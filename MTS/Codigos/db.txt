@@ -1,0 +1,216 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema MTS
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `MTS` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `MTS` ;
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Particulares`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Particulares` (
+  `ci` INT NOT NULL,
+  `nombre` VARCHAR(45) NULL,
+  `apellido` VARCHAR(45) NULL,
+  `dir` VARCHAR(45) NULL,
+  PRIMARY KEY (`ci`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Empresas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Empresas` (
+  `rut` INT NOT NULL,
+  `nombre` VARCHAR(45) NULL,
+  `dir` VARCHAR(45) NULL,
+  `contacto` VARCHAR(45) NULL,
+  PRIMARY KEY (`rut`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Empleados`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Empleados` (
+  `ci` INT NOT NULL,
+  `nombre` VARCHAR(45) NULL,
+  `apellido` VARCHAR(45) NULL,
+  `dir` VARCHAR(45) NULL,
+  PRIMARY KEY (`ci`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Trabajos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Trabajos` (
+  `idTrabajos` INT NOT NULL AUTO_INCREMENT,
+  `comentario` TEXT NULL,
+  `fecha_visita` VARCHAR(45) NULL,
+  `cuotas` INT NULL DEFAULT 0,
+  `referencia` INT NOT NULL,
+  `precio` INT NULL,
+  PRIMARY KEY (`idTrabajos`, `referencia`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Trabajo_cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Trabajo_cliente` (
+  `idTrabajo_cliente` INT NOT NULL AUTO_INCREMENT,
+  `fecha` VARCHAR(45) NULL,
+  `horas` VARCHAR(45) NULL,
+  `comentario` TEXT NULL,
+  `Trabajos_idTrabajos` INT NOT NULL,
+  `Empleados_ci` INT NOT NULL,
+  PRIMARY KEY (`idTrabajo_cliente`),
+  INDEX `fk_Trabajo_cliente_Trabajos1_idx` (`Trabajos_idTrabajos` ASC),
+  INDEX `fk_Trabajo_cliente_Empleados1_idx` (`Empleados_ci` ASC),
+  CONSTRAINT `fk_Trabajo_cliente_Trabajos1`
+    FOREIGN KEY (`Trabajos_idTrabajos`)
+    REFERENCES `MTS`.`Trabajos` (`idTrabajos`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Trabajo_cliente_Empleados1`
+    FOREIGN KEY (`Empleados_ci`)
+    REFERENCES `MTS`.`Empleados` (`ci`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Adms`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Adms` (
+  `clave` VARCHAR(45) NOT NULL,
+  `usuario` VARCHAR(45) NOT NULL,
+  `Empleados_ci` INT NOT NULL,
+  PRIMARY KEY (`clave`, `usuario`, `Empleados_ci`),
+  INDEX `fk_Adms_Empleados1_idx` (`Empleados_ci` ASC),
+  CONSTRAINT `fk_Adms_Empleados1`
+    FOREIGN KEY (`Empleados_ci`)
+    REFERENCES `MTS`.`Empleados` (`ci`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Pagos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Pagos` (
+  `Ncuota` INT NOT NULL,
+  `fecha` VARCHAR(45) NOT NULL,
+  `Trabajos_idTrabajos` INT NOT NULL,
+  INDEX `fk_Pagos_Trabajos1_idx` (`Trabajos_idTrabajos` ASC),
+  PRIMARY KEY (`Trabajos_idTrabajos`, `Ncuota`),
+  CONSTRAINT `fk_Pagos_Trabajos1`
+    FOREIGN KEY (`Trabajos_idTrabajos`)
+    REFERENCES `MTS`.`Trabajos` (`idTrabajos`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Socios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Socios` (
+  `fecha_socio` VARCHAR(45) NULL,
+  `referencia` INT NOT NULL,
+  `baja` BINARY NULL,
+  PRIMARY KEY (`referencia`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`Datos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`Datos` (
+  `idDatos` INT NOT NULL,
+  `descuento` INT NOT NULL,
+  `dir` VARCHAR(45) NULL,
+  `mail` VARCHAR(45) NULL,
+  PRIMARY KEY (`idDatos`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`tels_particulares`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`tels_particulares` (
+  `tel` VARCHAR(45) NOT NULL,
+  `Perticulars_ci` INT NOT NULL,
+  INDEX `fk_tels_particulares_Perticulars_idx` (`Perticulars_ci` ASC),
+  PRIMARY KEY (`tel`, `Perticulars_ci`),
+  CONSTRAINT `fk_tels_particulares_Perticulars`
+    FOREIGN KEY (`Perticulars_ci`)
+    REFERENCES `MTS`.`Particulares` (`ci`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`tel_Empresas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`tel_Empresas` (
+  `tel` VARCHAR(45) NOT NULL,
+  `Empresas_rut` INT NOT NULL,
+  INDEX `fk_tel_Empresas_Empresas1_idx` (`Empresas_rut` ASC),
+  PRIMARY KEY (`tel`, `Empresas_rut`),
+  CONSTRAINT `fk_tel_Empresas_Empresas1`
+    FOREIGN KEY (`Empresas_rut`)
+    REFERENCES `MTS`.`Empresas` (`rut`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `MTS`.`tel_empleado`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MTS`.`tel_empleado` (
+  `tel` VARCHAR(45) NOT NULL,
+  `Empleados_ci` INT NOT NULL,
+  PRIMARY KEY (`tel`, `Empleados_ci`),
+  INDEX `fk_tel_empleado_Empleados1_idx` (`Empleados_ci` ASC),
+  CONSTRAINT `fk_tel_empleado_Empleados1`
+    FOREIGN KEY (`Empleados_ci`)
+    REFERENCES `MTS`.`Empleados` (`ci`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
