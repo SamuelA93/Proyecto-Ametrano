@@ -273,6 +273,15 @@ public class Principal extends JFrame {
 		contentPane.add(bar_sub1);
 		
 		JMenu mnNuevo_1 = new JMenu("Nuevo");
+		mnNuevo_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				
+				
+				
+			}
+		});
 		mnNuevo_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
