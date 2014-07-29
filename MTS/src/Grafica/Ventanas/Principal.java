@@ -293,7 +293,7 @@ public class Principal extends JFrame {
 		});
 		bar_sub1.add(mnEliminar);
 		
-		JLabel lblParticulares = new JLabel("Trabajos a Particulares");
+		JLabel lblParticulares = new JLabel("Tareas pendientes");
 		lblParticulares.setBounds(5, 2, 193, 14);
 		contentPane.add(lblParticulares);
 		
