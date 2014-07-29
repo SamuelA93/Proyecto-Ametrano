@@ -1,7 +1,7 @@
 package Logica_Persistencia.Value_Object;
 
 public class VOParticular {
-	private  String cedula;
+	private  int cedula;
 	private String nombre;
 	private String apellido;
 	private String direccion;
@@ -9,7 +9,7 @@ public class VOParticular {
 	
 	public VOParticular(){};
 	
-	public VOParticular(String cedula, String nombre, String apellido,
+	public VOParticular(int cedula, String nombre, String apellido,
 			String direccion, String telefono) {
 		this.cedula = cedula;
 		this.nombre = nombre;
@@ -17,10 +17,10 @@ public class VOParticular {
 		this.direccion = direccion;
 		this.telefono = telefono;
 	}
-	public String getCedula() {
+	public int getCedula() {
 		return cedula;
 	}
-	public void setCedula(String cedula) {
+	public void setCedula(int cedula) {
 		this.cedula = cedula;
 	}
 	public String getNombre() {

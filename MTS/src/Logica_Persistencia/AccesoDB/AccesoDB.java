@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import Logica_Persistencia.Value_Object.VOEmpresa;
+import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
+import Logica_Persistencia.Value_Object.VOTrabajo;
 
 
 
@@ -133,93 +137,130 @@ public class AccesoDB {
 			this.desconectarBD(con);
 			return IdMutualista;
 		}
+		// Traer Trabajo segun idTrabajo
+		public VOTrabajo obtenerTrabajoXid(int id) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String strTrabajoXid = consultas.TrabajoXid();
+			PreparedStatement pstmt = con.prepareStatement (strTrabajoXid);
+			System.out.println(id);
+			pstmt.setInt (1, id);
+			ResultSet rs = pstmt.executeQuery ();
+			 rs.next();
+	    	int	 referencia = rs.getInt("referencia");
+	    	System.out.println(referencia);
+	    	float	 monto = rs.getFloat("monto");
+	    	int	 cuotas = rs.getInt("cuotas");
+	    	String	estado = rs.getString("estado");	
+	    	int	idd= rs.getInt("idTrabajos");
+		  	VOTrabajo trabajo = new VOTrabajo(idd, cuotas, monto, estado, referencia);
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return trabajo;
+		}
+		// Obtener de empleado nombre y apellido por la cedula
+		public String obtenerEmpleadoXcedula(int id) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String empleadoXcedula = consultas.empleadoXcedula();
+			PreparedStatement pstmt = con.prepareStatement (empleadoXcedula);
+			System.out.println(id);
+			pstmt.setInt (1, id);
+			ResultSet rs = pstmt.executeQuery ();
+			 rs.next();
+	    	String	 nombre = rs.getString("nombre");
+	    	//System.out.println(referencia);
+	    	String	 apellido = rs.getString("apellido");
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return nombre+" "+apellido;
+		}
 		
-		// retorna una lista de tareas para particulares
+		// obtener particular por ci 
+		public VOParticular obtenerParticularXcedula(int cedula) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String particularXcedula = consultas.particularXcedula();
+			PreparedStatement pstmt = con.prepareStatement (particularXcedula);
+			System.out.println(cedula);
+			pstmt.setInt (1, cedula);
+			ResultSet rs = pstmt.executeQuery ();
+			 rs.next();
+	    	String	 nombre = rs.getString("nombre");
+	    	String	 apellido = rs.getString("apellido");
+	    	String	 direccion = rs.getString("dir");
+	    	//System.out.println(referencia);
+	    	String tel=obtenerTelXreferencia(cedula);
+	    	VOParticular cliente = new VOParticular(cedula, nombre, apellido, direccion, tel);
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return cliente;
+		}
+		public VOEmpresa obtenerEmpresaXrut(int rut) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String empresaXrut = consultas.empresaXrut();
+			PreparedStatement pstmt = con.prepareStatement (empresaXrut);
+			System.out.println(rut);
+			pstmt.setInt (1, rut);
+			ResultSet rs = pstmt.executeQuery ();
+			 rs.next();
+			String tel= obtenerTelXreferencia(rut);
+		    
+	    	String	 nombre = rs.getString("nombre");
+	    	String	 contacto = rs.getString("contacto");
+	    	String dir = rs.getString("direccion");
+	    	VOEmpresa cliente = new VOEmpresa(rut, nombre, contacto, dir, tel);
+	    	//System.out.println(referencia);
+	    	
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return cliente;
+		}
 		
-		public List<VOTareaParticular> ListarTareaParticular(){
+		
+		
+		
+		// Listar tareas
+		
+		public List<VOTarea> ListarTareas(){
 			// 		 
 				Connection con = null;				
 				con = this.conectarBD();
 				
-				List<VOTareaParticular> lstTareaParticular = null;		
+				List<VOTarea> lstTareas = null;		
 				/*  */
 				Statement stmt;
 				try {
 					stmt = con.createStatement();			
 					Consultas consultas = new Consultas();
-					String strTareaParticular = consultas.DatosTareaParticulares();
-					ResultSet rs = stmt.executeQuery(strTareaParticular);					
-					lstTareaParticular= new ArrayList<VOTareaParticular>();			
+					String strTarea = consultas.DatosTareas();
+					ResultSet rs = stmt.executeQuery(strTarea);					
+					lstTareas= new ArrayList<VOTarea>();			
 					while (rs.next()) {
-						VOTareaParticular TareaParticular = new VOTareaParticular();
-						String cedula = rs.getString("ci");
-						String nombre = rs.getString("nombre");
-						String apellido = rs.getString("apellido");
-						String direccion = rs.getString("direccion");
-						String telefono = rs.getString("telefono");	
-						String empleado_cedula = rs.getString("emcedula");
-						String trabajo = rs.getString("trabajo");
-						String fecha = rs.getString("fecha");
-						String anio,dia,mes;
-						anio= (String) fecha.subSequence(0,4);
-						dia= (String) fecha.subSequence(8, 10);
-						mes= (String) fecha.subSequence(5, 7);
-						fecha= dia+'/'+mes+'/'+anio;
-						String encanombre = rs.getString("Encargado");
-						String hora = rs.getString("hora");//System.out.println(hora);
-						String horas = rs.getString("horas");
-						String comentario = rs.getString("comentario");
-						TareaParticular.construir(cedula, nombre, apellido, direccion, telefono, empleado_cedula,encanombre, trabajo, fecha, hora, horas, comentario);
-						lstTareaParticular.add(TareaParticular);			
-					}
-					rs.close();
-					stmt.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}		
-				this.desconectarBD(con);
-				return lstTareaParticular;
-			}
-		
-		// retorna una lista de tareas para empresas
-		
-		public List<VOTareaEmpresa> ListarTareaEmpresas(){
-			// 		 
-				Connection con = null;				
-				con = this.conectarBD();
-				
-				List<VOTareaEmpresa> lstTareaEmpresa = null;		
-				/*  */
-				Statement stmt;
-				try {
-					stmt = con.createStatement();			
-					Consultas consultas = new Consultas();
-					String strTareaEmpresa = consultas.DatosTareaEmpresas();
-					ResultSet rs = stmt.executeQuery(strTareaEmpresa);					
-					lstTareaEmpresa= new ArrayList<VOTareaEmpresa>();			
-					while (rs.next()) {
-						VOTareaEmpresa TareaEmpresa = new VOTareaEmpresa();
-						int rut = rs.getInt("rut");
-						String nombre = rs.getString("nombre");
-						String contacto = rs.getString("contacto");
-						String direccion = rs.getString("direccion");
-						String telefono = rs.getString("telefono");	
-						String empleado_cedula = rs.getString("emcedula");
-						String trabajo = rs.getString("trabajo");
-						String fecha = rs.getString("fecha");
-						String anio,dia,mes;
-						anio= (String) fecha.subSequence(0,4);
-						dia= (String) fecha.subSequence(8, 10);
-						mes= (String) fecha.subSequence(5, 7);
-						fecha= dia+'/'+mes+'/'+anio;
-						String encanombre = rs.getString("Encargado");
-						String hora = rs.getString("hora");//System.out.println(hora);
-						String horas = rs.getString("horas");
-						String comentario = rs.getString("comentario");
-						TareaEmpresa.construir(rut, nombre, contacto, direccion, telefono, empleado_cedula, encanombre, trabajo, fecha, hora, horas, comentario);
 						
-						lstTareaEmpresa.add(TareaEmpresa);			
+						int id_Trabajo = rs.getInt("Trabajos_idTrabajos");
+						int ci_encargado = rs.getInt("Empleados_cedula");
+						String fecha = rs.getString("fecha");
+						String anio,dia,mes;
+						anio= (String) fecha.subSequence(0,4);
+						dia= (String) fecha.subSequence(8, 10);
+						mes= (String) fecha.subSequence(5, 7);
+						fecha= dia+'/'+mes+'/'+anio;
+						String hora = rs.getString("hora");//System.out.println(hora);
+						String horas = rs.getString("horas");
+						String comentario = rs.getString("comentario");
+						VOTarea Tarea =new VOTarea(ci_encargado, id_Trabajo, fecha, hora, horas, comentario);
+						
+						lstTareas.add(Tarea);			
 					}
 					rs.close();
 					stmt.close();
@@ -228,6 +269,23 @@ public class AccesoDB {
 					e.printStackTrace();
 				}		
 				this.desconectarBD(con);
-				return lstTareaEmpresa;
+				return lstTareas;
 			}
+		public String obtenerTelXreferencia(int referencia) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String telXreferencia = consultas.TelXreferencia();
+			PreparedStatement pstmt = con.prepareStatement (telXreferencia);
+			System.out.println(referencia);
+			pstmt.setInt (1, referencia);
+			ResultSet rs = pstmt.executeQuery ();
+			 rs.next();
+	    	String	 tel = rs.getString("telefono");
+	    	//System.out.println(referencia);
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return tel;
+		}
 }

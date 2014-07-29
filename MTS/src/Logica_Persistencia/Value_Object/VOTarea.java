@@ -1,15 +1,15 @@
 package Logica_Persistencia.Value_Object;
 
 public class VOTarea {
-	private String empleado_cedula;
-	private String trabajo;
+	private int empleado_cedula;
+	private int trabajo;
 	private String fecha;
 	private String encanombre;
 	private String hora;
 	private String horas;
 	private String comentario;
 	public VOTarea(){}
-	public VOTarea(String empleado_cedula, String trabajo, String fecha, String hora,
+	public VOTarea(int empleado_cedula, int trabajo, String fecha, String hora,
 			String horas, String comentario) {
 		this.empleado_cedula = empleado_cedula;
 		this.trabajo = trabajo;
@@ -18,16 +18,16 @@ public class VOTarea {
 		this.horas = horas;
 		this.comentario = comentario;
 	}
-	public String getEmpleado_cedula() {
+	public int getEmpleado_cedula() {
 		return empleado_cedula;
 	}
-	public void setEmpleado_cedula(String empleado_cedula) {
+	public void setEmpleado_cedula(int empleado_cedula) {
 		this.empleado_cedula = empleado_cedula;
 	}
-	public String getTrabajo() {
+	public int getTrabajo() {
 		return trabajo;
 	}
-	public void setTrabajo(String trabajo) {
+	public void setTrabajo(int trabajo) {
 		this.trabajo = trabajo;
 	}
 	

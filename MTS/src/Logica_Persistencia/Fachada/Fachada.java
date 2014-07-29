@@ -4,9 +4,17 @@ import java.util.List;
 
 
 
+
+
+
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
+import Logica_Persistencia.Value_Object.VOEmpresa;
+import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
+import Logica_Persistencia.Value_Object.VOTrabajo;
 
 
 public class Fachada {
@@ -48,12 +56,25 @@ public class Fachada {
 			}
 		}
 		
-		public List<VOTareaParticular> listarTareaParticular(){
+		public List<VOTarea> listarTareas(){
 			AccesoDB a = new AccesoDB();
-			return a.ListarTareaParticular();
+			return a.ListarTareas();
 		}
-		public List<VOTareaEmpresa> listarTareaEmpresa(){
+		public VOTrabajo trabajoXid(int id) throws SQLException{
 			AccesoDB a = new AccesoDB();
-			return a.ListarTareaEmpresas();
+			return a.obtenerTrabajoXid(id);
 		}
+		public String empleadoXcedula(int id) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.obtenerEmpleadoXcedula(id);
+		}
+		public VOParticular particularXcedula(int cedula) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.obtenerParticularXcedula(cedula);
+		}
+		public VOEmpresa empresaXrut(int rut) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.obtenerEmpresaXrut(rut);
+		}
+		
 }

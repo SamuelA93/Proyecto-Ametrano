@@ -23,20 +23,7 @@ public class Consultas {
 	
 	public String DatosTareaParticulares(){
 		String consulta= " SELECT empleados_tiene_trabajos.fecha as fecha, empleados_tiene_trabajos.hora as hora, p.nombre as nombre , p.cedula as ci,p.dir as direccion,p.apellido,t.telefono as telefono, empleados.nombre as Encargado, empleados.cedula as emcedula,empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas, empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos JOIN particulares p on trabajos.referencia = p.cedula JOIN telefonos t on p.cedula = t.referencia;";
-		/*String consulta= " SELECT empleados_tiene_trabajos.fecha as fecha,"
-				            + "	  empleados_tiene_trabajos.hora as hora,"
-				            + "	  p.nombre as nombre ,"
-							+ "	  p.cedula as ci,"
-							+ "   p.dir as direccion,p.apellido,"
-							+ "   t.telefono as telefono, "
-							+ "   empleados.nombre as Encargado,"
-							+ "   empleados.cedula as emcedula,"
-							+ "   empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas,"
-							+ "   empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo"
-							+ "FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula"
-							+ "JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos"
-							+ "JOIN particulares p on trabajos.referencia = p.cedula"
-							+ "JOIN telefonos t on p.cedula = t.referencia; ";*/
+		
 		return consulta;
 	}
 	
@@ -44,5 +31,28 @@ public class Consultas {
 		String consulta = "SELECT empleados_tiene_trabajos.fecha as fecha, empleados_tiene_trabajos.hora as hora, e.nombre as nombre , e.rut as rut,e.direccion as direccion,e.contacto,t.telefono as telefono, empleados.nombre as Encargado, empleados.cedula as emcedula,empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas, empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos JOIN empresa e on trabajos.referencia = e.rut JOIN telefonos t on e.rut = t.referencia";
 		return consulta;
 	}
-	
+	public String DatosTareas(){
+		String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
+		return consulta;
+	}
+	public String TrabajoXid(){
+		String consulta = "SELECT idTrabajos,cuotas_totales as cuotas, monto_total as monto,estado, referencia FROM trabajos WHERE idTrabajos=?;";
+		return consulta;
+	}
+	public String empleadoXcedula(){
+		String consulta = "SELECT nombre,apellido FROM `empleados` WHERE `cedula`=?;";
+		return consulta;
+	}
+	public String particularXcedula(){
+		String consulta = "SELECT* FROM `particulares` WHERE `cedula`=?;";
+		return consulta;
+	}
+	public String empresaXrut(){
+		String consulta = "SELECT* FROM `empresa` WHERE `rut`=?;";
+		return consulta;
+	}
+	public String TelXreferencia(){
+		String consulta = "SELECT telefono FROM `telefonos` WHERE `referencia`=?;";
+		return consulta;
+	}
 }

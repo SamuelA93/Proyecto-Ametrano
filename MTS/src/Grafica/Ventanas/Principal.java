@@ -22,6 +22,7 @@ import javax.swing.JTextPane;
 
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -29,20 +30,30 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import Grafica.Controladores.Controlador_Tabla_Tareas_Empresas;
-import Grafica.Controladores.Controlador_Tabla_Tareas_Particulares;
+import Grafica.Controladores.Controlador_Auxiliares;
+import Grafica.Controladores.Controlador_ClienteXreferencia;
+
+import Grafica.Controladores.Controlador_Tabla_Tareas;
+import Grafica.Controladores.Controlador_TrabajoXid;
+import Logica_Persistencia.Value_Object.VOEmpresa;
+import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
+import Logica_Persistencia.Value_Object.VOTrabajo;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JEditorPane;
+import javax.swing.JTextField;
+import java.awt.Font;
 
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-	private JTable table_1;
 
 	/**
 	 * Launch the application.
@@ -66,7 +77,7 @@ public class Principal extends JFrame {
 	public Principal() {
 		setTitle("Administracion ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1264, 488);
+		setBounds(100, 100, 586, 452);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -142,7 +153,7 @@ public class Principal extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 40, 556, 207);
+		scrollPane.setBounds(5, 45, 277, 207);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -157,79 +168,104 @@ public class Principal extends JFrame {
 		};
 		modelo.addColumn("Fecha");
 		modelo.addColumn("Hora");
-		modelo.addColumn("Contacto");
-		modelo.addColumn("Telefono");
-		modelo.addColumn("Ci.");
-		modelo.addColumn("Dirección");
-		modelo.addColumn("Encargado");
-		
-		Controlador_Tabla_Tareas_Particulares controlador = new Controlador_Tabla_Tareas_Particulares();
-		final List<VOTareaParticular> lstParticularTarea = controlador.listarTareaParticular();
-		if (lstParticularTarea.size() > 0){	
-			Iterator<VOTareaParticular> iterPacientes = lstParticularTarea.iterator();
-			while (iterPacientes.hasNext()){
-				VOTareaParticular dataPaciente = iterPacientes.next();
-				Object[] fila = new Object[7];
-				fila[0] = dataPaciente.tarea.getFecha();
-				
-				fila[1] = dataPaciente.tarea.getHora();System.out.println(dataPaciente.tarea.getHora());
-				fila[2] = dataPaciente.particular.getNombre();
-				fila[3] = dataPaciente.particular.getTelefono();
-				
-				
-				// cambio el formato de la fecha de pago
-				//SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				//fila[4] = sdf.format(dataPaciente.getFechNac());
-				fila[4] =dataPaciente.particular.getCedula();
-				fila[5] = dataPaciente.particular.getDireccion();
-				fila[6] = dataPaciente.tarea.getEncanombre();
+		Controlador_Tabla_Tareas controlador = new Controlador_Tabla_Tareas();
+		final List<VOTarea> lstTareas = controlador.listarTareas();
+		if (lstTareas.size() > 0){	
+			Iterator<VOTarea> iterT = lstTareas.iterator();
+			while (iterT.hasNext()){
+				VOTarea Tarea = iterT.next();
+				Object[] fila = new Object[2];
+				fila[0] = Tarea.getFecha();
+				fila[1] = Tarea.getHora();
 				modelo.addRow(fila);
 			}		
-			
 		}	
 		table.setModel(modelo);
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(0, 268, 556, 95);
+		scrollPane_1.setBounds(5, 281, 277, 108);
 		contentPane.add(scrollPane_1);
 		final JTextPane comentarioP = new JTextPane();
 		//comentarioP.setText("Este es un comentario de un trabajo a realizar de la lista de arriba");
 		scrollPane_1.setViewportView(comentarioP);
+		final JLabel estado = new JLabel("");
+		estado.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel monto = new JLabel("");
+		monto.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel cuotas = new JLabel("");
+		cuotas.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel encargado = new JLabel("");
+		encargado.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel cliente = new JLabel("");
+		cliente.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel contacto = new JLabel("");
+		contacto.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel lblEncargado = new JLabel("ENCARGADO : ");
+		final JLabel referencia = new JLabel("");
+		referencia.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel direccion = new JLabel("");
+		direccion.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel tel = new JLabel("");
+		tel.setFont(new Font("Arial", Font.PLAIN, 13));
+		final JLabel lblContacto = new JLabel("CONTACTO : ");
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.getSelectedRow();
-				comentarioP.setText( lstParticularTarea.get(row).tarea.getComentario());
-				
+				comentarioP.setText( lstTareas.get(row).getComentario());
+				Controlador_TrabajoXid trabajoXid = new  Controlador_TrabajoXid();
+				System.out.println(lstTareas.get(row).getTrabajo());
+				try {
+					VOTrabajo trabajo = trabajoXid.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
+					
+					estado.setText(trabajo.getEstado());
+					monto.setText(""+trabajo.getMontoTotal());
+					cuotas.setText(trabajo.getCuotas()+"");
+					Controlador_Auxiliares empleadoNombre = new Controlador_Auxiliares();
+					//empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula());
+					encargado.setText(empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula()));
+					Controlador_ClienteXreferencia control = new Controlador_ClienteXreferencia();
+					if (control.esCedula(trabajo.getReferencia())){
+						VOParticular particular = new VOParticular();
+						particular = control.ParticularXcedula(trabajo.getReferencia());
+						cliente.setText(particular.getNombre());
+						lblContacto.setText("APELLIDO : ");
+						contacto.setText(particular.getApellido());
+						referencia.setText(""+particular.getCedula());
+						direccion.setText(particular.getDireccion());
+						tel.setText(particular.getTelefono());
+					}else{
+						VOEmpresa empresa = new VOEmpresa();
+						empresa = control.EmpresaXcedula(trabajo.getReferencia());
+						cliente.setText(empresa.getNombre());
+						lblContacto.setText("CONTACTO : ");
+						contacto.setText(empresa.getContacto());
+						referencia.setText(""+empresa.getRut());
+						direccion.setText(empresa.getDireccion());
+						tel.setText(empresa.getTelefono());
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 		});
-		/*table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Fecha", "Hora", "Contacto", "Telefono", "Ci/Rut", "Direcci\u00F3n", "Encargado"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, true, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});*/
 		scrollPane.setViewportView(table);
-		
-		
-		
-		
-		
-		JLabel lblComentario = new JLabel("Comentario");
-		lblComentario.setBounds(8, 250, 80, 14);
+		JLabel lblComentario = new JLabel("COMENTARIO");
+		lblComentario.setBounds(8, 259, 80, 14);
 		contentPane.add(lblComentario);
+		
+		JLabel lblInformacionDelCliente = new JLabel("INFORMACION DEL CLIENTE  ");
+		lblInformacionDelCliente.setBounds(290, 24, 214, 14);
+		contentPane.add(lblInformacionDelCliente);
+		
+		JLabel lblEstadoDePago = new JLabel("INFORMACION DE PAGO");
+		lblEstadoDePago.setBounds(290, 259, 203, 14);
+		contentPane.add(lblEstadoDePago);
 		
 		JMenuBar menuBar_1 = new JMenuBar();
 		menuBar_1.setToolTipText("");
-		menuBar_1.setBounds(0, 247, 556, 21);
+		menuBar_1.setBounds(0, 256, 600, 21);
 		contentPane.add(menuBar_1);
 		
 		JMenuBar bar_sub1 = new JMenuBar();
@@ -262,16 +298,104 @@ public class Principal extends JFrame {
 		contentPane.add(lblParticulares);
 		
 		JMenuBar menuBar_3 = new JMenuBar();
-		menuBar_3.setBounds(0, 0, 556, 21);
+		menuBar_3.setBounds(0, 0, 575, 21);
 		contentPane.add(menuBar_3);
 		
-		JScrollPane list2 = new JScrollPane();
-		list2.setBounds(566, 40, 641, 207);
-		contentPane.add(list2);
 		
-		table_1 = new JTable();
+		encargado.setBounds(400, 56, 108, 21);
+		contentPane.add(encargado);
 		
-		list2.setViewportView(table_1);
+		
+		lblEncargado.setBounds(299, 60, 108, 14);
+		contentPane.add(lblEncargado);
+		
+		
+		cliente.setBounds(400, 86, 108, 21);
+		contentPane.add(cliente);
+		
+		JLabel lblCliente = new JLabel("CLIENTE : ");
+		lblCliente.setBounds(299, 90, 108, 14);
+		contentPane.add(lblCliente);
+		
+		
+		contacto.setBounds(400, 116, 108, 21);
+		contentPane.add(contacto);
+		
+		
+		lblContacto.setBounds(299, 120, 108, 14);
+		contentPane.add(lblContacto);
+		
+		
+		referencia.setBounds(400, 146, 108, 21);
+		contentPane.add(referencia);
+		
+		JLabel lblRutCi = new JLabel("RUT / CI : ");
+		lblRutCi.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblRutCi.setBounds(292, 150, 59, 14);
+		contentPane.add(lblRutCi);
+		
+		
+		direccion.setBounds(400, 176, 108, 21);
+		contentPane.add(direccion);
+		
+		JLabel lblDireccion = new JLabel("DIRECCION : ");
+		lblDireccion.setBounds(299, 180, 108, 14);
+		contentPane.add(lblDireccion);
+		
+		
+		tel.setBounds(400, 206, 108, 21);
+		contentPane.add(tel);
+		
+		JLabel lblTelefono = new JLabel("TELEFONO : ");
+		lblTelefono.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTelefono.setBounds(299, 210, 108, 14);
+		contentPane.add(lblTelefono);
+		
+		JLabel lblMontoTotal = new JLabel("MONTO TOTAL : ");
+		lblMontoTotal.setHorizontalAlignment(SwingConstants.LEFT);
+		lblMontoTotal.setBounds(300, 295, 108, 14);
+		contentPane.add(lblMontoTotal);
+		
+		
+		monto.setHorizontalAlignment(SwingConstants.LEFT);
+		monto.setBounds(400, 295, 108, 14);
+		contentPane.add(monto);
+		
+		
+		cuotas.setHorizontalAlignment(SwingConstants.LEFT);
+		cuotas.setBounds(400, 320, 108, 14);
+		contentPane.add(cuotas);
+		
+		JLabel lblCuotas = new JLabel("CUOTAS : ");
+		lblCuotas.setHorizontalAlignment(SwingConstants.LEFT);
+		lblCuotas.setBounds(300, 320, 108, 14);
+		contentPane.add(lblCuotas);
+		
+		
+		estado.setHorizontalAlignment(SwingConstants.LEFT);
+		estado.setBounds(400, 345, 108, 14);
+		contentPane.add(estado);
+		
+		JLabel lblEstado = new JLabel("ESTADO : ");
+		lblEstado.setHorizontalAlignment(SwingConstants.LEFT);
+		lblEstado.setBounds(300, 345, 108, 14);
+		contentPane.add(lblEstado);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(287, 45, 279, 206);
+		contentPane.add(scrollPane_2);
+		
+		JEditorPane editorPane = new JEditorPane();
+		editorPane.setEditable(false);
+		scrollPane_2.setViewportView(editorPane);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(287, 281, 279, 108);
+		contentPane.add(scrollPane_3);
+		
+		JEditorPane editorPane_1 = new JEditorPane();
+		editorPane_1.setEditable(false);
+		scrollPane_3.setViewportView(editorPane_1);
 		//
 		DefaultTableModel modeloEmpresa = new DefaultTableModel(){
 
@@ -281,88 +405,5 @@ public class Principal extends JFrame {
 		       return false;
 		    }
 		};
-		modeloEmpresa.addColumn("Fecha");
-		modeloEmpresa.addColumn("Hora");
-		modeloEmpresa.addColumn("Empresa");
-		modeloEmpresa.addColumn("RUT");
-		modeloEmpresa.addColumn("Contacto");
-		modeloEmpresa.addColumn("Telefono");
-		modeloEmpresa.addColumn("Dirección");
-		modeloEmpresa.addColumn("Encargado");
-		
-		Controlador_Tabla_Tareas_Empresas controlador2 = new Controlador_Tabla_Tareas_Empresas();
-		final List<VOTareaEmpresa> lstEmpresaTarea = controlador2.listarTareaEmpresa();
-		if (lstEmpresaTarea.size() > 0){	
-			Iterator<VOTareaEmpresa> iterEmpresas = lstEmpresaTarea.iterator();
-			while (iterEmpresas.hasNext()){
-				VOTareaEmpresa dataPaciente = iterEmpresas.next();
-				Object[] fila = new Object[8];
-				fila[0] = dataPaciente.tarea.getFecha();
-				
-				fila[1] = dataPaciente.tarea.getHora();//System.out.println(dataPaciente.tarea.getHora());
-				fila[2] = dataPaciente.empresa.getNombre();
-				fila[3] = dataPaciente.empresa.getRut();
-				
-				
-				// cambio el formato de la fecha de pago
-				//SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				//fila[4] = sdf.format(dataPaciente.getFechNac());
-				fila[4] =dataPaciente.empresa.getContacto();
-				fila[5] = dataPaciente.empresa.getTelefono();
-				fila[6] = dataPaciente.empresa.getDireccion();
-				fila[7] = dataPaciente.tarea.getEncanombre();
-				modeloEmpresa.addRow(fila);
-			}		
-			
-		}	
-		table_1.setModel(modeloEmpresa);
-		
-		JMenuBar bar_sub2 = new JMenuBar();
-		bar_sub2.setBounds(566, 20, 641, 21);
-		contentPane.add(bar_sub2);
-		
-		JMenu mnNuevo_2 = new JMenu("Nuevo");
-		mnNuevo_2.setHorizontalAlignment(SwingConstants.CENTER);
-		bar_sub2.add(mnNuevo_2);
-		
-		JMenu mnNewMenu = new JMenu("Editar");
-		bar_sub2.add(mnNewMenu);
-		
-		JMenu mnNewMenu_1 = new JMenu("Eliminar");
-		bar_sub2.add(mnNewMenu_1);
-		
-		JLabel label = new JLabel("Comentario");
-		label.setBounds(576, 250, 80, 14);
-		contentPane.add(label);
-		
-		JMenuBar bar_com2 = new JMenuBar();
-		bar_com2.setToolTipText("");
-		bar_com2.setBounds(550, 247, 659, 21);
-		contentPane.add(bar_com2);
-		
-		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(566, 268, 641, 95);
-		contentPane.add(scrollPane_3);
-		
-		final JTextPane comentarioE = new JTextPane();
-		scrollPane_3.setViewportView(comentarioE);
-		
-		JLabel lblTrabajosAEmpresas = new JLabel("Trabajos a Empresas");
-		lblTrabajosAEmpresas.setBounds(570, 2, 193, 14);
-		contentPane.add(lblTrabajosAEmpresas);
-		
-		JMenuBar bar_tit2 = new JMenuBar();
-		bar_tit2.setBounds(550, 0, 656, 21);
-		contentPane.add(bar_tit2);
-		
-		table_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
-				int row2 = table_1.getSelectedRow();
-				comentarioE.setText( lstEmpresaTarea.get(row2).tarea.getComentario());
-				
-			}
-		});
 	}
 }
