@@ -55,4 +55,23 @@ public class Consultas {
 		String consulta = "SELECT telefono FROM `telefonos` WHERE `referencia`=?;";
 		return consulta;
 	}
+	public String NuevaTarea(){
+		String consulta = "INSERT INTO `devlopteam mts`.`empleados_tiene_trabajos` (`Empleados_cedula`, `Trabajos_idTrabajos`, `fecha`, `hora`, `horas`, `comentario`) VALUES (?,?,?,?,?,?);";
+		return consulta;
+	}
+	public String obtenerClientes_Referencias(){
+		
+		String consulta = "Select CONCAT(nombre,' ',apellido) as nombre, cedula as referencia from particulares  union select nombre, rut from empresa ;";
+		return consulta;
+	}
+public String obtenerTrabajos_id(){
+		
+		String consulta = "select idTrabajos as trabajo, estado from trabajos where referencia =?";
+		return consulta;
+	}
+public String obtenerCliente_Referencia(String entradaNombre,String entradareferencia){
+		
+		String consulta = "Select CONCAT(nombre,' ',apellido) as nombre, cedula as referencia from particulares Where CONCAT(nombre,' ',apellido) like '"+entradaNombre+"' or cedula like '"+entradareferencia+"' union select nombre, rut from empresa Where nombre like '"+entradaNombre+"' or rut like '"+entradareferencia+"';";
+		return consulta;
+	}
 }

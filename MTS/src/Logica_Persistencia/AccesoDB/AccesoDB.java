@@ -87,6 +87,24 @@ public class AccesoDB {
 			pstmt.close();					
 			this.desconectarBD(con);
 		}
+	// Ingresar nueva Tarea
+	public void nuevaTarea(int trabajo, int encargado, String fecha, String hora, int horas,String comentario) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.NuevaTarea();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setInt(1, trabajo);
+			pstmt.setInt(2, encargado);
+			pstmt.setString(3, fecha);
+			pstmt.setString(4, hora);
+			pstmt.setInt(5, horas);
+			pstmt.setString(6, comentario);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	
 	//
 	public void nuevoTelefono( String tel, int referencia) throws SQLException{
@@ -277,7 +295,7 @@ public class AccesoDB {
 			Consultas consultas = new Consultas ();
 			String telXreferencia = consultas.TelXreferencia();
 			PreparedStatement pstmt = con.prepareStatement (telXreferencia);
-			System.out.println(referencia);
+			//System.out.println(referencia);
 			pstmt.setInt (1, referencia);
 			ResultSet rs = pstmt.executeQuery ();
 			 rs.next();
@@ -287,5 +305,50 @@ public class AccesoDB {
 		    pstmt.close();
 			this.desconectarBD(con);
 			return tel;
+		}
+		
+		public List<Object[]> obtenerClientes_Referecia(String entradaNombre,String entradareferencia) throws SQLException{	
+			List<Object[]> lstClientes = null;	
+			Connection con = null;	
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String Cliente_Referencia = consultas.obtenerClientes_Referencias();
+			PreparedStatement pstmt = con.prepareStatement (Cliente_Referencia);
+			System.out.println(entradaNombre);
+			ResultSet rs = pstmt.executeQuery ();
+			lstClientes= new ArrayList<Object[]>();	
+			 while(rs.next()){
+				 Object[] fila = new Object[2];
+				 fila[0] = rs.getString("nombre");
+				 fila[1] = rs.getString("referencia");
+				 lstClientes.add(fila);
+			 }
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return lstClientes;
+		}
+		
+		// obtener idtranajo y titulo por la referencia 
+		public List<Object[]> obtenerTrabajos_Referecia(long a2) throws SQLException{	
+			List<Object[]> lstTrabajos = null;	
+			Connection con = null;	
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String Trabajo_Referencia = consultas.obtenerTrabajos_id();
+			PreparedStatement pstmt = con.prepareStatement (Trabajo_Referencia);
+			pstmt.setLong (1, a2);
+			ResultSet rs = pstmt.executeQuery ();
+			lstTrabajos= new ArrayList<Object[]>();	
+			 while(rs.next()){
+				 Object[] fila = new Object[2];
+				 fila[0] = rs.getString("trabajo");
+				 fila[1] = rs.getString("estado");
+				 lstTrabajos.add(fila);
+			 }
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return lstTrabajos;
 		}
 }

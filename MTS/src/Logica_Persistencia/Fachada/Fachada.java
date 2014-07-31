@@ -8,6 +8,7 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
@@ -76,5 +77,12 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a.obtenerEmpresaXrut(rut);
 		}
-		
+		public List<Object[]> obtenerClientes_Nombre_Referencia(String entradaNombre,String entradareferencia) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.obtenerClientes_Referecia(entradaNombre, entradareferencia);
+		}
+		public List<Object[]> obtenerTrabajo_TituloXReferencia(long a2) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a. obtenerTrabajos_Referecia(a2);
+		}
 }

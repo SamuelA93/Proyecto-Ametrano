@@ -147,6 +147,12 @@ public class Principal extends JFrame {
 		JMenuItem mntmSobre = new JMenuItem("Sobre");
 		mnAyuda.add(mntmSobre);
 		contentPane = new JPanel();
+		contentPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+			}
+		});
 		contentPane.setBackground(SystemColor.control);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -278,12 +284,14 @@ public class Principal extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				
 				
-				
+				Administrar_tareas tareaNueva = new Administrar_tareas();
+				tareaNueva.setVisible(true);
 				
 			}
 		});
 		mnNuevo_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 			}
 		});
 		bar_sub1.add(mnNuevo_1);
