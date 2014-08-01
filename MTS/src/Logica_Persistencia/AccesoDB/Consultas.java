@@ -64,14 +64,24 @@ public class Consultas {
 		String consulta = "Select CONCAT(nombre,' ',apellido) as nombre, cedula as referencia from particulares  union select nombre, rut from empresa ;";
 		return consulta;
 	}
-public String obtenerTrabajos_id(){
-		
-		String consulta = "select idTrabajos as trabajo, estado from trabajos where referencia =?";
+	public String obtenerTrabajos_id(){
+			
+			String consulta = "select idTrabajos as trabajo, estado from trabajos where referencia =?";
+			return consulta;
+		}
+	public String obtenerCliente_Referencia(String entradaNombre,String entradareferencia){
+			
+			String consulta = "Select CONCAT(nombre,' ',apellido) as nombre, cedula as referencia from particulares Where CONCAT(nombre,' ',apellido) like '"+entradaNombre+"' or cedula like '"+entradareferencia+"' union select nombre, rut from empresa Where nombre like '"+entradaNombre+"' or rut like '"+entradareferencia+"';";
+			return consulta;
+		}
+	public String listarParticulares(){
+		String consulta = "SELECT * FROM particulares";
 		return consulta;
 	}
-public String obtenerCliente_Referencia(String entradaNombre,String entradareferencia){
-		
-		String consulta = "Select CONCAT(nombre,' ',apellido) as nombre, cedula as referencia from particulares Where CONCAT(nombre,' ',apellido) like '"+entradaNombre+"' or cedula like '"+entradareferencia+"' union select nombre, rut from empresa Where nombre like '"+entradaNombre+"' or rut like '"+entradareferencia+"';";
+	public String nuevaEmpresa(){
+		String consulta = "INSERT INTO empresa (rut,nombre,contacto,direccion) VALUES (?,?,?,?);";
 		return consulta;
 	}
+	
+	
 }

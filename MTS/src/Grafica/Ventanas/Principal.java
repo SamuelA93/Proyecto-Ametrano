@@ -32,7 +32,6 @@ import javax.swing.SwingConstants;
 
 import Grafica.Controladores.Controlador_Auxiliares;
 import Grafica.Controladores.Controlador_ClienteXreferencia;
-
 import Grafica.Controladores.Controlador_Tabla_Tareas;
 import Grafica.Controladores.Controlador_TrabajoXid;
 import Logica_Persistencia.Value_Object.VOEmpresa;
@@ -47,6 +46,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JEditorPane;
 import javax.swing.JTextField;
+
+import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
+
 import java.awt.Font;
 
 
@@ -89,6 +91,12 @@ public class Principal extends JFrame {
 		menuBar.add(mnNuevo);
 		
 		JMenuItem mntmEmpresa = new JMenuItem("Empresa");
+		mntmEmpresa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Nueva_Empresa empresa = new Nueva_Empresa();
+				empresa.setVisible(true);
+			}
+		});
 		mnNuevo.add(mntmEmpresa);
 		
 		JMenuItem mntmParticular = new JMenuItem("Particular");
@@ -124,6 +132,13 @@ public class Principal extends JFrame {
 		mnVer.add(mntmSocios);
 		
 		JMenuItem mntmClientes = new JMenuItem("Particulares");
+		mntmClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Ver_Particulares parti = new Ver_Particulares();
+				parti.setVisible(true);
+				
+			}
+		});
 		mnVer.add(mntmClientes);
 		
 		JMenuItem mntmEmpresas = new JMenuItem("Empresas");

@@ -299,12 +299,18 @@ public class AccesoDB {
 			pstmt.setInt (1, referencia);
 			ResultSet rs = pstmt.executeQuery ();
 			 rs.next();
-	    	String	 tel = rs.getString("telefono");
+			 String	 tel;
+			 try{
+				 tel = rs.getString("telefono");
+				 rs.close();
+				 pstmt.close();
+				 this.desconectarBD(con);
+				 return tel;
+			 }catch(SQLException e){
+				 return "No tiene telefono";
+			 }
 	    	//System.out.println(referencia);
-		    rs.close();
-		    pstmt.close();
-			this.desconectarBD(con);
-			return tel;
+		    
 		}
 		
 		public List<Object[]> obtenerClientes_Referecia(String entradaNombre,String entradareferencia) throws SQLException{	
@@ -351,4 +357,70 @@ public class AccesoDB {
 			this.desconectarBD(con);
 			return lstTrabajos;
 		}
+		public void nuevaEmpresa(long rut, String nombre, String contacto, String direccion) throws SQLException{
+			// Ingresa una nueva actividad al sistema
+			System.out.println(rut);
+				Connection con = this.conectarBD();	
+				Consultas consultas = new Consultas();
+				String insert = consultas.nuevaEmpresa();	
+				PreparedStatement pstmt;
+				pstmt = con.prepareStatement(insert);
+				pstmt.setLong(1, rut);
+				pstmt.setString(2, nombre);
+				pstmt.setString(3, contacto);
+				pstmt.setString(4, direccion);
+				pstmt.executeUpdate ();			
+				pstmt.close();					
+				this.desconectarBD(con);
+			}
+			
+			
+			public void nuevoTelefono( String tel, long referencia) throws SQLException{
+			// Ingresa una nueva actividad al sistema
+				Connection con = this.conectarBD();	
+				Consultas consultas = new Consultas();
+				String insert = consultas.nuevoCelTel();	
+				PreparedStatement pstmt;
+				pstmt = con.prepareStatement(insert);
+				pstmt.setLong(1, referencia);
+				pstmt.setString(2, tel);
+				pstmt.executeUpdate ();			
+				pstmt.close();					
+				this.desconectarBD(con);
+			}
+			
+			public List<VOParticular> listarParticulares(){
+				// devuelve un listado de los datos de los particulares		 
+					Connection con = null;				
+					con = this.conectarBD();
+					VOParticular particular = null;
+					List<VOParticular> lstParticulares = null;		
+					// creo un Statement para listar todas las actividades 
+					Statement stmt;
+					try {
+						stmt = con.createStatement();			
+						Consultas consultas = new Consultas();
+						String strParticulares = consultas.listarParticulares();
+						ResultSet rs = stmt.executeQuery(strParticulares);					
+						lstParticulares = new ArrayList<VOParticular>();			
+						while (rs.next()) {
+							int cedula = rs.getInt("cedula");
+							String nombre = rs.getString("nombre");
+							//System.out.println(nombre);
+							String apellido = rs.getString("apellido");
+							String direccion = rs.getString("dir");	
+							//String telefono = "";
+							String	 telefono = obtenerTelXreferencia(cedula);
+							particular = new VOParticular(cedula, nombre, apellido, direccion, telefono);
+							lstParticulares.add(particular);			
+						}
+						rs.close();
+						stmt.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		
+					this.desconectarBD(con);
+					return lstParticulares;
+				}  
 }

@@ -85,4 +85,27 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a. obtenerTrabajos_Referecia(a2);
 		}
+		
+		public void nuevaEmpresa(long rut, String nombre, String contacto, String direccion) throws SQLException
+		{
+			AccesoDB a = new AccesoDB();
+			a.nuevaEmpresa(rut, nombre, contacto, direccion);
+			
+
+		}
+		
+		public void nuevoTelefono( String tel, long referencia){
+			AccesoDB a = new AccesoDB();
+			try {
+				a.nuevoTelefono(tel,referencia);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		public List<VOParticular> listarParticulares(){
+			AccesoDB a = new AccesoDB();
+			return a.listarParticulares();
+		}
 }
