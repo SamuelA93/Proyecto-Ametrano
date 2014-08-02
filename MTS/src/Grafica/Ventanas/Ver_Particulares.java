@@ -76,12 +76,6 @@ public class Ver_Particulares extends JFrame {
 		}else{
 			System.out.println("no");
 			agregarNombre.setEditable(clip);
-			
-			//System.out.println(listParticulares.getSelectedIndex());
-			//agregarNombre.setText(guia.get(listParticulares.getSelectedIndex()).getNombre());
-			//System.out.println(guia.get(listParticulares.getSelectedIndex()).getNombre());
-			
-			
 			agregarApellido.setEditable(clip);
 			//agregarApellido.setText(guia.get(listParticulares.getSelectedIndex()).getApellido());
 			agregarDireccion.setEditable(clip);
@@ -91,7 +85,6 @@ public class Ver_Particulares extends JFrame {
 			agregarTelefono.setEditable(clip);
 			//agregarTelefono.setText(guia.get(listParticulares.getSelectedIndex()).getTelefono());
 		}
-		
 	}
 	public void filtrarTuplasParticulares(String [] tuplasPart, String subCadena,List<VOParticular> par){
 		// Dado un array de tuplas de pacientes y una subcadena, va filtrando los nombres del jList

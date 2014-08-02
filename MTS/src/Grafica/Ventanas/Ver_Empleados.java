@@ -6,6 +6,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -20,7 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import Grafica.Controladores.Controlador_listarEmpleados;
+//import Grafica.Controladores.Controlador_listarParticulares;
 import Logica_Persistencia.Value_Object.VOEmpleado;
+//import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOParticular;
 
 
 public class Ver_Empleados extends JFrame {
@@ -33,6 +37,8 @@ public class Ver_Empleados extends JFrame {
 	private JLabel direccion;
 	private JLabel telefono;
 	private List<VOEmpleado> empleados;
+	Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
+	List<VOEmpleado> guia= null;
 	/**
 	 * Launch the application.
 	 */
@@ -53,13 +59,16 @@ public class Ver_Empleados extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public void filtrarTuplasParticulares(String [] tuplasPart, String subCadena){
+	public void filtrarTuplasParticulares(String [] tuplasPart, String subCadena,List<VOEmpleado> emples){
 		// Dado un array de tuplas de pacientes y una subcadena, va filtrando los nombres del jList
 			boolean hayQueFiltrar = false;
 			DefaultListModel modeloSocios = new DefaultListModel();
+			guia= new ArrayList<VOEmpleado>();
 			for (int i=0; i<tuplasPart.length;i++){			
+				
 				if (tuplasPart[i].toUpperCase().startsWith(subCadena.toUpperCase())){
-					hayQueFiltrar = true;			
+					hayQueFiltrar = true;
+					guia.add(emples.get(i));
 					modeloSocios.addElement(tuplasPart[i]);
 				}
 			}
@@ -69,14 +78,13 @@ public class Ver_Empleados extends JFrame {
 		}
 	
 	public String[] EmpleadosToString() {
-		// Retorna un array de pacientes en el cual cada tupla esta formada por nombre y apellido
-		// Este array luego se le pasa al jlist de pacientes
-		Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
-		//System.out.println("adfasdgdfga");
-			 empleados = controlador.listarEmpleados();
+		
+		List<VOEmpleado> empleados = controlador.listarEmpleados();
+		guia= new ArrayList<VOEmpleado>();
 			String[] tuplas = new String[empleados.size()];
 			int i = 0;
 			for (VOEmpleado emple : empleados){
+				guia.add(emple);
 				tuplas[i] =  emple.getNombre() + " " + emple.getApellido();
 				i++;
 			}		
@@ -109,17 +117,17 @@ public class Ver_Empleados extends JFrame {
 			StringBuffer txt = new StringBuffer();
 			@Override
 			public void keyTyped(KeyEvent e) {
-				
+				List<VOEmpleado> empleados = controlador.listarEmpleados();
 				char caracter = e.getKeyChar();								
 				if (caracter == KeyEvent.VK_BACK_SPACE){
 					e.consume();	
 					if (txt.length() >=1){
 						txt.setLength(txt.length()-1);
-						filtrarTuplasParticulares(EmpleadosToString(),txt.toString());
+						filtrarTuplasParticulares(EmpleadosToString(),txt.toString(),empleados);
 					}
 				}else{
 					txt.append(caracter);					
-					filtrarTuplasParticulares(EmpleadosToString(),txt.toString());
+					filtrarTuplasParticulares(EmpleadosToString(),txt.toString(),empleados);
 				}
 				
 			}
@@ -136,8 +144,8 @@ public class Ver_Empleados extends JFrame {
 		listEmpleados.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				nombre.setText((String) listEmpleados.getSelectedValue());
-				cedula.setText( empleados.get(listEmpleados.getSelectedIndex()).getCedula()+"");
+				nombre.setText(guia.get(listEmpleados.getSelectedIndex()).getNombre());
+				cedula.setText(""+guia.get(listEmpleados.getSelectedIndex()).getCedula());
 			}
 		});
 		
