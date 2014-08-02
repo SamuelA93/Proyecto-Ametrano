@@ -52,7 +52,7 @@ public class Consultas {
 		return consulta;
 	}
 	public String TelXreferencia(){
-		String consulta = "SELECT telefono FROM `telefonos` WHERE `referencia`=?;";
+		String consulta = "SELECT telefono,referencia FROM `telefonos` WHERE `referencia`=?;";
 		return consulta;
 	}
 	public String NuevaTarea(){

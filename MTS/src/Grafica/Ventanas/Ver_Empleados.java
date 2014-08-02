@@ -36,9 +36,9 @@ public class Ver_Empleados extends JFrame {
 	private JLabel cedula;
 	private JLabel direccion;
 	private JLabel telefono;
-	private List<VOEmpleado> empleados;
-	Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
-	List<VOEmpleado> guia= null;
+	//private List<VOEmpleado> empleados;
+	 private Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
+	 private List<VOEmpleado> guia= null;
 	/**
 	 * Launch the application.
 	 */
@@ -146,6 +146,7 @@ public class Ver_Empleados extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				nombre.setText(guia.get(listEmpleados.getSelectedIndex()).getNombre());
 				cedula.setText(""+guia.get(listEmpleados.getSelectedIndex()).getCedula());
+				telefono.setText(""+guia.get(listEmpleados.getSelectedIndex()).getTelefono());
 			}
 		});
 		
@@ -183,7 +184,7 @@ public class Ver_Empleados extends JFrame {
 		contentPane.add(direccion);
 		
 		telefono = new JLabel("");
-		telefono.setBounds(293, 154, 97, 14);
+		telefono.setBounds(293, 154, 131, 14);
 		contentPane.add(telefono);
 	}
 }

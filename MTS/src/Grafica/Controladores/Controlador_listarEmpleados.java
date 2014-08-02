@@ -8,7 +8,7 @@ import Logica_Persistencia.Value_Object.VOParticular;
 
 public class Controlador_listarEmpleados {
 	public List<VOEmpleado> listarEmpleados() {
-		System.out.println("adfasdgdfga");
+		//System.out.println("adfasdgdfga");
 		Fachada a = new Fachada();
 		return a.listarEmpleados();
 	}

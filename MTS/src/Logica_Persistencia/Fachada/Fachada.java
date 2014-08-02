@@ -113,7 +113,7 @@ public class Fachada {
 		
 		public List<VOEmpleado> listarEmpleados(){
 			AccesoDB a = new AccesoDB();
-			System.out.println("adfasdgdfga");
+			//System.out.println("adfasdgdfga");
 			return a.listarEmpleados();
 		}
 }

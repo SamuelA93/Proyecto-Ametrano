@@ -381,7 +381,7 @@ public class Principal extends JFrame {
 		contentPane.add(lblDireccion);
 		
 		
-		tel.setBounds(400, 206, 108, 21);
+		tel.setBounds(400, 206, 160, 21);
 		contentPane.add(tel);
 		
 		JLabel lblTelefono = new JLabel("TELEFONO : ");

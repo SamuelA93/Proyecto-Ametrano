@@ -36,8 +36,8 @@ public class Ver_Particulares extends JFrame {
 	private JTextField textField;
 	private JList listParticulares;
 	private int j=0;
-	Controlador_listarParticulares controlador = new Controlador_listarParticulares();
-	List<VOParticular> guia= null;
+	private Controlador_listarParticulares controlador = new Controlador_listarParticulares();
+	private List<VOParticular> guia= null;
 	private JTextField agregarNombre;
 	private JTextField agregarApellido;
 	private JTextField agregarCedula;
@@ -218,32 +218,32 @@ public class Ver_Particulares extends JFrame {
 		
 		agregarNombre = new JTextField();
 		agregarNombre.setEditable(false);
-		agregarNombre.setBounds(277, 57, 116, 20);
+		agregarNombre.setBounds(277, 57, 132, 20);
 		contentPane.add(agregarNombre);
 		agregarNombre.setColumns(10);
 		
 		agregarApellido = new JTextField();
 		agregarApellido.setEditable(false);
 		agregarApellido.setColumns(10);
-		agregarApellido.setBounds(277, 93, 116, 20);
+		agregarApellido.setBounds(277, 93, 132, 20);
 		contentPane.add(agregarApellido);
 		
 		agregarCedula = new JTextField();
 		agregarCedula.setEditable(false);
 		agregarCedula.setColumns(10);
-		agregarCedula.setBounds(277, 131, 116, 20);
+		agregarCedula.setBounds(277, 131, 132, 20);
 		contentPane.add(agregarCedula);
 		
 		agregarDireccion = new JTextField();
 		agregarDireccion.setEditable(false);
 		agregarDireccion.setColumns(10);
-		agregarDireccion.setBounds(277, 167, 116, 20);
+		agregarDireccion.setBounds(277, 167, 132, 20);
 		contentPane.add(agregarDireccion);
 		
 		agregarTelefono = new JTextField();
 		agregarTelefono.setEditable(false);
 		agregarTelefono.setColumns(10);
-		agregarTelefono.setBounds(277, 207, 116, 20);
+		agregarTelefono.setBounds(277, 207, 132, 20);
 		contentPane.add(agregarTelefono);
 		GuardarCambios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

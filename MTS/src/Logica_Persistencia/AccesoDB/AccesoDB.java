@@ -299,13 +299,21 @@ public class AccesoDB {
 			//System.out.println(referencia);
 			pstmt.setInt (1, referencia);
 			ResultSet rs = pstmt.executeQuery ();
-			 rs.next();
-			 String	 tel;
+			 //rs.next();
+			 //String	 tel="";
 			 try{
+				 String	 tel="";
+				 rs.next();
 				 tel = rs.getString("telefono");
+				 while (rs.next()){
+					// System.out.println(ref);
+					 tel = tel+" / "+rs.getString("telefono");
+				 }
+				
 				 rs.close();
 				 pstmt.close();
 				 this.desconectarBD(con);
+				 System.out.println(tel);
 				 return tel;
 			 }catch(SQLException e){
 				 return "No tiene telefono";
@@ -446,6 +454,7 @@ public class AccesoDB {
 							String direccion = rs.getString("direccion");	
 							//String telefono = "";
 							String	 telefono = obtenerTelXreferencia(cedula);
+							//System.out.println(telefono+"listado");
 							empleado = new VOEmpleado(cedula, nombre, apellido, direccion, telefono);
 							lstEmpleados.add(empleado);			
 						}
