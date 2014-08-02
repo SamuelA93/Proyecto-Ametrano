@@ -150,8 +150,8 @@ public class Principal extends JFrame {
 		JMenuItem mntmEmpleados = new JMenuItem("Empleados");
 		mntmEmpleados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Ver_Particulares particulares_ver = new Ver_Particulares();
-				particulares_ver.setVisible(true);
+				Ver_Empleados empleados_ver = new Ver_Empleados();
+				empleados_ver.setVisible(true);
 			}
 		});
 		mnVer.add(mntmEmpleados);

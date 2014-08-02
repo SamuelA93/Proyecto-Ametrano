@@ -82,6 +82,9 @@ public class Consultas {
 		String consulta = "INSERT INTO empresa (rut,nombre,contacto,direccion) VALUES (?,?,?,?);";
 		return consulta;
 	}
-	
+	public String listarEmpleados(){
+		String consulta = "SELECT * FROM empleados";
+		return consulta;
+	}
 	
 }

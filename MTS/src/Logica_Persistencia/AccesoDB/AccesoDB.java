@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
 import Logica_Persistencia.Value_Object.VOTarea;
@@ -422,5 +423,39 @@ public class AccesoDB {
 					}		
 					this.desconectarBD(con);
 					return lstParticulares;
+				}  
+			public List<VOEmpleado> listarEmpleados(){
+				// devuelve un listado de los datos de los particulares		 
+					Connection con = null;				
+					con = this.conectarBD();
+					VOEmpleado empleado = null;
+					List<VOEmpleado> lstEmpleados = null;		
+					// creo un Statement para listar todas las actividades 
+					Statement stmt;
+					try {
+						stmt = con.createStatement();			
+						Consultas consultas = new Consultas();
+						String strEmpleados = consultas.listarEmpleados();
+						ResultSet rs = stmt.executeQuery(strEmpleados);					
+						lstEmpleados = new ArrayList<VOEmpleado>();			
+						while (rs.next()) {
+							int cedula = rs.getInt("cedula");
+							String nombre = rs.getString("nombre");
+							System.out.println(nombre);
+							String apellido = rs.getString("apellido");
+							String direccion = rs.getString("direccion");	
+							//String telefono = "";
+							String	 telefono = obtenerTelXreferencia(cedula);
+							empleado = new VOEmpleado(cedula, nombre, apellido, direccion, telefono);
+							lstEmpleados.add(empleado);			
+						}
+						rs.close();
+						stmt.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		
+					this.desconectarBD(con);
+					return lstEmpleados;
 				}  
 }

@@ -9,7 +9,9 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
+import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
 import Logica_Persistencia.Value_Object.VOTarea;
@@ -107,5 +109,11 @@ public class Fachada {
 		public List<VOParticular> listarParticulares(){
 			AccesoDB a = new AccesoDB();
 			return a.listarParticulares();
+		}
+		
+		public List<VOEmpleado> listarEmpleados(){
+			AccesoDB a = new AccesoDB();
+			System.out.println("adfasdgdfga");
+			return a.listarEmpleados();
 		}
 }
