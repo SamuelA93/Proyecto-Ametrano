@@ -78,7 +78,7 @@ public class Principal extends JFrame {
 	 */
 	public Principal() {
 		setTitle("Administracion ");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 586, 452);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -148,6 +148,12 @@ public class Principal extends JFrame {
 		mnVer.add(mntmTrabajos);
 		
 		JMenuItem mntmEmpleados = new JMenuItem("Empleados");
+		mntmEmpleados.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Ver_Particulares particulares_ver = new Ver_Particulares();
+				particulares_ver.setVisible(true);
+			}
+		});
 		mnVer.add(mntmEmpleados);
 		
 		JMenu mnInformes = new JMenu("Informes");
