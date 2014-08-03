@@ -86,5 +86,17 @@ public class Consultas {
 		String consulta = "SELECT * FROM empleados";
 		return consulta;
 	}
+	public String ModificarParticulares(String cambios){
+		String consulta = "UPDATE `particulares` SET "+cambios+" WHERE `cedula` = ?;";
+		//String consulta = "UPDATE `particulares` SET nombre='danil sol' WHERE `cedula` = 4854911;";
+		//System.out.println(consulta);
+		return consulta;
+	}
+	public String ModificarTel(String tel,String vie){
+		String consulta = "UPDATE `telefonos` SET `telefono` = '"+tel+"' WHERE `telefono` = '"+vie+"' AND `referencia`=?;";
+		
+		System.out.println(consulta);
+		return consulta;
+	}
 	
 }

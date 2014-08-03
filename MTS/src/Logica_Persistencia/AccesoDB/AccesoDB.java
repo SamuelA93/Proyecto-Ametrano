@@ -156,6 +156,34 @@ public class AccesoDB {
 			this.desconectarBD(con);
 			return IdMutualista;
 		}
+		// Modificar Particulares 
+		public void Modificar_Particular(String modi,long l) throws SQLException{	
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.ModificarParticulares(modi);	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1, l);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+		// Modificar telefono 
+				public void Modificar_Tel(String modi,String viejo,int ci) throws SQLException{	
+					Connection con = this.conectarBD();	
+					Consultas consultas = new Consultas();
+					String insert = consultas.ModificarTel(modi,viejo);	
+					PreparedStatement pstmt;
+					pstmt = con.prepareStatement(insert);
+					
+					/*pstmt.setString(1, modi);
+					pstmt.setString(2, viejo);*/
+					pstmt.setInt(1, ci);
+					//System.out.println(insert);
+					pstmt.executeUpdate ();			
+					pstmt.close();					
+					this.desconectarBD(con);
+				}
 		// Traer Trabajo segun idTrabajo
 		public VOTrabajo obtenerTrabajoXid(int id) throws SQLException{	
 			Connection con = null;				

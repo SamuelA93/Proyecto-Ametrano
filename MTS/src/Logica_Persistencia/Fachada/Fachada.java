@@ -10,6 +10,7 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
@@ -116,4 +117,15 @@ public class Fachada {
 			//System.out.println("adfasdgdfga");
 			return a.listarEmpleados();
 		}
+		public void ModificarParticular(String modi,long l) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			a.Modificar_Particular( modi,l);
+		}
+		public void ModificarTel(String modi,String viejo , int ci) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			a.Modificar_Tel( modi,viejo,ci);
+		}
+		
 }

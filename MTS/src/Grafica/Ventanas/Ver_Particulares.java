@@ -13,13 +13,17 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
+import Grafica.Controladores.Controlador_Modificar_Particular;
+import Grafica.Controladores.Controlador_Modificar_Tel;
 import Grafica.Controladores.Controlador_listarParticulares;
+import Grafica.Controladores.Verificar_Tel;
 import Logica_Persistencia.Value_Object.VOParticular;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,7 @@ import javax.swing.JEditorPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JButton;
 
 public class Ver_Particulares extends JFrame {
@@ -46,6 +51,8 @@ public class Ver_Particulares extends JFrame {
 	private boolean editer=false;
 	JButton GuardarCambios = new JButton("Guardar Cambios");
 	private JTextField agregarTelefono2;
+	private ArrayList<String> modif ;
+	private ArrayList<Object[]> modifT ;
 	/**
 	 * Launch the application.
 	 */
@@ -73,7 +80,7 @@ public class Ver_Particulares extends JFrame {
 			agregarNombre.setEditable(clip);
 			agregarApellido.setEditable(clip);
 			agregarDireccion.setEditable(clip);
-			agregarCedula.setEditable(clip);
+			//agregarCedula.setEditable(clip);
 			agregarTelefono.setEditable(clip);
 			agregarTelefono2.setEditable(clip);
 		}else{
@@ -84,7 +91,7 @@ public class Ver_Particulares extends JFrame {
 			//agregarApellido.setText(guia.get(listParticulares.getSelectedIndex()).getApellido());
 			agregarDireccion.setEditable(clip);
 			//agregarDireccion.setText(guia.get(listParticulares.getSelectedIndex()).getDireccion()); 
-			agregarCedula.setEditable(clip);
+			//agregarCedula.setEditable(clip);
 			//agregarCedula.setText(""+guia.get(listParticulares.getSelectedIndex()).getCedula());
 			agregarTelefono.setEditable(clip);
 			//agregarTelefono.setText(guia.get(listParticulares.getSelectedIndex()).getTelefono());
@@ -252,7 +259,75 @@ public class Ver_Particulares extends JFrame {
 		contentPane.add(agregarTelefono);
 		GuardarCambios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("sfgadgadfgh");
+				modif = new ArrayList<String>();
+				modifT = new ArrayList<Object[]>();
+				
+				if( Verificar_Tel.veri(agregarTelefono2.getText()) && !agregarTelefono2.getText().trim().toUpperCase().contentEquals(guia.get(listParticulares.getSelectedIndex()).getTelefono2().trim().toUpperCase())){
+					//System.out.println("igual");
+					//modifT.add("`dir`="+"'"+agregarTelefono2.getText().trim());
+					Object[] rec = new Object[2];
+					rec[0]= agregarTelefono2.getText().trim();
+					rec[1]= guia.get(listParticulares.getSelectedIndex()).getTelefono2();
+					modifT.add(rec);
+					
+				}
+				if(  Verificar_Tel.veri(agregarTelefono.getText()) && !agregarTelefono.getText().trim().toUpperCase().contentEquals(guia.get(listParticulares.getSelectedIndex()).getTelefono().trim().toUpperCase())){
+					//System.out.println("igual");
+					//modifT.add(agregarTelefono.getText().trim());
+					Object[] rec = new Object[2];
+					rec[0]= agregarTelefono.getText().trim();
+					rec[1]= guia.get(listParticulares.getSelectedIndex()).getTelefono();
+					modifT.add(rec);
+				}
+				if( !agregarNombre.getText().trim().toUpperCase().contentEquals(guia.get(listParticulares.getSelectedIndex()).getNombre().trim().toUpperCase())){
+					//System.out.println(agregarNombre.getText());
+					modif.add("`nombre`="+"'"+agregarNombre.getText().trim()+"'");
+					//modif.add(agregarNombre.getText()+"");
+				}
+				if( !agregarDireccion.getText().trim().toUpperCase().contentEquals(guia.get(listParticulares.getSelectedIndex()).getDireccion().trim().toUpperCase())){
+					//System.out.println("igual");
+					modif.add("`dir`="+"'"+agregarDireccion.getText().trim()+"'");
+				}
+				if( !agregarApellido.getText().trim().toUpperCase().contentEquals(guia.get(listParticulares.getSelectedIndex()).getApellido().trim().toUpperCase())){
+					//System.out.println("igual");
+					modif.add("`apellido`="+"'"+agregarApellido.getText().trim()+"'");
+				}
+				String agregar="";
+				int i=1;
+				//System.out.println(modif.size());
+				if(modif.size()>0 ){
+				agregar = agregar+""+modif.get(0);
+				}
+				//System.out.println(agregar);
+				while( i< modif.size()){
+					agregar = agregar+","+modif.get(i);
+					//System.out.println(agregar);
+					i++;
+					}
+				//agregar = agregar+""+modif.get(modif.size()+1);
+				//System.out.println(agregar);
+				Controlador_Modificar_Particular ModiPart = new Controlador_Modificar_Particular();
+				Controlador_Modificar_Tel modiTel = new Controlador_Modificar_Tel();
+				try {
+					//System.out.println(guia.get(listParticulares.getSelectedIndex()).getCedula());
+					if(agregar!=""){
+						ModiPart.modificar(agregar, guia.get(listParticulares.getSelectedIndex()).getCedula());
+					}
+					
+					if(modifT.size()>0){
+						modiTel.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listParticulares.getSelectedIndex()).getCedula());
+						System.out.println((String) modifT.get(0)[0]);
+					}
+					if(modifT.size()>1){
+						modiTel.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listParticulares.getSelectedIndex()).getCedula());
+						System.out.println((String) modifT.get(1)[0]);
+					}
+					
+				} catch (SQLException e) {
+					//System.out.println("Error");
+					e.printStackTrace();
+					
+				}
 			}
 		});
 		
