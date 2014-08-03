@@ -10,7 +10,7 @@ public class Controlador_ClienteXreferencia {
 	
 	public Controlador_ClienteXreferencia(){}
 	
-	public boolean esCedula(int referencia){
+	public boolean esCedula(long referencia){
 		String num = String.valueOf(referencia);
 		if ( num.length()==7 ){
 			return true;
@@ -19,11 +19,11 @@ public class Controlador_ClienteXreferencia {
 		}
 	}
 	
-	public VOParticular ParticularXcedula(int cedula) throws SQLException{
+	public VOParticular ParticularXcedula(long cedula) throws SQLException{
 		Fachada obtener = new Fachada();
 		return obtener.particularXcedula(cedula);
 	}
-	public VOEmpresa EmpresaXcedula(int cedula) throws SQLException{
+	public VOEmpresa EmpresaXcedula(long cedula) throws SQLException{
 		Fachada obtener = new Fachada();
 		return obtener.empresaXrut(cedula);
 	}

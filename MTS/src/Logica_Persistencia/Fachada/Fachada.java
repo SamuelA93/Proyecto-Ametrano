@@ -67,15 +67,15 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a.obtenerTrabajoXid(id);
 		}
-		public String empleadoXcedula(int id) throws SQLException{
+		public String empleadoXcedula(long id) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			return a.obtenerEmpleadoXcedula(id);
 		}
-		public VOParticular particularXcedula(int cedula) throws SQLException{
+		public VOParticular particularXcedula(long cedula) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			return a.obtenerParticularXcedula(cedula);
 		}
-		public VOEmpresa empresaXrut(int rut) throws SQLException{
+		public VOEmpresa empresaXrut(long rut) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			return a.obtenerEmpresaXrut(rut);
 		}

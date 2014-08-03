@@ -7,16 +7,26 @@ public class VOEmpleado {
 	private String apellido;
 	private String direccion;
 	private String telefono;
+	private String telefono2;
 	
 	public VOEmpleado(){};
 	
+	public String getTelefono2() {
+		return telefono2;
+	}
+
+	public void setTelefono2(String telefono2) {
+		this.telefono2 = telefono2;
+	}
+
 	public VOEmpleado(int cedula, String nombre, String apellido,
-			String direccion, String telefono) {
+			String direccion, String telefono,String telefono2) {
 		this.cedula = cedula;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
 		this.telefono = telefono;
+		this.telefono = telefono2;
 	}
 	public int getCedula() {
 		return cedula;

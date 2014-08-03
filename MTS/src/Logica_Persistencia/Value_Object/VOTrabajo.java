@@ -9,8 +9,8 @@ public class VOTrabajo {
 	private float montoTotal;
 	private String estado;
 	
-	private int referencia;
-	public VOTrabajo(int id, int cuotas, float montoTotal,String estado, int referencia) {
+	private long referencia;
+	public VOTrabajo(int id, int cuotas, float montoTotal,String estado, long referencia) {
 		this.id = id;
 		this.cuotas = cuotas;
 	
@@ -45,10 +45,10 @@ public class VOTrabajo {
 		this.estado = estado;
 	}
 
-	public int getReferencia() {
+	public long getReferencia() {
 		return referencia;
 	}
-	public void setReferencia(int referencia) {
+	public void setReferencia(long referencia) {
 		this.referencia = referencia;
 	}
 	

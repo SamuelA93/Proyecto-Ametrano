@@ -163,12 +163,12 @@ public class AccesoDB {
 			Consultas consultas = new Consultas ();
 			String strTrabajoXid = consultas.TrabajoXid();
 			PreparedStatement pstmt = con.prepareStatement (strTrabajoXid);
-			System.out.println(id);
+			//System.out.println(id);
 			pstmt.setInt (1, id);
 			ResultSet rs = pstmt.executeQuery ();
 			 rs.next();
-	    	int	 referencia = rs.getInt("referencia");
-	    	System.out.println(referencia);
+	    	long	 referencia = rs.getLong("referencia");
+	    	//System.out.println(referencia);
 	    	float	 monto = rs.getFloat("monto");
 	    	int	 cuotas = rs.getInt("cuotas");
 	    	String	estado = rs.getString("estado");	
@@ -180,14 +180,14 @@ public class AccesoDB {
 			return trabajo;
 		}
 		// Obtener de empleado nombre y apellido por la cedula
-		public String obtenerEmpleadoXcedula(int id) throws SQLException{	
+		public String obtenerEmpleadoXcedula(long id) throws SQLException{	
 			Connection con = null;				
 			con = this.conectarBD();	
 			Consultas consultas = new Consultas ();
 			String empleadoXcedula = consultas.empleadoXcedula();
 			PreparedStatement pstmt = con.prepareStatement (empleadoXcedula);
-			System.out.println(id);
-			pstmt.setInt (1, id);
+			//System.out.println(id);
+			pstmt.setLong (1, id);
 			ResultSet rs = pstmt.executeQuery ();
 			 rs.next();
 	    	String	 nombre = rs.getString("nombre");
@@ -200,43 +200,47 @@ public class AccesoDB {
 		}
 		
 		// obtener particular por ci 
-		public VOParticular obtenerParticularXcedula(int cedula) throws SQLException{	
+		public VOParticular obtenerParticularXcedula(long cedula) throws SQLException{	
 			Connection con = null;				
 			con = this.conectarBD();	
 			Consultas consultas = new Consultas ();
 			String particularXcedula = consultas.particularXcedula();
 			PreparedStatement pstmt = con.prepareStatement (particularXcedula);
-			System.out.println(cedula);
-			pstmt.setInt (1, cedula);
+			//System.out.println(cedula);
+			pstmt.setLong (1, cedula);
 			ResultSet rs = pstmt.executeQuery ();
 			 rs.next();
 	    	String	 nombre = rs.getString("nombre");
 	    	String	 apellido = rs.getString("apellido");
 	    	String	 direccion = rs.getString("dir");
 	    	//System.out.println(referencia);
-	    	String tel=obtenerTelXreferencia(cedula);
-	    	VOParticular cliente = new VOParticular(cedula, nombre, apellido, direccion, tel);
+	    	Object[] telefono=obtenerTelXreferencia(cedula);
+	    	VOParticular cliente = new VOParticular(cedula, nombre, apellido, direccion,(String) telefono[0],(String)telefono[1]);
 		    rs.close();
 		    pstmt.close();
 			this.desconectarBD(con);
 			return cliente;
 		}
-		public VOEmpresa obtenerEmpresaXrut(int rut) throws SQLException{	
+		public VOEmpresa obtenerEmpresaXrut(long rut) throws SQLException{	
 			Connection con = null;				
 			con = this.conectarBD();	
 			Consultas consultas = new Consultas ();
 			String empresaXrut = consultas.empresaXrut();
 			PreparedStatement pstmt = con.prepareStatement (empresaXrut);
-			System.out.println(rut);
-			pstmt.setInt (1, rut);
+			//System.out.println(rut);
+			//System.out.println(rut);
+			pstmt.setLong (1, rut);
 			ResultSet rs = pstmt.executeQuery ();
 			 rs.next();
-			String tel= obtenerTelXreferencia(rut);
+			Object[] telefono= obtenerTelXreferencia(rut);
 		    
 	    	String	 nombre = rs.getString("nombre");
 	    	String	 contacto = rs.getString("contacto");
 	    	String dir = rs.getString("direccion");
-	    	VOEmpresa cliente = new VOEmpresa(rut, nombre, contacto, dir, tel);
+	    	
+	    	//System.out.println((String) telefono[0]);
+	    	//System.out.println((String) telefono[1]);
+	    	VOEmpresa cliente = new VOEmpresa(rut, nombre, contacto, dir,(String) telefono[0],(String) telefono[1]);
 	    	//System.out.println(referencia);
 	    	
 		    rs.close();
@@ -290,33 +294,36 @@ public class AccesoDB {
 				this.desconectarBD(con);
 				return lstTareas;
 			}
-		public String obtenerTelXreferencia(int referencia) throws SQLException{	
+		public Object[] obtenerTelXreferencia(long referencia) throws SQLException{	
 			Connection con = null;				
 			con = this.conectarBD();	
 			Consultas consultas = new Consultas ();
 			String telXreferencia = consultas.TelXreferencia();
 			PreparedStatement pstmt = con.prepareStatement (telXreferencia);
 			//System.out.println(referencia);
-			pstmt.setInt (1, referencia);
+			pstmt.setLong (1, referencia);
 			ResultSet rs = pstmt.executeQuery ();
-			 //rs.next();
-			 //String	 tel="";
+			Object[] tels = new Object[2];
 			 try{
-				 String	 tel="";
-				 rs.next();
-				 tel = rs.getString("telefono");
-				 while (rs.next()){
-					// System.out.println(ref);
-					 tel = tel+" / "+rs.getString("telefono");
-				 }
+				 
+				if(rs.next()){
+					tels[0]= rs.getString("telefono");
+				}else{
+					tels[0]= "No igresado";
+				}
+				if(rs.next()){
+					tels[1]= rs.getString("telefono");
+				}else{
+					tels[1]= "No igresado";
+				}
 				
 				 rs.close();
 				 pstmt.close();
 				 this.desconectarBD(con);
-				 System.out.println(tel);
-				 return tel;
+				//System.out.println(tel);
+				 return tels;
 			 }catch(SQLException e){
-				 return "No tiene telefono";
+				 return tels;
 			 }
 	    	//System.out.println(referencia);
 		    
@@ -329,7 +336,7 @@ public class AccesoDB {
 			Consultas consultas = new Consultas ();
 			String Cliente_Referencia = consultas.obtenerClientes_Referencias();
 			PreparedStatement pstmt = con.prepareStatement (Cliente_Referencia);
-			System.out.println(entradaNombre);
+			//System.out.println(entradaNombre);
 			ResultSet rs = pstmt.executeQuery ();
 			lstClientes= new ArrayList<Object[]>();	
 			 while(rs.next()){
@@ -368,7 +375,7 @@ public class AccesoDB {
 		}
 		public void nuevaEmpresa(long rut, String nombre, String contacto, String direccion) throws SQLException{
 			// Ingresa una nueva actividad al sistema
-			System.out.println(rut);
+			//System.out.println(rut);
 				Connection con = this.conectarBD();	
 				Consultas consultas = new Consultas();
 				String insert = consultas.nuevaEmpresa();	
@@ -419,8 +426,8 @@ public class AccesoDB {
 							String apellido = rs.getString("apellido");
 							String direccion = rs.getString("dir");	
 							//String telefono = "";
-							String	 telefono = obtenerTelXreferencia(cedula);
-							particular = new VOParticular(cedula, nombre, apellido, direccion, telefono);
+							Object[]	 telefono = obtenerTelXreferencia(cedula);
+							particular = new VOParticular(cedula, nombre, apellido, direccion,(String) telefono[0],(String)telefono[1]);
 							lstParticulares.add(particular);			
 						}
 						rs.close();
@@ -449,13 +456,13 @@ public class AccesoDB {
 						while (rs.next()) {
 							int cedula = rs.getInt("cedula");
 							String nombre = rs.getString("nombre");
-							System.out.println(nombre);
+							//System.out.println(nombre);
 							String apellido = rs.getString("apellido");
 							String direccion = rs.getString("direccion");	
 							//String telefono = "";
-							String	 telefono = obtenerTelXreferencia(cedula);
+							Object[]	 telefono = obtenerTelXreferencia(cedula);
 							//System.out.println(telefono+"listado");
-							empleado = new VOEmpleado(cedula, nombre, apellido, direccion, telefono);
+							empleado = new VOEmpleado(cedula, nombre, apellido, direccion, (String ) telefono[0],  (String ) telefono[1]);
 							lstEmpleados.add(empleado);			
 						}
 						rs.close();

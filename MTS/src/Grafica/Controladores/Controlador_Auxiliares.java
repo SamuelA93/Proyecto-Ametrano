@@ -8,7 +8,7 @@ public class Controlador_Auxiliares {
 
 	
 	public Controlador_Auxiliares(){}
-	public String empleadoXcedula(int cedula) throws SQLException{
+	public String empleadoXcedula(long cedula) throws SQLException{
 		
 		Fachada obtener = new Fachada();
 		return obtener.empleadoXcedula(cedula);

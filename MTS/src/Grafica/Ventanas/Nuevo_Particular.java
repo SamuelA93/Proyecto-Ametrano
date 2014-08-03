@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import Grafica.Controladores.Controlador_Nuevo_Particular;
 import Grafica.Controladores.Verificar_Ci;
+import Grafica.Controladores.Verificar_Existencia;
 import Grafica.Controladores.Verificar_Tel;
 
 public class Nuevo_Particular extends JFrame {
@@ -28,6 +29,8 @@ public class Nuevo_Particular extends JFrame {
 	private JTextField ci;
 	private JTextField tel;
 	private JTextField dir;
+	private JTextField celu;
+	private JLabel lblCel;
 
 	/**
 	 * Launch the application.
@@ -77,12 +80,12 @@ public class Nuevo_Particular extends JFrame {
 		lblCi.setBounds(43, 97, 65, 14);
 		contentPane.add(lblCi);
 		
-		JLabel lblTel = new JLabel("Tel. / Cel.");
+		JLabel lblTel = new JLabel("Tel.:");
 		lblTel.setBounds(43, 132, 65, 14);
 		contentPane.add(lblTel);
 		
 		JLabel lblDireccin = new JLabel("Direcci\u00F3n");
-		lblDireccin.setBounds(43, 166, 65, 14);
+		lblDireccin.setBounds(43, 192, 65, 14);
 		contentPane.add(lblDireccin);
 		
 		nombre = new JTextField();
@@ -108,7 +111,7 @@ public class Nuevo_Particular extends JFrame {
 		tel.setColumns(10);
 		
 		dir = new JTextField();
-		dir.setBounds(107, 163, 173, 20);
+		dir.setBounds(107, 189, 173, 20);
 		contentPane.add(dir);
 		dir.setColumns(10);
 		
@@ -121,21 +124,22 @@ public class Nuevo_Particular extends JFrame {
 				String dirP 		= dir.getText();
 				String telP			= tel.getText();
 				String ciP 			= ci.getText();
-				
+				String celuP 			= celu.getText();
 				Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
-				if(Verificar_Ci.verificar(ciP) && Verificar_Tel.veri(telP)){
-					controlador.nuevoParticular(nombreP,apellidoP,dirP,telP,Verificar_Ci.numeroCi(ciP));
+				if(		Verificar_Ci.verificar(ciP) 
+						&& Verificar_Tel.veri(telP)
+						
+						){
+					controlador.nuevoParticular(nombreP,apellidoP,dirP,telP,Verificar_Ci.numeroCi(ciP),celuP);
 					ci.setBorder(BorderFactory.createLineBorder(Color.green));
 					tel.setBorder(BorderFactory.createLineBorder(Color.green));
 				}else{
-					if( Verificar_Ci.verificar(ciP) ){
-						ci.setBorder(BorderFactory.createLineBorder(Color.green));
-					}else{
-						ci.setBorder(BorderFactory.createLineBorder(Color.red));
-					}
-					if( Verificar_Ci.verificar(telP) ){
+					
+					if( Verificar_Tel.veri(telP) ){
+						//System.out.println("gree");
 						tel.setBorder(BorderFactory.createLineBorder(Color.green));
 					}else{
+						//System.out.println("red");
 						tel.setBorder(BorderFactory.createLineBorder(Color.red));
 					}
 				}
@@ -144,8 +148,17 @@ public class Nuevo_Particular extends JFrame {
 				
 			}
 		});
-		btnNewButton.setBounds(188, 208, 89, 23);
+		btnNewButton.setBounds(188, 220, 89, 23);
 		contentPane.add(btnNewButton);
+		
+		celu = new JTextField();
+		celu.setColumns(10);
+		celu.setBounds(107, 160, 173, 20);
+		contentPane.add(celu);
+		
+		lblCel = new JLabel("Cel.:");
+		lblCel.setBounds(43, 163, 65, 14);
+		contentPane.add(lblCel);
 		
 		
 	}

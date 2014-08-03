@@ -45,6 +45,7 @@ public class Ver_Particulares extends JFrame {
 	private JTextField agregarTelefono;
 	private boolean editer=false;
 	JButton GuardarCambios = new JButton("Guardar Cambios");
+	private JTextField agregarTelefono2;
 	/**
 	 * Launch the application.
 	 */
@@ -74,8 +75,10 @@ public class Ver_Particulares extends JFrame {
 			agregarDireccion.setEditable(clip);
 			agregarCedula.setEditable(clip);
 			agregarTelefono.setEditable(clip);
+			agregarTelefono2.setEditable(clip);
 		}else{
 			System.out.println("no");
+			agregarTelefono2.setEditable(clip);
 			agregarNombre.setEditable(clip);
 			agregarApellido.setEditable(clip);
 			//agregarApellido.setText(guia.get(listParticulares.getSelectedIndex()).getApellido());
@@ -189,6 +192,7 @@ public class Ver_Particulares extends JFrame {
 				agregarDireccion.setText(guia.get(listParticulares.getSelectedIndex()).getDireccion()); 
 				agregarCedula.setText(""+guia.get(listParticulares.getSelectedIndex()).getCedula());
 				agregarTelefono.setText(guia.get(listParticulares.getSelectedIndex()).getTelefono());
+				agregarTelefono2.setText(guia.get(listParticulares.getSelectedIndex()).getTelefono2());
 			}
 		});
 		scrollPane.setViewportView(listParticulares);
@@ -213,9 +217,9 @@ public class Ver_Particulares extends JFrame {
 		lblTelefono.setBounds(194, 170, 73, 14);
 		contentPane.add(lblTelefono);
 		
-		JLabel label = new JLabel("TELEFONO:");
-		label.setBounds(194, 210, 73, 14);
-		contentPane.add(label);
+		JLabel lblTel = new JLabel("Tel 1:");
+		lblTel.setBounds(194, 210, 73, 14);
+		contentPane.add(lblTel);
 		
 		agregarNombre = new JTextField();
 		agregarNombre.setEditable(false);
@@ -253,6 +257,16 @@ public class Ver_Particulares extends JFrame {
 		});
 		
 		GuardarCambios.setVisible(false);
+		
+		JLabel lblTel_1 = new JLabel("Tel 2:");
+		lblTel_1.setBounds(194, 246, 73, 14);
+		contentPane.add(lblTel_1);
+		
+		agregarTelefono2 = new JTextField();
+		agregarTelefono2.setEditable(false);
+		agregarTelefono2.setColumns(10);
+		agregarTelefono2.setBounds(277, 245, 132, 20);
+		contentPane.add(agregarTelefono2);
 		GuardarCambios.setBounds(194, 276, 199, 23);
 		contentPane.add(GuardarCambios);
 		

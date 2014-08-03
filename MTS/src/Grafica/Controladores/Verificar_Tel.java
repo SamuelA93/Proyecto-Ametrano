@@ -3,11 +3,12 @@ package Grafica.Controladores;
 public class Verificar_Tel {
 	
 	public static boolean noVacio(String tel){
-		if(tel!="" && tel!=null){
+		return tel.matches("^\\d+$");
+		/*if(tel!="" && tel!=null && tel!=" "){
 			return true;
 		}else{
 			return false;
-		}		
+		}*/		
 	}
 	public static boolean isNumeric(String inputData) {
 		  return inputData.matches("[-+]?\\d+(\\.\\d+)?");
@@ -31,11 +32,11 @@ public class Verificar_Tel {
 			}
 		}	
 	}
-	//public static void main(String[] args){
+	/*public static void main(String[] args){
 		//String tel="";
 		//System.out.print(veri(tel)+"");
-		/*System.out.print(varTrim(tel)+"");
-		System.out.print(isNumeric(varTrim(tel))+"");*/
-		/*System.out.print(noVacio(tel)+"");*/	
-	//}
+		//System.out.print(varTrim(tel)+"");
+		//System.out.print(isNumeric(varTrim(tel))+"");
+		System.out.print(noVacio("2"));	
+	}*/
 }

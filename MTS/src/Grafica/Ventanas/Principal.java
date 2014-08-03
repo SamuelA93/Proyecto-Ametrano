@@ -240,8 +240,9 @@ public class Principal extends JFrame {
 				int row = table.getSelectedRow();
 				comentarioP.setText( lstTareas.get(row).getComentario());
 				Controlador_TrabajoXid trabajoXid = new  Controlador_TrabajoXid();
-				System.out.println(lstTareas.get(row).getTrabajo());
+				//System.out.println(lstTareas.get(row).getTrabajo());
 				try {
+					//System.out.println(lstTareas.get(row).getTrabajo());
 					VOTrabajo trabajo = trabajoXid.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
 					
 					estado.setText(trabajo.getEstado());
@@ -249,8 +250,10 @@ public class Principal extends JFrame {
 					cuotas.setText(trabajo.getCuotas()+"");
 					Controlador_Auxiliares empleadoNombre = new Controlador_Auxiliares();
 					//empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula());
+					
 					encargado.setText(empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula()));
 					Controlador_ClienteXreferencia control = new Controlador_ClienteXreferencia();
+					//System.out.println(trabajo.getReferencia());
 					if (control.esCedula(trabajo.getReferencia())){
 						VOParticular particular = new VOParticular();
 						particular = control.ParticularXcedula(trabajo.getReferencia());
@@ -259,7 +262,7 @@ public class Principal extends JFrame {
 						contacto.setText(particular.getApellido());
 						referencia.setText(""+particular.getCedula());
 						direccion.setText(particular.getDireccion());
-						tel.setText(particular.getTelefono());
+						tel.setText(particular.getTelefono()+" / "+particular.getTelefono2());
 					}else{
 						VOEmpresa empresa = new VOEmpresa();
 						empresa = control.EmpresaXcedula(trabajo.getReferencia());
@@ -268,7 +271,7 @@ public class Principal extends JFrame {
 						contacto.setText(empresa.getContacto());
 						referencia.setText(""+empresa.getRut());
 						direccion.setText(empresa.getDireccion());
-						tel.setText(empresa.getTelefono());
+						tel.setText(empresa.getTelefono()+" / "+empresa.getTelefono2());
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
