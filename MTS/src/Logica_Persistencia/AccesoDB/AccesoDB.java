@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
@@ -282,11 +283,9 @@ public class AccesoDB {
 		
 		// Listar tareas
 		
-		public List<VOTarea> ListarTareas(){
-			// 		 
+		public List<VOTarea> ListarTareas(){	 
 				Connection con = null;				
 				con = this.conectarBD();
-				
 				List<VOTarea> lstTareas = null;		
 				/*  */
 				Statement stmt;
@@ -337,12 +336,12 @@ public class AccesoDB {
 				if(rs.next()){
 					tels[0]= rs.getString("telefono");
 				}else{
-					tels[0]= "No igresado";
+					tels[0]= "No ingresado";
 				}
 				if(rs.next()){
 					tels[1]= rs.getString("telefono");
 				}else{
-					tels[1]= "No igresado";
+					tels[1]= "No ingresado";
 				}
 				
 				 rs.close();
@@ -501,5 +500,58 @@ public class AccesoDB {
 					}		
 					this.desconectarBD(con);
 					return lstEmpleados;
-				}  
+				} 
+			
+			public List<VOCliente> ListarClientes_Dir_Tel_Ref(){	 
+				Connection con = null;				
+				con = this.conectarBD();
+				List<VOCliente> lstCliente = null;		
+				/*  */
+				Statement stmt;
+				try {
+					stmt = con.createStatement();			
+					Consultas consultas = new Consultas();
+					String strTarea = consultas.Clientes_Dir_Ref();
+					ResultSet rs = stmt.executeQuery(strTarea);					
+					lstCliente= new ArrayList<VOCliente>();		
+					VOCliente Tarea;
+					while (rs.next()) {
+						
+						long ref = rs.getLong("referencia");
+						String dir = rs.getString("dir");
+						String nombre = rs.getString("nombre");
+						Object[]	 telefono = obtenerTelXreferencia(ref);
+						
+						if(telefono[0]=="No ingresado" && telefono[1]=="No ingresado"){
+							 Tarea =new VOCliente(ref, dir, "No ingresado", nombre);
+							//System.out.println("No ingresado");
+						}else{
+							if(telefono[0]!="No ingresado" && telefono[1]=="No ingresado"){
+								 Tarea =new VOCliente(ref, dir, (String ) telefono[0], nombre);
+								//System.out.println((String ) telefono[0]);
+							}else{
+								if(telefono[0]=="No ingresado" && telefono[1]!="No ingresado"){
+									 Tarea =new VOCliente(ref, dir, (String ) telefono[1], nombre);
+									//System.out.println( (String ) telefono[1]);
+								}else{
+									 Tarea =new VOCliente(ref, dir, (String ) telefono[1]+" / "+telefono[0], nombre);
+									//System.out.println( (String ) telefono[1]+"/"+telefono[0]);
+								}
+							}
+							
+						}
+						
+						//VOCliente Tarea =new VOCliente(ref, dir, (String ) telefono[0]+" / "+telefono[1], nombre);
+						
+						lstCliente.add(Tarea);			
+					}
+					rs.close();
+					stmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}		
+				this.desconectarBD(con);
+				return lstCliente;
+			}
 }

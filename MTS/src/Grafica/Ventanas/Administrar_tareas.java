@@ -26,6 +26,8 @@ import javax.swing.JButton;
 import Grafica.Controladores.Controlador_Obtener_Clientes_Referencia;
 import Grafica.Controladores.Controlador_Tabla_Tareas;
 import Grafica.Controladores.Controlador_Trabajo_TituloXreferencia;
+import Grafica.Controladores.Controlador_listarEmpleados;
+import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOTarea;
 
 import java.awt.event.KeyAdapter;
@@ -48,6 +50,13 @@ public class Administrar_tareas extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	 private List<Object[]> list = null;
+	 private List<VOEmpleado> listE ;
+	 String entradaNombre ="a%";
+		String entradareferencia="4%";
+	 JComboBox comboBox_2 = new JComboBox(inici("empleados"));
+	 final JComboBox opcionCliente = new JComboBox(inici("clientes"));
+	  JList list_1 = new JList();
+	//DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
 
 	/**
 	 * Launch the application.
@@ -58,19 +67,74 @@ public class Administrar_tareas extends JFrame {
 				try {
 					Administrar_tareas frame = new Administrar_tareas();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
+	
 
-	/**
-	 * Create the frame.
-	 */
 	
+	public void actualizarEmpleado(){
+		Controlador_listarEmpleados empleados = new Controlador_listarEmpleados();
+		try {
+			DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
+			 listE = empleados.listarEmpleados();
+			 for (int i=0; i<list.size();i++){						
+					modelo2.addElement(listE.get(i).getNombre()+" "+listE.get(i).getApellido());
+					//System.out.println(list.get(i)[0]);
+			}
+			comboBox_2.setModel(modelo2);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		AutoCompletion.enable(comboBox_2);
+	}
 	
-	
+	public DefaultComboBoxModel inici(String lista){
+	DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
+		if(lista=="empleados"){
+			Controlador_listarEmpleados empleados = new Controlador_listarEmpleados();
+			//DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
+			try {
+				 listE = empleados.listarEmpleados();
+				 for (int i=0; i<listE.size();i++){		
+					String a= listE.get(i).getNombre()+" "+listE.get(i).getApellido();
+						modelo2.addElement(a);
+						//System.out.println(list.get(i)[0]);
+				}
+				return modelo2;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				modelo2.addElement("No elementos encontrados");
+				return modelo2;
+			}	
+		}
+		if(lista=="clientes"){
+			 Controlador_Obtener_Clientes_Referencia list_cont= new Controlador_Obtener_Clientes_Referencia();
+			 DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+			 try {
+				 list = list_cont.obtenerClientes(entradaNombre, entradareferencia);
+				 for (int i=0; i<list.size();i++){						
+						modelo.addElement(list.get(i)[0]);
+						//System.out.println(list.get(i)[0]);
+				}
+				return modelo ;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				modelo.addElement("Error");
+				return modelo;
+			}
+		}
+		//return modelo2= null;
+		modelo2.addElement("Error");
+		return modelo2;
+	}
 	
 	public Administrar_tareas() {
 		setTitle("Nueva Tarea");
@@ -84,30 +148,7 @@ public class Administrar_tareas extends JFrame {
 		JLabel lblCliente = new JLabel("Cliente ");
 		lblCliente.setBounds(14, 35, 46, 14);
 		contentPane.add(lblCliente);
-		String entradaNombre ="a%";
-		String entradareferencia="4%";
-	
-		 //Creo comboBox new JComboBox();  po.comboBox;
-		 final JComboBox opcionCliente = new JComboBox(new Object[] {"Ester", "Jordi", "Jordina", "Jorge", "Sergi"});
-		 Controlador_Obtener_Clientes_Referencia list_cont= new Controlador_Obtener_Clientes_Referencia();
-		   
-		 
-		try {
-			 list = list_cont.obtenerClientes(entradaNombre, entradareferencia);
-			
-			DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-			for (int i=0; i<list.size();i++){						
-					modelo.addElement(list.get(i)[0]);
-					//System.out.println(list.get(i)[0]);
-			}
-			opcionCliente.setModel(modelo);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-				
-		 
-		 AutoCompletion.enable(opcionCliente);
+		AutoCompletion.enable(opcionCliente);
 		 
 		 //configuro para que sea editable
 		opcionCliente.setEditable(true);
@@ -135,7 +176,7 @@ public class Administrar_tareas extends JFrame {
 					DefaultListModel modeloT = new DefaultListModel();
 					try {
 						listT = T.obtener_TrabajoId_Titulo(a);
-						System.out.println(a);
+						//System.out.println(a);
 						for (int i=0; i<listT.size();i++){			
 							modeloT.addElement(listT.get(i)[0]);
 							
@@ -153,12 +194,6 @@ public class Administrar_tareas extends JFrame {
 		list_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				
-				
-				
-				
-				
 			}
 		});
 		scrollPane.setViewportView(list_1);
@@ -169,7 +204,12 @@ public class Administrar_tareas extends JFrame {
 		lblNewLabel.setBounds(270, 90, 93, 14);
 		contentPane.add(lblNewLabel);
 		
-		JComboBox comboBox_2 = new JComboBox();
+		
+		comboBox_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+}
+		});
+		AutoCompletion.enable(comboBox_2);
 		comboBox_2.setEditable(true);
 		comboBox_2.setBounds(350, 85, 167, 19);
 		contentPane.add(comboBox_2);

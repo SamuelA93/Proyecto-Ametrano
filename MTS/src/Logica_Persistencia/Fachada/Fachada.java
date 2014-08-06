@@ -11,7 +11,9 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
+import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
@@ -110,6 +112,10 @@ public class Fachada {
 		public List<VOParticular> listarParticulares(){
 			AccesoDB a = new AccesoDB();
 			return a.listarParticulares();
+		}
+		public List<VOCliente> listarClientes_Dir_Tel_Ref(){
+			AccesoDB a = new AccesoDB();
+			return a.ListarClientes_Dir_Tel_Ref();
 		}
 		
 		public List<VOEmpleado> listarEmpleados(){

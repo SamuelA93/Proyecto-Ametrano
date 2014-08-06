@@ -50,12 +50,24 @@ import javax.swing.JTextField;
 import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
 
 import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable table= new JTable();
+	public Controlador_Tabla_Tareas controlador = new Controlador_Tabla_Tareas();
+	//public table = new JTable();
+	public DefaultTableModel modelo = new DefaultTableModel(){
+
+	    @Override
+	    public boolean isCellEditable(int row, int column) {
+	       //all cells false
+	       return false;
+	    }
+	};
 
 	/**
 	 * Launch the application.
@@ -76,6 +88,30 @@ public class Principal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public void actualizar_Tabla(){
+		final List<VOTarea> lstTareas = controlador.listarTareas();
+		//System.out.println("sfgahg");
+		DefaultTableModel modelo2 = new DefaultTableModel(){
+			
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		if (lstTareas.size() > 0){	
+			Iterator<VOTarea> iterT = lstTareas.iterator();
+			while (iterT.hasNext()){
+				VOTarea Tarea = iterT.next();
+				Object[] fila = new Object[2];
+				fila[0] = Tarea.getFecha();
+				fila[1] = Tarea.getHora();
+				modelo2.addRow(fila);
+			}		
+		}	
+		table.setModel(modelo);
+		
+	}
 	public Principal() {
 		setTitle("Administracion ");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -179,23 +215,27 @@ public class Principal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JButton actualizar = new JButton("Actualizar");
+		actualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				actualizar_Tabla();
+				
+			}
+		});
+		
+		
+		actualizar.setBackground(SystemColor.control);
+		actualizar.setBounds(180, 19, 102, 21);
+		contentPane.add(actualizar);
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(5, 45, 277, 207);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
 		
-		DefaultTableModel modelo = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
 		modelo.addColumn("Fecha");
 		modelo.addColumn("Hora");
-		Controlador_Tabla_Tareas controlador = new Controlador_Tabla_Tareas();
+		
 		final List<VOTarea> lstTareas = controlador.listarTareas();
 		if (lstTareas.size() > 0){	
 			Iterator<VOTarea> iterT = lstTareas.iterator();

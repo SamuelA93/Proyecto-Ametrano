@@ -75,6 +75,7 @@ public class Ver_Particulares extends JFrame {
 	public void setEditableCampos(boolean bandera){
 		 boolean clip = (!listParticulares.isSelectionEmpty() && (bandera));
 		if (clip){
+			
 			GuardarCambios.setVisible(true);
 			System.out.println("si");
 			agregarNombre.setEditable(clip);
@@ -328,7 +329,9 @@ public class Ver_Particulares extends JFrame {
 					e.printStackTrace();
 					
 				}
+				setEditableCampos(false);
 			}
+			
 		});
 		
 		GuardarCambios.setVisible(false);

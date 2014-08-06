@@ -27,6 +27,7 @@ public class Consultas {
 		return consulta;
 	}
 	
+	
 	public String DatosTareaEmpresas(){
 		String consulta = "SELECT empleados_tiene_trabajos.fecha as fecha, empleados_tiene_trabajos.hora as hora, e.nombre as nombre , e.rut as rut,e.direccion as direccion,e.contacto,t.telefono as telefono, empleados.nombre as Encargado, empleados.cedula as emcedula,empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas, empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos JOIN empresa e on trabajos.referencia = e.rut JOIN telefonos t on e.rut = t.referencia";
 		return consulta;
@@ -98,5 +99,20 @@ public class Consultas {
 		System.out.println(consulta);
 		return consulta;
 	}
-	
+	public String nuevoSocio(){
+		String consulta = "INSERT INTO `socios`(`referencia`, `fecha_inscripcion`, `fecha_finalizacion`) VALUES (4854911,CURDATE(), DATE_ADD( CURDATE(),INTERVAL 1 MONTH);";
+		return consulta;
+	}
+	public String ultimoMesPago_X_Referencia(){
+		String consulta = "SELECT `referencia`, `fecha_inscripcion`, `fecha_finalizacion` FROM `socios` WHERE `fecha_finalizacion`=(SELECT MAX(`fecha_finalizacion`) FROM `socios` where `referencia`=4854911)";
+		return consulta;
+	}
+	public String cantidad_Registros_Socio_X_referencia(){
+		String consulta = "SELECT COUNT(`referencia`) AS registros FROM `socios` WHERE `referencia`=4854911;";
+		return consulta;
+	}
+	public String Clientes_Dir_Ref(){
+		String consulta = "Select CONCAT(`particulares`.`nombre`,' ',`particulares`.`apellido`) as nombre, `particulares`.`cedula` as referencia, `particulares`.`dir`  from `particulares`  union select `nombre`, `rut` , `direccion` FROM `empresa`;";
+		return consulta;
+	}
 }
