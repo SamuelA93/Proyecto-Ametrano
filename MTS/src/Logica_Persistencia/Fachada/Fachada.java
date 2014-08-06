@@ -12,11 +12,13 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOSocio;
 import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
@@ -132,6 +134,11 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			//System.out.println("adfasdgdfga");
 			a.Modificar_Tel( modi,viejo,ci);
+		}
+		public VOSocio Socio_Fechas(long ref) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			return a.obtenerSocioX_Ref(ref);
 		}
 		
 }

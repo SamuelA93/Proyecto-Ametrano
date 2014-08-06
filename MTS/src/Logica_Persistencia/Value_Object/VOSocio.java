@@ -11,24 +11,22 @@ public class VOSocio  {
 	
 	private List<VOSocio_Fechas> lista ;
 	private long ref;
-	public VOSocio(){}
+	public VOSocio(){
+		
+		
+	}
 	public VOSocio(List<VOSocio_Fechas> lista, long ref) {
 		this.lista = lista;
 		this.ref = ref;
 	}
 	public int Largo(){
-		Date cancelado;
-		pruebaFechas aux = new pruebaFechas();
-		cancelado= aux.dateJAVA("01/01/2000");
-		if (lista.get(lista.size()).getF2().equals(cancelado)){
-			return lista.size();
-		}else{
-			return lista.size()+1;
-		}
+		return lista.size();
 	}
 	
 	
 	public List<VOSocio_Fechas> getLista() {
+		
+		
 		return lista;
 	}
 	public void setLista(List<VOSocio_Fechas> lista) {

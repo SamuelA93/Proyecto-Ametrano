@@ -1,6 +1,7 @@
 package Grafica.Ventanas;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -19,16 +20,23 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import Grafica.Controladores.Controlador_Obtener_Cliente_Ref_Dir_Tel;
+import Grafica.Controladores.Controlador_Obtener_Fechas_Socio;
+import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOCliente;
+import Logica_Persistencia.Value_Object.VOSocio;
 import Logica_Persistencia.Value_Object.VOTarea;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JToolBar;
 import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -40,8 +48,13 @@ public class Ver_Socios extends JFrame {
 	DefaultTableModel modelo2=null;
 	private JTextField textField;
 	List<VOCliente> listCli= null;
+	int MAX,MIN;
+	JButton menos;
+	JButton mas;
 	private Controlador_Obtener_Cliente_Ref_Dir_Tel control= new Controlador_Obtener_Cliente_Ref_Dir_Tel();
 	private JTable linea;
+	Controlador_Obtener_Fechas_Socio dato_fechas= new Controlador_Obtener_Fechas_Socio() ;
+	VOSocio socio = new VOSocio();
 	
 
 	/**
@@ -68,10 +81,87 @@ public class Ver_Socios extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public void cargarLineaPagos( VOCliente socio){
+	public Object[] indices(int largo,int palanca){
+		Object[] indices= new Object[3];
+		if (palanca==2){
+			indices[0]=largo-5;
+			indices[1]=largo;
+			
+		}else{
+			if (palanca==1){
+				if(MIN>0){
+					indices[1]=MAX-1;
+					indices[0]=MIN-1;
+				}else{
+					indices[1]=MAX;
+					indices[0]=MIN;
+				}
+			}else{
+				if (palanca==0){
+					if( MAX<largo){
+						indices[1]=MAX+1;
+						indices[0]=MIN+1;
+					}else{
+						indices[1]=MAX;
+						indices[0]=MIN;
+					}
+			}
+		}
+		}
 		
+		return indices;
+	}
+	public void cargarLineaPagos( VOCliente cliente, int pal){
+		try {
+			socio = dato_fechas.ObtenerFechas(cliente.getReferencia());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("error");
+			e.printStackTrace();
+		}
 		
+		pruebaFechas auxiliar = new pruebaFechas();
+		Date cancelado=auxiliar.dateJAVA("01/01/2000");
+		int j= socio.Largo();
+		 modelo = new DefaultTableModel(){
+			    @Override
+			    public boolean isCellEditable(int row, int column) {
+			       //all cells false
+			       return false;
+			    }
+			};
+			
+			Object[] indi = indices(socio.Largo(),pal);
+			MIN=(int) indi[0];
+			MAX=(int) indi[1];
+			Date pendiente = auxiliar.dateJAVA("09/09/2009");
+			/*System.out.println(MIN+" "+MAX);
+			System.out.println(auxiliar.fechaJAVAstring(socio.getLista().get(socio.getLista().size()-1).getF1()));
+			System.out.println(socio.Largo());
+			System.out.println(socio.getLista().size());*/
+			
+			
+		for (int i = MIN ; i<MAX ; i++){
+			//System.out.println(i);
+			if (!socio.getLista().get(i).getF2().equals(cancelado)){
+				
+				if(socio.getLista().get(i).getF2().equals(pendiente)){
+					modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(i).getF2())+" - PENDIENTE");
+					
+					System.out.println("entra");
+				}else{
+					modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(i).getF1())+" - "+auxiliar.fechaJAVAstring(socio.getLista().get(i).getF2()));
+					
+				}
+			}else{
+				modelo.addColumn("CANCELADO");
+				
+				
+			}
+			
+		}
 		
+		linea.setModel(modelo);
 	}
 	public void cargarTabla(){
 		
@@ -104,7 +194,7 @@ public class Ver_Socios extends JFrame {
 	}
 	public Ver_Socios() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 694, 468);
+		setBounds(100, 100, 922, 468);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -120,7 +210,7 @@ public class Ver_Socios extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(5, 5, 543, 295);
+		scrollPane.setBounds(5, 5, 771, 295);
 		contentPane.add(scrollPane);
 		
 		 
@@ -137,8 +227,9 @@ public class Ver_Socios extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
-				cargarLineaPagos(listCli.get(table.getSelectedRow()));
-				
+				cargarLineaPagos(listCli.get(table.getSelectedRow()),2);
+				mas.setEnabled(true);
+				menos.setEnabled(true);
 			}
 		});
 		cargarTabla();
@@ -150,49 +241,74 @@ public class Ver_Socios extends JFrame {
 			}
 		});
 		btnMes.setHorizontalAlignment(SwingConstants.LEFT);
-		btnMes.setBounds(563, 11, 98, 23);
+		btnMes.setBounds(795, 11, 98, 23);
 		contentPane.add(btnMes);
 		
 		JButton btnMeses = new JButton("+ 2 Meses");
 		btnMeses.setHorizontalAlignment(SwingConstants.LEFT);
-		btnMeses.setBounds(563, 45, 98, 23);
+		btnMeses.setBounds(795, 45, 98, 23);
 		contentPane.add(btnMeses);
 		
 		JButton btnMeses_1 = new JButton("+ 3 Meses");
 		btnMeses_1.setHorizontalAlignment(SwingConstants.LEFT);
-		btnMeses_1.setBounds(563, 79, 98, 23);
+		btnMeses_1.setBounds(795, 79, 98, 23);
 		contentPane.add(btnMeses_1);
 		
 		textField = new JTextField();
-		textField.setBounds(563, 110, 23, 23);
+		textField.setBounds(795, 110, 23, 23);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Meses");
-		btnNewButton.setBounds(588, 110, 72, 23);
+		btnNewButton.setBounds(820, 110, 72, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnAo = new JButton("+ 1 A\u00F1o");
-		btnAo.setBounds(563, 140, 98, 23);
+		btnAo.setBounds(795, 140, 98, 23);
 		contentPane.add(btnAo);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(555, 5, 113, 166);
+		scrollPane_1.setBounds(787, 5, 113, 166);
 		contentPane.add(scrollPane_1);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(5, 329, 668, 74);
+		scrollPane_2.setBounds(55, 329, 796, 23);
 		contentPane.add(scrollPane_2);
 		
 		linea = new JTable();
 		scrollPane_2.setViewportView(linea);
+		Dimension d = linea.getPreferredScrollableViewportSize();
+
+		d.height = 200;
+		
+		linea.setPreferredScrollableViewportSize(d);
 		
 		JLabel lblSeguimientoDePagos = new JLabel("Seguimiento de pagos de CUOTA SOCIOS");
 		lblSeguimientoDePagos.setBounds(5, 308, 321, 14);
 		contentPane.add(lblSeguimientoDePagos);
 		
 		JMenuBar menuBar_1 = new JMenuBar();
-		menuBar_1.setBounds(0, 304, 680, 21);
+		menuBar_1.setBounds(0, 304, 910, 21);
 		contentPane.add(menuBar_1);
+		
+		 menos = new JButton("<");
+		 menos.setEnabled(false);
+		menos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cargarLineaPagos(listCli.get(table.getSelectedRow()),1);
+			}
+		});
+		menos.setBounds(5, 329, 48, 23);
+		contentPane.add(menos);
+		
+		 mas = new JButton(">");
+		 mas.setEnabled(false);
+		mas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarLineaPagos(listCli.get(table.getSelectedRow()),0);
+			}
+		});
+		mas.setBounds(852, 329, 48, 23);
+		contentPane.add(mas);
 	}
 }

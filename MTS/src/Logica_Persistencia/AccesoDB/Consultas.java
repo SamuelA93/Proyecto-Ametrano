@@ -115,4 +115,13 @@ public class Consultas {
 		String consulta = "Select CONCAT(`particulares`.`nombre`,' ',`particulares`.`apellido`) as nombre, `particulares`.`cedula` as referencia, `particulares`.`dir`  from `particulares`  union select `nombre`, `rut` , `direccion` FROM `empresa`;";
 		return consulta;
 	}
+	public String Clientes_Dir_Ref_union_socios(){
+		String consulta = "Select CONCAT(`particulares`.`nombre`,' ',`particulares`.`apellido`) as nombre, `particulares`.`cedula` as referencia, `particulares`.`dir` from `particulares` join `socios` on `particulares`.`cedula`=`socios`.`referencia` union select `nombre`, `rut` , `direccion` FROM `empresa` join `socios` on `empresa`.`rut`=`socios`.`referencia`";
+		return consulta;
+	}
+	
+	public String Socio_Fechas(){
+		String consulta = "SELECT `fecha_inscripcion` as f1,`fecha_finalizacion` as f2 FROM `socios` WHERE `referencia`=?;";
+		return consulta;
+	}
 }

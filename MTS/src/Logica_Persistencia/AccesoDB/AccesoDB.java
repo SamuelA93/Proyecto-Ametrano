@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOSocio;
+import Logica_Persistencia.Value_Object.VOSocio_Fechas;
 import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
@@ -279,7 +282,46 @@ public class AccesoDB {
 		}
 		
 		
-		
+		public VOSocio obtenerSocioX_Ref(long ref) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String fechasXref = consultas.Socio_Fechas();
+			PreparedStatement pstmt = con.prepareStatement (fechasXref);
+			pstmt.setLong (1, ref);
+			ResultSet rs = pstmt.executeQuery ();
+			ArrayList<VOSocio_Fechas> fechas = new ArrayList();
+			pruebaFechas conv = new pruebaFechas();
+			 while (rs.next()){
+				 VOSocio_Fechas dato = new  VOSocio_Fechas();
+				 String f1 = conv.fechaJAVA(rs.getString("f1"));
+				 dato.setF1(conv.dateJAVA(f1));
+				 try{
+					 String f2 = conv.fechaJAVA(rs.getString("f2"));
+					 dato.setF2(conv.dateJAVA(f2));
+				 }catch(Exception e){
+					 dato.setF2(conv.dateJAVA("01/01/2000"));
+					 //dato.setF2(null);
+				 }
+				 
+				 
+				 fechas.add(dato);
+			 }
+			 	VOSocio_Fechas nueva = new VOSocio_Fechas();
+				pruebaFechas auxiliar = new pruebaFechas();
+				java.util.Date cancelado =  auxiliar.dateJAVA("01/01/2000");
+				java.util.Date pendiente =  auxiliar.dateJAVA("09/09/2009");
+				if (!fechas.get(fechas.size()-1).getF2().equals(cancelado)){
+					nueva.setF1(fechas.get(fechas.size()-1).getF2());
+					nueva.setF2(pendiente);	
+				}
+				fechas.add(nueva);
+			VOSocio socio = new VOSocio(fechas, ref);
+			rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return socio;
+		}
 		
 		// Listar tareas
 		
@@ -511,7 +553,7 @@ public class AccesoDB {
 				try {
 					stmt = con.createStatement();			
 					Consultas consultas = new Consultas();
-					String strTarea = consultas.Clientes_Dir_Ref();
+					String strTarea = consultas.Clientes_Dir_Ref_union_socios();
 					ResultSet rs = stmt.executeQuery(strTarea);					
 					lstCliente= new ArrayList<VOCliente>();		
 					VOCliente Tarea;

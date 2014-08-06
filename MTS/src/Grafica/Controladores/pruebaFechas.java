@@ -51,6 +51,11 @@ public class pruebaFechas {
 			//ex.printStackTrace();
 				return null;
 			}
+	} 
+	public String fechaJAVAstring(Date fechaJAVA){
+		SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+		return formatoDeFecha.format(fechaJAVA);
+		
 	}
 	public boolean reciente(Date f1,Date f2){
 		if (f1.after(f2)){
