@@ -76,6 +76,46 @@ public class AccesoDB {
 		}
 	}
 	
+	public void Socio_Un_Mes_Mas(long ref, String fecha ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Agregar_un_mes();
+			System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void Cancelar_Socio(long ref, String fecha ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Cancelar_Socio();
+			System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void Nuevo_Socio(long ref) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.nuevoSocio();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	// Guardar los datos del nuevo particular 
 	public void nuevoParticular(String nombre, String apellido, String dir, int ci) throws SQLException{
 		// Ingresa una nueva actividad al sistema
@@ -307,7 +347,7 @@ public class AccesoDB {
 				 
 				 fechas.add(dato);
 			 }
-			 	VOSocio_Fechas nueva = new VOSocio_Fechas();
+			 	/*VOSocio_Fechas nueva = new VOSocio_Fechas();
 				pruebaFechas auxiliar = new pruebaFechas();
 				java.util.Date cancelado =  auxiliar.dateJAVA("01/01/2000");
 				java.util.Date pendiente =  auxiliar.dateJAVA("09/09/2009");
@@ -315,7 +355,7 @@ public class AccesoDB {
 					nueva.setF1(fechas.get(fechas.size()-1).getF2());
 					nueva.setF2(pendiente);	
 				}
-				fechas.add(nueva);
+				fechas.add(nueva);*/
 			VOSocio socio = new VOSocio(fechas, ref);
 			rs.close();
 		    pstmt.close();

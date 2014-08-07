@@ -330,6 +330,10 @@ public class Ver_Particulares extends JFrame {
 					
 				}
 				setEditableCampos(false);
+				List<VOParticular> particulares = controlador.listarParticulares();
+				filtrarTuplasParticulares(particularesToString(),"",particulares);
+				GuardarCambios.setVisible(false);
+				
 			}
 			
 		});

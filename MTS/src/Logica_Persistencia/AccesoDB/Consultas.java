@@ -100,7 +100,8 @@ public class Consultas {
 		return consulta;
 	}
 	public String nuevoSocio(){
-		String consulta = "INSERT INTO `socios`(`referencia`, `fecha_inscripcion`, `fecha_finalizacion`) VALUES (4854911,CURDATE(), DATE_ADD( CURDATE(),INTERVAL 1 MONTH);";
+		String consulta = "INSERT INTO `socios`(`referencia`, `fecha_inscripcion`, `fecha_finalizacion`) VALUES (?,CURDATE(), DATE_ADD( CURDATE(),INTERVAL 1 MONTH));";
+		//System.out.println(consulta);
 		return consulta;
 	}
 	public String ultimoMesPago_X_Referencia(){
@@ -122,6 +123,16 @@ public class Consultas {
 	
 	public String Socio_Fechas(){
 		String consulta = "SELECT `fecha_inscripcion` as f1,`fecha_finalizacion` as f2 FROM `socios` WHERE `referencia`=?;";
+		return consulta;
+	}
+	public String Agregar_un_mes(){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL 1 MONTH));";
+		//System.out.println("consulta");
+		return consulta;
+	}
+	public String Cancelar_Socio(){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`) VALUES (?,?);";
+		//System.out.println("consulta");
 		return consulta;
 	}
 }

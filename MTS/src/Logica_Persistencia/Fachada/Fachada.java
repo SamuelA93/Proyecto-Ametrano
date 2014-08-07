@@ -13,6 +13,8 @@ import java.util.List;
 
 
 
+
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
@@ -140,5 +142,22 @@ public class Fachada {
 			//System.out.println("adfasdgdfga");
 			return a.obtenerSocioX_Ref(ref);
 		}
+		public void agregar_Un_Mes(long ref,String fecha) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Socio_Un_Mes_Mas(ref, fecha);
+			
+		}
+		public void NuevoSocio(long ref) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			a.Nuevo_Socio(ref);
+		}
+		public void Cancelar(long ref,String fecha) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Cancelar_Socio(ref, fecha);
+			
+		}
+		
 		
 }

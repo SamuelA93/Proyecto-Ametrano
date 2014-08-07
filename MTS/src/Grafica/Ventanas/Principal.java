@@ -165,6 +165,13 @@ public class Principal extends JFrame {
 		menuBar.add(mnVer);
 		
 		JMenuItem mntmSocios = new JMenuItem("Socios");
+		mntmSocios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Ver_Socios ventanaSocios = new Ver_Socios();
+				ventanaSocios.setVisible(true);
+			}
+		});
 		mnVer.add(mntmSocios);
 		
 		JMenuItem mntmClientes = new JMenuItem("Particulares");
