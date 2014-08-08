@@ -9,9 +9,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.MaskFormatter;
 import javax.swing.text.PlainDocument;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
@@ -27,6 +29,7 @@ import Grafica.Controladores.Controlador_Obtener_Clientes_Referencia;
 import Grafica.Controladores.Controlador_Tabla_Tareas;
 import Grafica.Controladores.Controlador_Trabajo_TituloXreferencia;
 import Grafica.Controladores.Controlador_listarEmpleados;
+import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOTarea;
 
@@ -34,6 +37,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,15 +51,19 @@ import java.awt.event.MouseEvent;
 public class Administrar_tareas extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
 	 private List<Object[]> list = null;
 	 private List<VOEmpleado> listE ;
 	 String entradaNombre ="a%";
 		String entradareferencia="4%";
-	 JComboBox comboBox_2 = new JComboBox(inici("empleados"));
+	 JComboBox encarSelec = new JComboBox(inici("empleados"));
 	 final JComboBox opcionCliente = new JComboBox(inici("clientes"));
 	  JList list_1 = new JList();
+	  private boolean bandera= false;
+	  pruebaFechas auxiliar =new pruebaFechas();
+	  JFormattedTextField fechaformat;
+	  JFormattedTextField horaformat;
+	  MaskFormatter mascara;
+	  MaskFormatter  mascara2;
 	//DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
 
 	/**
@@ -67,6 +75,7 @@ public class Administrar_tareas extends JFrame {
 				try {
 					Administrar_tareas frame = new Administrar_tareas();
 					frame.setVisible(true);
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -86,12 +95,12 @@ public class Administrar_tareas extends JFrame {
 					modelo2.addElement(listE.get(i).getNombre()+" "+listE.get(i).getApellido());
 					//System.out.println(list.get(i)[0]);
 			}
-			comboBox_2.setModel(modelo2);
+			encarSelec.setModel(modelo2);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		AutoCompletion.enable(comboBox_2);
+		AutoCompletion.enable(encarSelec);
 	}
 	
 	public DefaultComboBoxModel inici(String lista){
@@ -137,31 +146,40 @@ public class Administrar_tareas extends JFrame {
 	}
 	
 	public Administrar_tareas() {
+		try{
+			 mascara =new MaskFormatter("##/##/####");
+			mascara.setPlaceholderCharacter('_');
+			 mascara2 =new MaskFormatter("##:##");
+				mascara2.setPlaceholderCharacter('_');
+			
+		}catch(Exception E){
+			
+		}
 		setTitle("Nueva Tarea");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 593, 441);
+		setBounds(100, 100, 444, 435);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblCliente = new JLabel("Cliente ");
-		lblCliente.setBounds(14, 35, 46, 14);
+		JLabel lblCliente = new JLabel("Cliente :");
+		lblCliente.setBounds(14, 30, 46, 14);
 		contentPane.add(lblCliente);
 		AutoCompletion.enable(opcionCliente);
 		 
 		 //configuro para que sea editable
 		opcionCliente.setEditable(true);
 		
-		opcionCliente.setBounds(70, 33, 167, 19);
+		opcionCliente.setBounds(70, 28, 167, 19);
 		contentPane.add(opcionCliente);
 		
-		JLabel lblTrabajos = new JLabel("Trabajos");
-		lblTrabajos.setBounds(14, 76, 79, 14);
+		JLabel lblTrabajos = new JLabel("Trabajos :");
+		lblTrabajos.setBounds(14, 58, 79, 14);
 		contentPane.add(lblTrabajos);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(70, 74, 167, 273);
+		scrollPane.setBounds(14, 74, 112, 310);
 		contentPane.add(scrollPane);
 		
 		final JList list_1 = new JList();
@@ -200,66 +218,111 @@ public class Administrar_tareas extends JFrame {
 		
 		
 		
-		JLabel lblNewLabel = new JLabel("Encargado");
-		lblNewLabel.setBounds(270, 90, 93, 14);
+		JLabel lblNewLabel = new JLabel("Encargado :");
+		lblNewLabel.setBounds(150, 90, 93, 14);
 		contentPane.add(lblNewLabel);
 		
 		
-		comboBox_2.addActionListener(new ActionListener() {
+		encarSelec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				bandera=true;
+				System.out.println("dfxbgadghadfha");
 }
 		});
-		AutoCompletion.enable(comboBox_2);
-		comboBox_2.setEditable(true);
-		comboBox_2.setBounds(350, 85, 167, 19);
-		contentPane.add(comboBox_2);
+		AutoCompletion.enable(encarSelec);
+		encarSelec.setEditable(true);
+		encarSelec.setBounds(230, 85, 167, 19);
+		contentPane.add(encarSelec);
 		
-		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(270, 120, 46, 14);
+		JLabel lblFecha = new JLabel("Fecha :");
+		lblFecha.setBounds(150, 120, 46, 14);
 		contentPane.add(lblFecha);
 		
-		JLabel lblHora = new JLabel("Hora");
-		lblHora.setBounds(270, 150, 46, 14);
+		JLabel lblHora = new JLabel("Hora :");
+		lblHora.setBounds(150, 150, 46, 14);
 		contentPane.add(lblHora);
 		
-		JLabel lblComentario = new JLabel("Comentario");
-		lblComentario.setBounds(270, 180, 77, 14);
+		JLabel lblComentario = new JLabel("Comentario :");
+		lblComentario.setBounds(150, 180, 77, 14);
 		contentPane.add(lblComentario);
+		fechaformat = new JFormattedTextField(mascara);
 		
-		textField = new JTextField();
-		textField.setBounds(350, 115, 77, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(350, 145, 77, 20);
-		contentPane.add(textField_1);
+		//fechaformat = new JFormattedTextField();
+		fechaformat.setColumns(2);
+		fechaformat.setBounds(230, 115, 70, 20);
+		contentPane.add(fechaformat);
 		
 		JLabel lblDdmmaaaa = new JLabel("dd/mm/aaaa");
 		lblDdmmaaaa.setForeground(Color.GRAY);
-		lblDdmmaaaa.setBounds(454, 120, 88, 14);
+		lblDdmmaaaa.setBounds(330, 120, 88, 14);
 		contentPane.add(lblDdmmaaaa);
 		
-		JLabel lblHhmmss = new JLabel("hh/mm/ss");
+		horaformat = new JFormattedTextField(mascara2);
+		horaformat.setBounds(230, 145, 40, 20);
+		contentPane.add(horaformat);
+		
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(bandera && !list_1.isSelectionEmpty()){
+					//System.out.println("si");
+					/*try{
+						Date ho = auxiliar.horaDate(horaIngre.getText());
+						
+						System.out.println(auxiliar.horaString(ho));
+					}catch(Exception ee){
+						System.out.println("mal");
+					}*/
+					//auxiliar.valid(fechaformat.getText());
+					
+					///System.out.println(auxiliar.valid(horaformat.getText()));
+					//System.out.println(auxiliar.validH(horaformat.getText()));
+					//System.out.println(auxiliar.esHora("36:30"));
+					if(auxiliar.validF(fechaformat.getText()) && auxiliar.validH(horaformat.getText())){
+						System.out.println("bien");
+					}else{
+						System.out.println("mal");
+					}
+				}else{
+					System.out.println("no");
+				}
+				
+				
+			}
+		});
+		
+		btnGuardar.setBounds(305, 351, 89, 23);
+		contentPane.add(btnGuardar);
+		
+		JLabel lblHhmmss = new JLabel("hh : mm");
 		lblHhmmss.setForeground(Color.GRAY);
-		lblHhmmss.setBounds(454, 150, 88, 14);
+		lblHhmmss.setBounds(330, 150, 88, 14);
 		contentPane.add(lblHhmmss);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(350, 183, 173, 153);
+		scrollPane_3.setBounds(142, 202, 262, 138);
 		contentPane.add(scrollPane_3);
 		
-		JTextArea textArea = new JTextArea();
-		scrollPane_3.setViewportView(textArea);
+		JTextArea ComentIngre = new JTextArea();
+		ComentIngre.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				/*try{
+					Date ho = auxiliar.horaDate(horaIngre.getText());
+					horaIngre.setText(auxiliar.horaString(ho));
+					//System.out.println(auxiliar.horaString(ho));
+				}catch(Exception ee){
+					horaIngre.setText("Hora incorrecta");
+				}*/
+				
+			}
+		});
+		scrollPane_3.setViewportView(ComentIngre);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(247, 74, 295, 273);
+		scrollPane_2.setBounds(132, 74, 281, 310);
 		contentPane.add(scrollPane_2);
-		
-		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(454, 369, 89, 23);
-		contentPane.add(btnGuardar);
 		
 	}
 }

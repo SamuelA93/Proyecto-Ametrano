@@ -90,6 +90,64 @@ public class AccesoDB {
 			pstmt.close();					
 			this.desconectarBD(con);
 		}
+	public void Socio_dos_Mes_Mas(long ref, String fecha ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Agregar_dos_mes();
+			System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void Socio_tres_Mes_Mas(long ref, String fecha ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Agregar_tres_mes();
+			System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void Socio_Anio_Mes_Mas(long ref, String fecha ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Agregar_tres_mes();
+			System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void Socio_x_Mes_Mas(long ref, String fecha,int x ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Agregar_X_mes();
+			System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setString(2, fecha);
+			pstmt.setInt(1,x);
+			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	public void Cancelar_Socio(long ref, String fecha ) throws SQLException{
 		// Ingresa una nueva actividad al sistema
 			Connection con = this.conectarBD();	

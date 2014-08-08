@@ -33,7 +33,8 @@ public class Consultas {
 		return consulta;
 	}
 	public String DatosTareas(){
-		String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
+		String consulta =  "SELECT* FROM `empleados_tiene_trabajos` WHERE DATE(`fecha`)>=CURDATE() ORDER BY `fecha` ;";
+		//String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
 		return consulta;
 	}
 	public String TrabajoXid(){
@@ -67,7 +68,7 @@ public class Consultas {
 	}
 	public String obtenerTrabajos_id(){
 			
-			String consulta = "select idTrabajos as trabajo, estado from trabajos where referencia =?";
+			String consulta = "select idTrabajos as trabajo, estado from trabajos where referencia =? AND `estado`='Activo';";
 			return consulta;
 		}
 	public String obtenerCliente_Referencia(String entradaNombre,String entradareferencia){
@@ -127,6 +128,26 @@ public class Consultas {
 	}
 	public String Agregar_un_mes(){
 		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL 1 MONTH));";
+		//System.out.println("consulta");
+		return consulta;
+	}
+	public String Agregar_dos_mes(){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL 2 MONTH));";
+		//System.out.println("consulta");
+		return consulta;
+	}
+	public String Agregar_tres_mes(){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL 3 MONTH));";
+		//System.out.println("consulta");
+		return consulta;
+	}
+	public String Agregar_Anio_mes(){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL 1 YEAR));";
+		//System.out.println("consulta");
+		return consulta;
+	}
+	public String Agregar_X_mes(){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL ? MONTH));";
 		//System.out.println("consulta");
 		return consulta;
 	}

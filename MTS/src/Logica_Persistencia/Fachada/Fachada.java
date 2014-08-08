@@ -148,6 +148,27 @@ public class Fachada {
 			a.Socio_Un_Mes_Mas(ref, fecha);
 			
 		}
+		public void agregar_dos_Mes(long ref,String fecha) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Socio_dos_Mes_Mas(ref, fecha);
+			
+		}
+		public void agregar_tres_Mes(long ref,String fecha) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Socio_tres_Mes_Mas(ref, fecha);	
+		}
+		public void agregar_anio_Mes(long ref,String fecha) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Socio_Anio_Mes_Mas(ref, fecha);	
+		}
+		public void agregar_X_Mes(long ref,String fecha,int x) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Socio_x_Mes_Mas(ref, fecha,x);
+		}
 		public void NuevoSocio(long ref) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			a.Nuevo_Socio(ref);

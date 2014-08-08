@@ -45,7 +45,8 @@ public class pruebaFechas {
 	public  Date dateJAVA(String fechaJAVA){
 		SimpleDateFormat formatoDeFechaJAVA = new SimpleDateFormat("dd/MM/yyyy");
 		Date fecha =null;
-		try { fecha = formatoDeFechaJAVA.parse(fechaJAVA);
+		try { 
+			fecha = formatoDeFechaJAVA.parse(fechaJAVA);
 			 return fecha;
 			} catch (ParseException ex) {
 			//ex.printStackTrace();
@@ -57,12 +58,29 @@ public class pruebaFechas {
 		return formatoDeFecha.format(fechaJAVA);
 		
 	}
-	public boolean reciente(Date f1,Date f2){
-		if (f1.after(f2)){
-			return true;
-		}else{
+	public int reciente(Date f1,Date f2){
+		return f1.compareTo(f2);
+			
+		
+	}
+	/*public String intervalo(String fecha){
+		
+		int i=0;
+		while(i){
+			}
+		}*/
+	public boolean esFecha(String fecha){
+		try{
+			Date fechDate= dateJAVA(fecha);
+			String fech =fechaJAVAstring(fechDate); 
+			/*if(fechDate.compareTo(dateJAVA("05/01/1980"))>=0){
+				System.out.println("ok");
+			}*/
+			//return true;
+		}catch(Exception e){
 			return false;
 		}
+		return true;
 	}
 
 	/*public static void main(String[] args) {
@@ -111,6 +129,86 @@ public class pruebaFechas {
 
 		System.out.println(fecha2.toString()+" "+strFecha+" "+formatoDelTexto2.format(fecha2));
 		
+		Date date = new Date();
+	//Caso 1: obtener la hora y salida por pantalla con formato:
+	DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+	System.out.println("Hora: "+hourFormat.format(date));
+	//Caso 2: obtener la fecha y salida por pantalla con formato:
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	System.out.println("Fecha: "+dateFormat.format(date));
+	//Caso 3: obtenerhora y fecha y salida por pantalla con formato:
+	DateFormat hourdateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+	System.out.println("Hora y fecha: "+hourdateFormat.format(date));
+		
 	}*/
+	public Date horaDate(String hora) throws ParseException{
 
+		Date date ;
+		DateFormat hourFormat = new SimpleDateFormat("HH:mm");
+		date= hourFormat.parse(hora); 
+		
+		return date;
+		//System.out.println("Hora: "+hourFormat.format(date));
+	}
+	public String horaString(Date hora) throws ParseException{
+		
+		DateFormat hourFormat = new SimpleDateFormat("HH:mm");
+		return hourFormat.format(hora);
+		
+		//System.out.println("Hora: "+hourFormat.format(date));
+	}
+	public boolean esHora(String hora){
+		
+		try{
+			Date ho = horaDate(hora);
+			
+			//System.out.println(horaString(ho));
+			
+		}catch(Exception e){
+			return false;
+		}
+		return true;
+	}
+	public String fechaActualDate(){
+		Calendar calendario = GregorianCalendar.getInstance();
+		Date fecha = calendario.getTime();
+		
+		SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+		//System.out.println(formatoDeFecha.format(fecha));
+		return formatoDeFecha.format(fecha);
+	}
+	public boolean validH(String fech){
+		
+		java.text.DateFormat df = java.text.DateFormat.getInstance(); 
+		try { 
+			//java.text.DateFormat formatter = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT); 
+			DateFormat hourFormat = new SimpleDateFormat("HH:mm");
+			
+			hourFormat.setLenient(false); 
+			java.util.Date date = hourFormat.parse(fech); 
+			return true;
+		} catch (ParseException ex) { 
+			
+			javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+			mensaje.showMessageDialog(null, "La fecha ingresada no es valida", "Atención!!!", mensaje.ERROR_MESSAGE); 
+			return false;
+		} 
+		
+		
+	}
+public boolean validF(String fech){
+		
+		java.text.DateFormat df = java.text.DateFormat.getInstance(); 
+		try { 
+			java.text.DateFormat formatter = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT); 
+			formatter.setLenient(false); 
+			java.util.Date date = formatter.parse(fech); 
+			return true;
+		} catch (ParseException ex) { 
+			
+			javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+			mensaje.showMessageDialog(null, "La fecha ingresada no es valida", "Atención!!!", mensaje.ERROR_MESSAGE); 
+			return false;
+		}
+	}
 }
