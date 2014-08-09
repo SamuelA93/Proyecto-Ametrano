@@ -146,8 +146,8 @@ public class Consultas {
 		//System.out.println("consulta");
 		return consulta;
 	}
-	public String Agregar_X_mes(){
-		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL ? MONTH));";
+	public String Agregar_X_mes(int x){
+		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`,`fecha_finalizacion`) VALUES (?,?,DATE_ADD( `fecha_inscripcion`,INTERVAL "+x+" MONTH));";
 		//System.out.println("consulta");
 		return consulta;
 	}

@@ -11,12 +11,25 @@ public class VOSocio  {
 	
 	private List<VOSocio_Fechas> lista ;
 	private long ref;
+	pruebaFechas auxiliar = new pruebaFechas();
+	pruebaFechas auxiliar2 = new pruebaFechas();
 	public VOSocio(){
 		
 		
 	}
 	public VOSocio(List<VOSocio_Fechas> lista, long ref) {
-		this.lista = lista;
+		Date cancelado=auxiliar.dateJAVA("01/01/2000");
+		Date pendiente=auxiliar2.dateJAVA("09/09/2009");
+		if(lista.get(lista.size()-1).getF2().equals(cancelado)){
+			this.lista = lista;
+		}else{
+			VOSocio_Fechas dato = new  VOSocio_Fechas();
+			dato.setF1(lista.get(lista.size()-1).getF2());
+			dato.setF2(pendiente);
+			lista.add(dato);
+			this.lista = lista;
+		}
+		
 		this.ref = ref;
 	}
 	public int Largo(){

@@ -7,9 +7,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -30,6 +33,7 @@ import Logica_Persistencia.Value_Object.VOTarea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -41,13 +45,14 @@ import javax.swing.JLayeredPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JFormattedTextField;
+
 public class Ver_Socios extends JFrame {
 	
 	private JPanel contentPane;
 	private JTable table;
 	DefaultTableModel modelo=null; 
 	DefaultTableModel modelo2=null;
-	private JTextField cant;
 	List<VOCliente> listCli= null;
 	int MAX,MIN;
 	JButton menos;
@@ -57,8 +62,13 @@ public class Ver_Socios extends JFrame {
 	Controlador_Obtener_Fechas_Socio dato_fechas= new Controlador_Obtener_Fechas_Socio() ;
 	VOSocio socio = new VOSocio();
 	pruebaFechas auxiliar = new pruebaFechas();
+	pruebaFechas auxiliar2 = new pruebaFechas();
 	Controlador_Agregar_meses controlSocios = new Controlador_Agregar_meses();
 	private boolean bandera = false;
+	JFormattedTextField numForma;
+	MaskFormatter mascara;
+	private 	JFrame frame = new JFrame("Exito");
+	//celdaVerde verde;
 	
 
 	/**
@@ -88,10 +98,14 @@ public class Ver_Socios extends JFrame {
 	public Object[] indices(int largo,int palanca){
 		Object[] indices= new Object[3];
 		if (palanca==2){
-			indices[0]=largo-5;
-			indices[1]=largo;
-			
-		}else{
+			if(largo>5){
+				indices[0]=largo-5;
+				indices[1]=largo;
+			}else{
+				indices[0]=0;
+				indices[1]=largo;
+			}
+	}else{
 			if (palanca==1){
 				if(MIN>0){
 					indices[1]=MAX-1;
@@ -124,6 +138,7 @@ public class Ver_Socios extends JFrame {
 			e.printStackTrace();
 		}
 		Date cancelado=auxiliar.dateJAVA("01/01/2000");
+		
 		int j= socio.Largo();
 		 modelo = new DefaultTableModel(){
 			    @Override
@@ -136,34 +151,49 @@ public class Ver_Socios extends JFrame {
 			MIN=(int) indi[0];
 			MAX=(int) indi[1];
 			Date pendiente = auxiliar.dateJAVA("09/09/2009");
-			/*System.out.println(MIN+" "+MAX);
-			System.out.println(auxiliar.fechaJAVAstring(socio.getLista().get(socio.getLista().size()-1).getF1()));
-			System.out.println(socio.Largo());
-			System.out.println(socio.getLista().size());*/
+			
 			System.out.println(MIN+" "+MAX);
-		for (int i = MIN ; i<MAX ; i++){
-	//	System.out.println(auxiliar.fechaJAVAstring(socio.getLista().get(i).getF2())+" asdfasdf");
 			
-			if (!socio.getLista().get(i).getF2().equals(cancelado)){
-					
-					if( i == socio.Largo()-1){
-						modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())+" - PENDIENTE");
+			ArrayList<String> color = new ArrayList();
+				for (int i = MIN; i<MAX ; i++){
+				//modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())+" - PENDIENTE");
 						//System.out.println("entra");
-					}else{
-						modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(i).getF1())+" - "+auxiliar.fechaJAVAstring(socio.getLista().get(i).getF2()));
+					
+							if (!socio.getLista().get(i).getF2().equals(cancelado)){
+								if(socio.getLista().get(i).getF2().equals(pendiente)){
+									
+									color.add("Amarillo");
+									modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(i).getF1())+"  PENDIENTE");
+								}else{
+									color.add("Verde");
+										modelo.addColumn(auxiliar.fechaJAVAstring(socio.getLista().get(i).getF1())+" - "+auxiliar.fechaJAVAstring(socio.getLista().get(i).getF2()).substring(0, 5));
+								}
+							}else{
+								modelo.addColumn("    CANCELADO");
+								color.add("Gris");
+							}	
+					
 					}
-			
-			}else{
-				modelo.addColumn("CANCELADO");	
-			}	
-			
-		}
 		
 		linea.setModel(modelo);
+		
+		
+		
+		for(int j1=0;j1<color.size();j1++){
+			switch(color.get(j1)){
+				case  "Amarillo": 	linea.getColumnModel().getColumn(j1).setHeaderRenderer(new celdaAmarilla());
+									break;
+				case  "Verde": 		linea.getColumnModel().getColumn(j1).setHeaderRenderer(new celdaVerde());
+									break;
+				case  "Gris":		linea.getColumnModel().getColumn(j1).setHeaderRenderer(new celdaGris());
+									break;
+			}
+		}
 	}
 	public void cargarTabla(){
 		
 		 listCli =  control.obtenerLista();
+		 
 		 modelo2 = new DefaultTableModel(){
 		    @Override
 		    public boolean isCellEditable(int row, int column) {
@@ -191,6 +221,14 @@ public class Ver_Socios extends JFrame {
 		
 	}
 	public Ver_Socios() {
+		try{
+			 mascara =new MaskFormatter("#");
+			mascara.setPlaceholderCharacter('_');
+			 
+			
+		}catch(Exception E){
+			
+		}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 922, 419);
 		
@@ -204,6 +242,10 @@ public class Ver_Socios extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		 numForma = new JFormattedTextField(mascara);
+		numForma.setBounds(795, 111, 20, 20);
+		contentPane.add(numForma);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(5, 5, 771, 295);
@@ -235,22 +277,31 @@ public class Ver_Socios extends JFrame {
 		btnMes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(bandera);
+			
 				if(bandera){
 					System.out.println("selec");
-				
-				long ref = listCli.get(table.getSelectedRow()).getReferencia();
+				int selec= table.getSelectedRow();
+				long ref = listCli.get(selec).getReferencia();
 				String fechaVerif = auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2());
-				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2())) ;
+				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())) ;
 				System.out.println(fechaVerif);
 				
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
 						controlSocios.agregar_Un_Mes(ref, fecha);
+						
+					     
+					    // show a joptionpane dialog using showMessageDialog
+						JOptionPane.showMessageDialog(frame,
+						        "Se ah agregado un mes más de socio ah "+listCli.get(selec).getNombre());
+						
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
-						e.printStackTrace();
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "No se puedo ingresar mes", "Atención!!!", mensaje.ERROR_MESSAGE);
+						//e.printStackTrace();
 					}
 					
 				}
@@ -258,9 +309,16 @@ public class Ver_Socios extends JFrame {
 						try {
 							System.out.println(fechaVerif);
 							controlSocios.Nuevo_Socio(ref);
+							
+						     
+						    // show a joptionpane dialog using showMessageDialog
+							JOptionPane.showMessageDialog(frame,
+							        "Se ah agregado un mes más de socio ah "+listCli.get(selec).getNombre());
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							System.out.println("Duplica key");
+							javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+							mensaje.showMessageDialog(null, "Usted ya cancelo este cliente hoy debe esperara hasta mañana", "Atención!!!", mensaje.ERROR_MESSAGE);
 							//e.printStackTrace();
 						}
 						
@@ -268,7 +326,12 @@ public class Ver_Socios extends JFrame {
 					
 				//}
 				cargarTabla();
-				bandera = false;
+				bandera = false;mas.setEnabled(false);menos.setEnabled(false);
+				
+			   // System.exit(1);
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Seleccione un socio antes de agregar meses", "Atención!!!", mensaje.ERROR_MESSAGE);
 			}
 			}
 		});
@@ -283,20 +346,24 @@ public class Ver_Socios extends JFrame {
 				System.out.println(bandera);
 				if(bandera){
 					System.out.println("selec");
-				
-				long ref = listCli.get(table.getSelectedRow()).getReferencia();
+				int selec = table.getSelectedRow();
+				long ref = listCli.get(selec).getReferencia();
 				String fechaVerif = auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2());
-				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2())) ;
+				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())) ;
 				System.out.println(fechaVerif);
 				
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
 						controlSocios.agregar_dos_Mes(ref, fecha);
+						JOptionPane.showMessageDialog(frame,
+						        "Se ah agregado dos mes más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
-						e.printStackTrace();
+						//e.printStackTrace();
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Error al sumar dos meses ", "Atención!!!", mensaje.ERROR_MESSAGE);
 					}
 					
 				}
@@ -307,6 +374,10 @@ public class Ver_Socios extends JFrame {
 				//}
 				cargarTabla();
 				bandera = false;
+				mas.setEnabled(false);menos.setEnabled(false);
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Seleccione un socio antes de agregar meses", "Atención!!!", mensaje.ERROR_MESSAGE);
 			}
 				
 			}
@@ -323,19 +394,24 @@ public class Ver_Socios extends JFrame {
 				if(bandera){
 					System.out.println("selec");
 				
-				long ref = listCli.get(table.getSelectedRow()).getReferencia();
+					int selec = table.getSelectedRow();
+					long ref = listCli.get(selec).getReferencia();
 				String fechaVerif = auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2());
-				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2())) ;
+				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())) ;
 				System.out.println(fechaVerif);
 				
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
 						controlSocios.agregar_tres_Mes(ref, fecha);
+						JOptionPane.showMessageDialog(frame,
+						        "Se ah agregado tres mes más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
-						e.printStackTrace();
+						//e.printStackTrace();
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Erros al sumar tres mes ", "Atención!!!", mensaje.ERROR_MESSAGE);
 					}
 					
 				}
@@ -346,6 +422,10 @@ public class Ver_Socios extends JFrame {
 				//}
 				cargarTabla();
 				bandera = false;
+				mas.setEnabled(false);menos.setEnabled(false);
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Seleccione un socio antes de agregar meses", "Atención!!!", mensaje.ERROR_MESSAGE);
 			}
 				
 			}
@@ -354,35 +434,49 @@ public class Ver_Socios extends JFrame {
 		btnMeses_1.setBounds(786, 79, 107, 23);
 		contentPane.add(btnMeses_1);
 		
-		cant = new JTextField();
-		cant.setBounds(786, 110, 32, 23);
-		contentPane.add(cant);
-		cant.setColumns(10);
-		
 		JButton btnNewButton = new JButton("Meses");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int x= 0;
-				String xn= cant.getText();
-				try{ x = Integer.parseInt(xn);}catch(Exception e3){ x=0; }
+				//String xn= cant.getText();
 				System.out.println(bandera);
-				if((bandera) && (x!=0)){
+				int xF=0;
+				
+				//System.out.println( ""+xF);
+				if((bandera) ){
+					try{
+						xF = Integer.parseInt(numForma.getText()); 
+					}catch(Exception e3){ 
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Ingrese un numero y  distinto de 0", "Atención!!!", mensaje.ERROR_MESSAGE);
+						//mensaje.showMessageDialog(null, "Ingrese nuevamente un numero", "Atención!!!", mensaje.);
+					}
+					
+					if(xF!=0){
+					
+					
+					
 					System.out.println("entre");
 					System.out.println("selec");
 				
-				long ref = listCli.get(table.getSelectedRow()).getReferencia();
+					int selec = table.getSelectedRow();
+					long ref = listCli.get(selec).getReferencia();
 				String fechaVerif = auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2());
-				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2())) ;
+				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())) ;
 				System.out.println(fechaVerif);
 				
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
-						controlSocios.agregar_x_Mes(ref, fecha,x);
+						controlSocios.agregar_x_Mes(ref, fecha,xF);
+						JOptionPane.showMessageDialog(frame,
+						        "Se ah agregado "+xF+" meses más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
-						e1.printStackTrace();
+						//e1.printStackTrace();
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Error al sumar  "+xF+" meses ", "Atención!!!", mensaje.ERROR_MESSAGE);
 					}
 					
 				}
@@ -393,6 +487,11 @@ public class Ver_Socios extends JFrame {
 				//}
 				cargarTabla();
 				bandera = false;
+				mas.setEnabled(false);menos.setEnabled(false);
+					}
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Seleccione un socio antes de agregar meses", "Atención!!!", mensaje.ERROR_MESSAGE);
 			}
 				
 			}
@@ -407,19 +506,24 @@ public class Ver_Socios extends JFrame {
 				if(bandera){
 					System.out.println("selec");
 				
-				long ref = listCli.get(table.getSelectedRow()).getReferencia();
+					int selec = table.getSelectedRow();
+					long ref = listCli.get(selec).getReferencia();
 				String fechaVerif = auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2());
-				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2())) ;
+				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())) ;
 				System.out.println(fechaVerif);
 				
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
 						controlSocios.agregar_anio_Mes(ref, fecha);
+						JOptionPane.showMessageDialog(frame,
+						        "Se ah agregado un año  más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e4) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
-						e4.printStackTrace();
+						//e4.printStackTrace();
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Error al sumar un año ", "Atención!!!", mensaje.ERROR_MESSAGE);
 					}
 					
 				}
@@ -430,6 +534,10 @@ public class Ver_Socios extends JFrame {
 				//}
 				cargarTabla();
 				bandera = false;
+				mas.setEnabled(false);menos.setEnabled(false);
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Seleccione un socio antes de agregar meses", "Atención!!!", mensaje.ERROR_MESSAGE);
 			}
 				
 			}
@@ -447,25 +555,36 @@ public class Ver_Socios extends JFrame {
 				
 				if(bandera){
 					System.out.println("selec"); 
-				long ref = listCli.get(table.getSelectedRow()).getReferencia();
+					int selec = table.getSelectedRow();
+					long ref = listCli.get(selec).getReferencia();
 				String fechaVerif = auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2()) ;
-				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF2())) ;
+				String fecha= auxiliar.fechaSQL(auxiliar.fechaJAVAstring(socio.getLista().get(socio.Largo()-1).getF1())) ;
 				System.out.println(fechaVerif);
 				if( !fechaVerif.equals("01/01/2000") ){
 					
 						System.out.println("si "+fechaVerif);
 						try {
 							controlSocios.Cancelar(ref, fecha);
+							JOptionPane.showMessageDialog(frame,
+							        "Se cancelado la cuenta de "+listCli.get(selec).getNombre());
 						} catch (SQLException e) {
 						// TODO Auto-generated catch block
+							javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+							mensaje.showMessageDialog(null, "No se pudo cancelar la cuenta", "Atención!!!", mensaje.ERROR_MESSAGE);
 						
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 				}else{
 					System.out.println("ya esta eliminada");
+					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+					mensaje.showMessageDialog(null, "Ya esta cancelado actualmente", "Atención!!!", mensaje.ERROR_MESSAGE);
 				}
 				cargarTabla();
 				bandera = false;
+				mas.setEnabled(false);menos.setEnabled(false);
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Seleccione un socio antes de cancelar cuenta", "Atención!!!", mensaje.ERROR_MESSAGE);
 			}
 			}
 		});

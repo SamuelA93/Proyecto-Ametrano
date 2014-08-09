@@ -136,14 +136,14 @@ public class AccesoDB {
 		// Ingresa una nueva actividad al sistema
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
-			String insert = consultas.Agregar_X_mes();
+			String insert = consultas.Agregar_X_mes(x);
 			System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
 			pstmt.setString(2, fecha);
-			pstmt.setInt(1,x);
-			pstmt.setString(2, fecha);
+			
+			
 			pstmt.executeUpdate ();			
 			pstmt.close();					
 			this.desconectarBD(con);
