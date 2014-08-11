@@ -125,25 +125,71 @@ public class Nuevo_Particular extends JFrame {
 				String telP			= tel.getText();
 				String ciP 			= ci.getText();
 				String celuP 			= celu.getText();
-				Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
-				if(		Verificar_Ci.verificar(ciP) 
-						&& Verificar_Tel.veri(telP)
-						
-						){
-					controlador.nuevoParticular(nombreP,apellidoP,dirP,telP,Verificar_Ci.numeroCi(ciP),celuP);
-					ci.setBorder(BorderFactory.createLineBorder(Color.green));
-					tel.setBorder(BorderFactory.createLineBorder(Color.green));
+				Object[] tels = new Object[2];
+				String espa ="";
+				boolean bandera = false;
+				boolean bandera2 = false;
+				/*if(){
+					
 				}else{
 					
-					if( Verificar_Tel.veri(telP) ){
-						//System.out.println("gree");
-						tel.setBorder(BorderFactory.createLineBorder(Color.green));
+				}*/
+				if(!nombreP.equals(espa) ){
+					if(	Verificar_Ci.verificar(ciP) ){
+						/*controlador.nuevoParticular(nombreP,apellidoP,dirP,telP,Verificar_Ci.numeroCi(ciP),celuP);*/
+						ci.setBorder(BorderFactory.createLineBorder(Color.green));
+						
+						if(!telP.equals(espa) ){
+					  
+							//Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
+							if(Verificar_Tel.isNumeric(telP)){
+								tels[0]=telP;	
+								tel.setBorder(BorderFactory.createLineBorder(Color.green));
+								bandera = true;
+							}else{
+								tel.setBorder(BorderFactory.createLineBorder(Color.red));
+								javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+								mensaje.showMessageDialog(null, "Telefono incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+							}
+									
+						}else{
+							tels[0]="";
+							bandera = true;
+							tel.setBorder(BorderFactory.createLineBorder(Color.green));
+						}
+						
+						if(!celuP.equals(espa) ){
+							  
+							//Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
+							if(Verificar_Tel.isNumeric(celuP)){
+								tels[1]=celuP;	
+								bandera2 = true;
+								celu.setBorder(BorderFactory.createLineBorder(Color.green));
+							}else{
+								celu.setBorder(BorderFactory.createLineBorder(Color.red));
+								javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+								mensaje.showMessageDialog(null, "Celular incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+							}
+									
+						}else{
+							tels[1]="";
+							bandera2 = true;
+							celu.setBorder(BorderFactory.createLineBorder(Color.green));
+						}
+						
+						if(bandera && bandera2){
+							System.out.println("ntro");
+							Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
+							controlador.nuevoParticular(nombreP, apellidoP, dirP, (String) tels[0], Verificar_Ci.numeroCi(ciP),(String) tels[1]);
+						}
+						
 					}else{
-						//System.out.println("red");
-						tel.setBorder(BorderFactory.createLineBorder(Color.red));
-					}
+							ci.setBorder(BorderFactory.createLineBorder(Color.red));		
+						}
+				}else{
+					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+					mensaje.showMessageDialog(null, "Ingrese el nombre.", "Atención!!!", mensaje.ERROR_MESSAGE);
 				}
-				
 				
 				
 			}

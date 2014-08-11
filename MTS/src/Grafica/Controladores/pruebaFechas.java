@@ -190,7 +190,7 @@ public class pruebaFechas {
 		} catch (ParseException ex) { 
 			
 			javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
-			mensaje.showMessageDialog(null, "La fecha ingresada no es valida", "Atención!!!", mensaje.ERROR_MESSAGE); 
+			mensaje.showMessageDialog(null, "La hora ingresada no es valida", "Atención!!!", mensaje.ERROR_MESSAGE); 
 			return false;
 		} 
 		

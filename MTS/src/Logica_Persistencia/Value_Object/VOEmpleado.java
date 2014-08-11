@@ -26,7 +26,7 @@ public class VOEmpleado {
 		this.apellido = apellido;
 		this.direccion = direccion;
 		this.telefono = telefono;
-		this.telefono = telefono2;
+		this.telefono2 = telefono2;
 	}
 	public int getCedula() {
 		return cedula;

@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
+import Grafica.Controladores.Controlador_Agregar_meses;
+import Grafica.Controladores.Controlador_Cantidad_Registros_Socio;
 import Grafica.Controladores.Controlador_Modificar_Particular;
 import Grafica.Controladores.Controlador_Modificar_Tel;
 import Grafica.Controladores.Controlador_listarParticulares;
@@ -34,6 +36,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.JCheckBox;
 
 public class Ver_Particulares extends JFrame {
 
@@ -53,6 +57,9 @@ public class Ver_Particulares extends JFrame {
 	private JTextField agregarTelefono2;
 	private ArrayList<String> modif ;
 	private ArrayList<Object[]> modifT ;
+	Controlador_Agregar_meses controlSocios = new Controlador_Agregar_meses();
+	Controlador_Cantidad_Registros_Socio cuenta = new Controlador_Cantidad_Registros_Socio();
+	JCheckBox Socio;
 	/**
 	 * Launch the application.
 	 */
@@ -134,7 +141,7 @@ public class Ver_Particulares extends JFrame {
 	
 	public Ver_Particulares() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 394);
+		setBounds(100, 100, 450, 434);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -146,7 +153,9 @@ public class Ver_Particulares extends JFrame {
 		mnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-
+					if(!Socio.isSelected()){
+						Socio.setEnabled(true);
+					}
 					setEditableCampos(true);
 					
 }
@@ -193,7 +202,22 @@ public class Ver_Particulares extends JFrame {
 		listParticulares.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				setEditableCampos(false);
+				
+				try {
+					long refer= cuenta.registros(guia.get(listParticulares.getSelectedIndex()).getCedula());
+					if (refer>0) {
+						Socio.setSelected(true);
+						
+					}else{
+						Socio.setSelected(false);
+						
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					Socio.setEnabled(false);
+					e.printStackTrace();
+				}
+				Socio.setEnabled(false);
 				GuardarCambios.setVisible(false);
 				agregarNombre.setText(guia.get(listParticulares.getSelectedIndex()).getNombre());
 				agregarApellido.setText(guia.get(listParticulares.getSelectedIndex()).getApellido());
@@ -260,6 +284,20 @@ public class Ver_Particulares extends JFrame {
 		contentPane.add(agregarTelefono);
 		GuardarCambios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				String espa ="";
+				if(Socio.isEnabled()&&Socio.isSelected()){
+					try {
+						controlSocios.Nuevo_Socio((long) guia.get(listParticulares.getSelectedIndex()).getCedula());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//System.out.println("gusrdar");
+				}
+				
+				if(!agregarNombre.getText().equals(espa)){
+					
 				modif = new ArrayList<String>();
 				modifT = new ArrayList<Object[]>();
 				
@@ -324,6 +362,8 @@ public class Ver_Particulares extends JFrame {
 						System.out.println((String) modifT.get(1)[0]);
 					}
 					
+					
+					
 				} catch (SQLException e) {
 					//System.out.println("Error");
 					e.printStackTrace();
@@ -333,6 +373,12 @@ public class Ver_Particulares extends JFrame {
 				List<VOParticular> particulares = controlador.listarParticulares();
 				filtrarTuplasParticulares(particularesToString(),"",particulares);
 				GuardarCambios.setVisible(false);
+				
+			}else{
+				javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+				mensaje.showMessageDialog(null, "Ingrese el nombre.", "Atención!!!", mensaje.ERROR_MESSAGE);
+			}
+				Socio.setEnabled(false);
 				
 			}
 			
@@ -349,12 +395,18 @@ public class Ver_Particulares extends JFrame {
 		agregarTelefono2.setColumns(10);
 		agregarTelefono2.setBounds(277, 245, 132, 20);
 		contentPane.add(agregarTelefono2);
-		GuardarCambios.setBounds(194, 276, 199, 23);
+		GuardarCambios.setBounds(194, 310, 199, 23);
 		contentPane.add(GuardarCambios);
+		
+		Socio = new JCheckBox("Socio");
+		//Socio.setSelected(true);
+		Socio.setBounds(277, 276, 97, 23);
+		contentPane.add(Socio);
+		Socio.setEnabled(false);
 		
 		JEditorPane editorPane = new JEditorPane();
 		editorPane.setEditable(false);
-		editorPane.setBounds(179, 42, 245, 270);
+		editorPane.setBounds(179, 42, 245, 302);
 		contentPane.add(editorPane);
 	}
 }

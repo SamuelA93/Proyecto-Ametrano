@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -32,8 +33,10 @@ import javax.swing.SwingConstants;
 
 import Grafica.Controladores.Controlador_Auxiliares;
 import Grafica.Controladores.Controlador_ClienteXreferencia;
+import Grafica.Controladores.Controlador_Eliminar_Tarea;
 import Grafica.Controladores.Controlador_Tabla_Tareas;
 import Grafica.Controladores.Controlador_TrabajoXid;
+import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
 import Logica_Persistencia.Value_Object.VOTarea;
@@ -50,6 +53,7 @@ import javax.swing.JTextField;
 import com.sun.jndi.toolkit.ctx.PartialCompositeContext;
 
 import java.awt.Font;
+
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
@@ -60,6 +64,8 @@ public class Principal extends JFrame {
 	private JTable table= new JTable();
 	public Controlador_Tabla_Tareas controlador = new Controlador_Tabla_Tareas();
 	//public table = new JTable();
+	List<VOTarea> lstTareas=null;
+	private 	JFrame frame2 = new JFrame("Exito");
 	public DefaultTableModel modelo = new DefaultTableModel(){
 
 	    @Override
@@ -89,9 +95,9 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public void actualizar_Tabla(){
-		final List<VOTarea> lstTareas = controlador.listarTareas();
+		 lstTareas = controlador.listarTareas();
 		//System.out.println("sfgahg");
-		DefaultTableModel modelo2 = new DefaultTableModel(){
+		DefaultTableModel modelo = new DefaultTableModel(){
 			
 		    @Override
 		    public boolean isCellEditable(int row, int column) {
@@ -99,6 +105,8 @@ public class Principal extends JFrame {
 		       return false;
 		    }
 		};
+		modelo.addColumn("Fecha");
+		modelo.addColumn("Hora");
 		if (lstTareas.size() > 0){	
 			Iterator<VOTarea> iterT = lstTareas.iterator();
 			while (iterT.hasNext()){
@@ -106,7 +114,7 @@ public class Principal extends JFrame {
 				Object[] fila = new Object[2];
 				fila[0] = Tarea.getFecha();
 				fila[1] = Tarea.getHora();
-				modelo2.addRow(fila);
+				modelo.addRow(fila);
 			}		
 		}	
 		table.setModel(modelo);
@@ -240,10 +248,10 @@ public class Principal extends JFrame {
 		contentPane.add(scrollPane);
 		
 		
-		modelo.addColumn("Fecha");
-		modelo.addColumn("Hora");
+		/*modelo.addColumn("Fecha");
+		modelo.addColumn("Hora");*/
 		
-		final List<VOTarea> lstTareas = controlador.listarTareas();
+		/* lstTareas = controlador.listarTareas();
 		if (lstTareas.size() > 0){	
 			Iterator<VOTarea> iterT = lstTareas.iterator();
 			while (iterT.hasNext()){
@@ -253,12 +261,15 @@ public class Principal extends JFrame {
 				fila[1] = Tarea.getHora();
 				modelo.addRow(fila);
 			}		
-		}	
-		table.setModel(modelo);
+		}	*/
+		table = new JTable();
+		actualizar_Tabla();
+		//table.setModel(modelo);
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(5, 281, 277, 108);
 		contentPane.add(scrollPane_1);
 		final JTextPane comentarioP = new JTextPane();
+		comentarioP.setEditable(false);
 		//comentarioP.setText("Este es un comentario de un trabajo a realizar de la lista de arriba");
 		scrollPane_1.setViewportView(comentarioP);
 		final JLabel estado = new JLabel("");
@@ -375,8 +386,37 @@ public class Principal extends JFrame {
 		bar_sub1.add(mnEditar);
 		
 		JMenu mnEliminar = new JMenu("Eliminar");
+		mnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				int row = table.getSelectedRow();
+				pruebaFechas aux = new pruebaFechas();
+				Controlador_Eliminar_Tarea eli = new Controlador_Eliminar_Tarea();
+				
+				try {
+					System.out.println(lstTareas.get(row).getTrabajo());
+					System.out.println(lstTareas.get(row).getEmpleado_cedula());
+					System.out.println(aux.fechaSQL(lstTareas.get(row).getFecha()));
+					eli.eliminar(lstTareas.get(row).getTrabajo(), lstTareas.get(row).getEmpleado_cedula(),aux.fechaSQL(lstTareas.get(row).getFecha()) );
+					actualizar_Tabla();
+					
+				} catch (SQLException e) {
+					 //TODO Auto-generated catch block
+					e.printStackTrace();
+					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+					mensaje.showMessageDialog(null, "Error al eliminar.", "Atención!!!", mensaje.ERROR_MESSAGE);
+				}
+				/*JOptionPane.showMessageDialog(frame2,
+				        "Se elimino correctamente. ");*/
+				
+			}
+		});
 		mnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				
 			}
 		});
 		bar_sub1.add(mnEliminar);

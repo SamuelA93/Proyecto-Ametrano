@@ -191,24 +191,38 @@ public class AccesoDB {
 			this.desconectarBD(con);
 		}
 	// Ingresar nueva Tarea
-	public void nuevaTarea(int trabajo, int encargado, String fecha, String hora, int horas,String comentario) throws SQLException{
+	public void nuevaTarea(int trabajo, int encargado, String fecha, String hora,String comentario) throws SQLException{
 		// Ingresa una nueva actividad al sistema
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.NuevaTarea();	
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
-			pstmt.setInt(1, trabajo);
-			pstmt.setInt(2, encargado);
+			pstmt.setInt(2, trabajo);
+			pstmt.setInt(1, encargado);
 			pstmt.setString(3, fecha);
 			pstmt.setString(4, hora);
-			pstmt.setInt(5, horas);
-			pstmt.setString(6, comentario);
+			//pstmt.setInt(5, horas);
+			pstmt.setString(5, comentario);
 			pstmt.executeUpdate ();			
 			pstmt.close();					
 			this.desconectarBD(con);
 		}
 	
+	public void Eliminar_Tarea(int trabajo, long l, String fecha) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Eliminar_Tarea();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setInt(2, trabajo);
+			pstmt.setLong(1, l);
+			pstmt.setString(3, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	//
 	public void nuevoTelefono( String tel, int referencia) throws SQLException{
 		// Ingresa una nueva actividad al sistema
@@ -308,6 +322,23 @@ public class AccesoDB {
 		    pstmt.close();
 			this.desconectarBD(con);
 			return trabajo;
+		}
+		
+		public int obtenerCantiadXref_Socio(long ref) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String strTrabajoXid = consultas.Cantidad_Registros_Socio_Ref();
+			PreparedStatement pstmt = con.prepareStatement (strTrabajoXid);
+			//System.out.println(id);
+			pstmt.setLong (1, ref);
+			ResultSet rs = pstmt.executeQuery ();
+			 rs.next();
+	    	int	 cantidad = rs.getInt("cantidad");
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return cantidad;
 		}
 		// Obtener de empleado nombre y apellido por la cedula
 		public String obtenerEmpleadoXcedula(long id) throws SQLException{	
@@ -694,4 +725,16 @@ public class AccesoDB {
 				this.desconectarBD(con);
 				return lstCliente;
 			}
+			// Modificar Empleados
+						public void Modificar_Empleado(String modi,int ced) throws SQLException{	
+							Connection con = this.conectarBD();	
+							Consultas consultas = new Consultas();
+							String insert = consultas.ModificarEmpleados(modi);	
+							PreparedStatement pstmt;
+							pstmt = con.prepareStatement(insert);
+							pstmt.setInt(1, ced);
+							pstmt.executeUpdate ();			
+							pstmt.close();					
+							this.desconectarBD(con);
+						}
 }

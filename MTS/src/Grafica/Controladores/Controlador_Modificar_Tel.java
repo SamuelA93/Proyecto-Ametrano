@@ -12,10 +12,12 @@ public Controlador_Modificar_Tel(){}
 	
 	public void modificar (String modi,String viejo,int ci) throws SQLException{
 		Fachada a = new Fachada();
-		if( viejo== "No igresado"){
+		String s = "No ingresado";
+		if( viejo.toUpperCase().equals(s.toUpperCase())){
 			a.nuevoTelefono(modi, ci);
 		}else{
 			a.ModificarTel(modi,viejo,ci);
+			//System.out.println(modi+" "+viejo);
 		}
 		
 	}

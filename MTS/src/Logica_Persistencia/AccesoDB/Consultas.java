@@ -58,7 +58,7 @@ public class Consultas {
 		return consulta;
 	}
 	public String NuevaTarea(){
-		String consulta = "INSERT INTO `devlopteam mts`.`empleados_tiene_trabajos` (`Empleados_cedula`, `Trabajos_idTrabajos`, `fecha`, `hora`, `horas`, `comentario`) VALUES (?,?,?,?,?,?);";
+		String consulta = "INSERT INTO `empleados_tiene_trabajos` (`Empleados_cedula`, `Trabajos_idTrabajos`, `fecha`, `hora`,  `comentario`) VALUES (?,?,?,?,?);";
 		return consulta;
 	}
 	public String obtenerClientes_Referencias(){
@@ -154,6 +154,20 @@ public class Consultas {
 	public String Cancelar_Socio(){
 		String consulta ="INSERT INTO `socios`(`referencia`, `fecha_inscripcion`) VALUES (?,?);";
 		//System.out.println("consulta");
+		return consulta;
+	}
+	public String Eliminar_Tarea(){
+		String consulta ="DELETE FROM `empleados_tiene_trabajos` WHERE `empleados_tiene_trabajos`.`Empleados_cedula` = ? AND `empleados_tiene_trabajos`.`Trabajos_idTrabajos` = ? AND `empleados_tiene_trabajos`.`fecha` = ?";
+		//System.out.println("consulta");
+		return consulta;
+	}
+	
+	public String ModificarEmpleados(String cambios){
+		String consulta = "UPDATE `empleados` SET "+cambios+" WHERE `cedula` = ?;";
+		return consulta;
+	}
+	public String Cantidad_Registros_Socio_Ref(){
+		String consulta = "SELECT COUNT(`referencia`) as cantidad FROM `socios` WHERE `referencia`=?";
 		return consulta;
 	}
 }

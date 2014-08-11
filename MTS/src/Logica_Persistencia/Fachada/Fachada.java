@@ -15,6 +15,7 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
@@ -49,6 +50,7 @@ public class Fachada {
 		AccesoDB a = new AccesoDB();
 		try {
 			a.nuevoTelefono(tel,referencia);
+			System.out.println("alli");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -134,7 +136,7 @@ public class Fachada {
 		}
 		public void ModificarTel(String modi,String viejo , int ci) throws SQLException{
 			AccesoDB a = new AccesoDB();
-			//System.out.println("adfasdgdfga");
+			System.out.println("aca");
 			a.Modificar_Tel( modi,viejo,ci);
 		}
 		public VOSocio Socio_Fechas(long ref) throws SQLException{
@@ -180,5 +182,28 @@ public class Fachada {
 			
 		}
 		
+		public void Nueva_Tarea(int trabajo, int encargado, String fecha, String hora, String comentario) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.nuevaTarea(trabajo, encargado, fecha, hora, comentario);;
+			
+		}
+		public void EliminarTarea(int trabajo, long l, String fecha) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			System.out.println("fach");
+			a.Eliminar_Tarea(trabajo, l, fecha);
+			
+		}
 		
+		public void ModificarEmpleado(String modi,int ced) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			a.Modificar_Empleado( modi,ced);
+		}
+		
+		public int Socio_Cantidad_Reg(long ref) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			return a.obtenerCantiadXref_Socio(ref);
+		}
 }

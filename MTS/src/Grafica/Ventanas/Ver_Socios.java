@@ -545,10 +545,6 @@ public class Ver_Socios extends JFrame {
 		btnAo.setBounds(786, 140, 107, 23);
 		contentPane.add(btnAo);
 		
-		JButton btnAlDa = new JButton("Poner al d\u00EDa");
-		btnAlDa.setBounds(786, 170, 107, 23);
-		contentPane.add(btnAlDa);
-		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -588,7 +584,7 @@ public class Ver_Socios extends JFrame {
 			}
 			}
 		});
-		btnCancelar.setBounds(786, 200, 107, 23);
+		btnCancelar.setBounds(786, 170, 107, 23);
 		contentPane.add(btnCancelar);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();

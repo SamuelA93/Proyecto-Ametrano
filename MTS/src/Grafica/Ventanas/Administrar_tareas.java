@@ -16,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -25,6 +26,7 @@ import java.awt.Color;
 
 import javax.swing.JButton;
 
+import Grafica.Controladores.Controlador_Nueva_Tarea;
 import Grafica.Controladores.Controlador_Obtener_Clientes_Referencia;
 import Grafica.Controladores.Controlador_Tabla_Tareas;
 import Grafica.Controladores.Controlador_Trabajo_TituloXreferencia;
@@ -64,6 +66,9 @@ public class Administrar_tareas extends JFrame {
 	  JFormattedTextField horaformat;
 	  MaskFormatter mascara;
 	  MaskFormatter  mascara2;
+	  List<Object[]> listT=null;
+	  JTextArea ComentIngre;
+	  private 	JFrame frame2 = new JFrame("Exito");
 	//DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
 
 	/**
@@ -190,7 +195,7 @@ public class Administrar_tareas extends JFrame {
 					Controlador_Trabajo_TituloXreferencia  T =new Controlador_Trabajo_TituloXreferencia ();
 					//int ref= (int) list.get(opcionCliente.getSelectedIndex())[1];
 					long a= Long.parseLong((String) list.get(opcionCliente.getSelectedIndex())[1]);
-					List<Object[]> listT=null;
+					
 					DefaultListModel modeloT = new DefaultListModel();
 					try {
 						listT = T.obtener_TrabajoId_Titulo(a);
@@ -226,7 +231,7 @@ public class Administrar_tareas extends JFrame {
 		encarSelec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				bandera=true;
-				System.out.println("dfxbgadghadfha");
+				//System.out.println("dfxbgadghadfha");
 }
 		});
 		AutoCompletion.enable(encarSelec);
@@ -281,11 +286,38 @@ public class Administrar_tareas extends JFrame {
 					//System.out.println(auxiliar.esHora("36:30"));
 					if(auxiliar.validF(fechaformat.getText()) && auxiliar.validH(horaformat.getText())){
 						System.out.println("bien");
+						Controlador_Nueva_Tarea tareaN = new Controlador_Nueva_Tarea();
+						//tareaN.nuevo(trabajo, encargado, fecha, hora, comentario);
+						System.out.println(listT.get(list_1.getSelectedIndex())[0]);
+						System.out.println(listE.get(encarSelec.getSelectedIndex()).getCedula()+" "+listE.get(encarSelec.getSelectedIndex()).getNombre());
+						System.out.println(auxiliar.fechaSQL(fechaformat.getText()));
+						System.out.println(horaformat.getText());
+						System.out.println(ComentIngre.getText());
+						int t = Integer.parseInt((String) listT.get(list_1.getSelectedIndex())[0]) ;
+						try {
+							tareaN.nuevo(  t,  listE.get(encarSelec.getSelectedIndex()).getCedula(), auxiliar.fechaSQL(fechaformat.getText()), horaformat.getText(), ComentIngre.getText());
+							JOptionPane.showMessageDialog(frame2,
+							        "Se guardo nueva tarea. ");
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+							javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+							mensaje.showMessageDialog(null, "Error al guardar.", "Atención!!!", mensaje.ERROR_MESSAGE);
+						}
+					
+						
+						fechaformat.setText("");
+						horaformat.setText("");
+						ComentIngre.setText("");
 					}else{
 						System.out.println("mal");
 					}
 				}else{
 					System.out.println("no");
+					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+					mensaje.showMessageDialog(null, "Seleccione un trabajo y encargado.", "Atención!!!", mensaje.ERROR_MESSAGE); 
+				
 				}
 				
 				
@@ -304,7 +336,7 @@ public class Administrar_tareas extends JFrame {
 		scrollPane_3.setBounds(142, 202, 262, 138);
 		contentPane.add(scrollPane_3);
 		
-		JTextArea ComentIngre = new JTextArea();
+	 ComentIngre = new JTextArea();
 		ComentIngre.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
