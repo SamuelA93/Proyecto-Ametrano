@@ -1,6 +1,8 @@
 package Logica_Persistencia.Fachada;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
 
 
 
@@ -46,7 +48,7 @@ public class Fachada {
 	}
 	
 	//
-	public void nuevoTelefono( String tel, int referencia){
+	/*public void nuevoTelefono( String tel, int referencia){
 		AccesoDB a = new AccesoDB();
 		try {
 			a.nuevoTelefono(tel,referencia);
@@ -55,6 +57,10 @@ public class Fachada {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}*/
+	public void nuevos_2_Telefonos( ArrayList tel, int referencia) throws SQLException{
+		AccesoDB a = new AccesoDB();
+		a.nuevos_2_Telefonos(tel, referencia);
 	}
 	
 	//Envia los datos nuevo trabajo a AccesoDB
@@ -105,14 +111,9 @@ public class Fachada {
 
 		}
 		
-		public void nuevoTelefono( String tel, long referencia){
+		public void nuevoTelefono( String tel, long referencia) throws SQLException{
 			AccesoDB a = new AccesoDB();
-			try {
-				a.nuevoTelefono(tel,referencia);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			a.nuevoTelefono(tel,referencia);
 		}
 		
 		public List<VOParticular> listarParticulares(){
@@ -206,4 +207,10 @@ public class Fachada {
 			//System.out.println("adfasdgdfga");
 			return a.obtenerCantiadXref_Socio(ref);
 		}
+		// Envia los datos del Nuevo Empleado al AccesoDB mediante un metodo adecuado
+				public void nuevoEmpleado(String nombre, String apellido, String direccion, int cedula) throws SQLException{
+					AccesoDB a = new AccesoDB();
+					a.nuevoEmpleado(nombre, apellido, direccion, cedula);
+					//a.nuevoTelefono(telefono, cedula);
+				}
 }

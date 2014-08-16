@@ -231,13 +231,29 @@ public class AccesoDB {
 			String insert = consultas.nuevoCelTel();	
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
-			pstmt.setInt(1, referencia);
-			pstmt.setString(2, tel);
+			pstmt.setString(1, tel);
+			pstmt.setInt(2, referencia);
+			
 			pstmt.executeUpdate ();			
 			pstmt.close();					
 			this.desconectarBD(con);
 		}
-
+	public void nuevos_2_Telefonos( ArrayList tel, int referencia) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.nuevoCel_Y_Tel();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setString(1, (String) tel.get(0));
+			pstmt.setInt(2, referencia);
+			pstmt.setString(3, (String) tel.get(1));
+			pstmt.setInt(4, referencia);
+			
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	//Guardo los Trabajos
 		public void nuevoTrabajo(long cedulaRut,String fechaInicio, int montoTotal, int cuotas, String comentario,String estado) throws SQLException{
 				// Ingresa una nueva actividad al sistema
@@ -737,4 +753,20 @@ public class AccesoDB {
 							pstmt.close();					
 							this.desconectarBD(con);
 						}
+						// Guardar los datos del nuevo empleado 
+						public void nuevoEmpleado(String nombre, String apellido, String direccion, int cedula) throws SQLException{
+							// Ingresa una nueva actividad al sistema
+								Connection con = this.conectarBD();	
+								Consultas consultas = new Consultas();
+								String insert = consultas.nuevoEmpleado();	
+								PreparedStatement pstmt;
+								pstmt = con.prepareStatement(insert);
+								pstmt.setInt(1, cedula);
+								pstmt.setString(2, nombre);
+								pstmt.setString(3, apellido);
+								pstmt.setString(4, direccion);
+								pstmt.executeUpdate ();			
+								pstmt.close();					
+								this.desconectarBD(con);
+							}
 }

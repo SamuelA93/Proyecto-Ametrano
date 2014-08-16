@@ -1,5 +1,7 @@
 package Grafica.Controladores;
 
+import java.sql.SQLException;
+
 import Logica_Persistencia.Fachada.Fachada;
 
 public class Controlador_Nuevo_Particular {
@@ -12,8 +14,18 @@ public class Controlador_Nuevo_Particular {
 		int cedula = Integer.parseInt(ci);
 		Fachada f= new Fachada();
 		f.nuevoParticular(nombre, apellido, dir, tel , cedula);
-		f.nuevoTelefono(tel, cedula );
-		f.nuevoTelefono(celu, cedula );
+		try {
+			f.nuevoTelefono(tel, cedula );
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			f.nuevoTelefono(celu, cedula );
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

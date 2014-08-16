@@ -11,6 +11,10 @@ public class Consultas {
 		String consulta = "INSERT INTO Telefonos (referencia,telefono) VALUES (?,?);";
 		return consulta;
 	}
+	public String nuevoCel_Y_Tel(){
+		String consulta = "INSERT INTO `Telefonos` (`telefono`,`referencia`) VALUES (?,?),(?,?);";
+		return consulta;
+	}
 	// 
 	public String nuevoTrabajo(){
 		String consulta="INSERT INTO trabajos(cuotas_totales,fecha_inicio,monto_total,estado,comentario,referencia) VALUES(?,?,?,?,?,?)";
@@ -170,4 +174,9 @@ public class Consultas {
 		String consulta = "SELECT COUNT(`referencia`) as cantidad FROM `socios` WHERE `referencia`=?";
 		return consulta;
 	}
+	// Retorna la sentencia SQL para registrar un nuevo Empleado
+				public String nuevoEmpleado(){
+					String consulta = "INSERT INTO empleados (cedula,nombre,apellido,direccion) VALUES (?,?,?,?);";
+					return consulta;
+				}
 }
