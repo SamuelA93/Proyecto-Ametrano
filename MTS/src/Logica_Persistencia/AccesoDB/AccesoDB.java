@@ -174,6 +174,19 @@ public class AccesoDB {
 			pstmt.close();					
 			this.desconectarBD(con);
 		}
+	public void Eliminar_Telefono(String tel,long ref) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.EliminarTelefono();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setString(1,tel);
+			pstmt.setLong(2,ref);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	// Guardar los datos del nuevo particular 
 	public void nuevoParticular(String nombre, String apellido, String dir, int ci) throws SQLException{
 		// Ingresa una nueva actividad al sistema

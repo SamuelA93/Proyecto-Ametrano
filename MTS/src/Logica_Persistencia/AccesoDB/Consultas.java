@@ -24,6 +24,10 @@ public class Consultas {
 		String consulta="SELECT id FROM `prueba` WHERE id=?;";
 		return consulta;
 	}
+	public String EliminarTelefono(){
+		String consulta="DELETE FROM `telefonos` WHERE `telefono` = ? AND `referencia`=? ;";
+		return consulta;
+	}
 	
 	public String DatosTareaParticulares(){
 		String consulta= " SELECT empleados_tiene_trabajos.fecha as fecha, empleados_tiene_trabajos.hora as hora, p.nombre as nombre , p.cedula as ci,p.dir as direccion,p.apellido,t.telefono as telefono, empleados.nombre as Encargado, empleados.cedula as emcedula,empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas, empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos JOIN particulares p on trabajos.referencia = p.cedula JOIN telefonos t on p.cedula = t.referencia;";
@@ -101,7 +105,7 @@ public class Consultas {
 	public String ModificarTel(String tel,String vie){
 		String consulta = "UPDATE `telefonos` SET `telefono` = '"+tel+"' WHERE `telefono` = '"+vie+"' AND `referencia`=?;";
 		
-		System.out.println(consulta);
+		//System.out.println(consulta);
 		return consulta;
 	}
 	public String nuevoSocio(){

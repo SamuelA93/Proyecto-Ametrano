@@ -16,13 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import Grafica.Controladores.Controlador_Empleados;
 import Grafica.Controladores.Controlador_Modificar_Empleado;
 import Grafica.Controladores.Controlador_Modificar_Tel;
+import Grafica.Controladores.Controlador_Telefonos;
+import Grafica.Controladores.Controlador_Verificar;
 import Grafica.Controladores.Controlador_listarEmpleados;
 import Grafica.Controladores.Verificar_Tel;
 //import Grafica.Controladores.Controlador_listarParticulares;
@@ -43,10 +47,9 @@ import java.awt.event.ActionListener;
 
 public class Ver_Empleados extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField textField;
-	private JList listEmpleados;
-	//private List<VOEmpleado> empleados;
+	 private JPanel contentPane;
+	 private JTextField textField;
+	 private JList listEmpleados;
 	 private Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
 	 private List<VOEmpleado> guia= null;
 	 private JTextField agregarNombre;
@@ -56,12 +59,15 @@ public class Ver_Empleados extends JFrame {
 	 private JTextField agregarTelefono;
 	 private JTextField agregarTelefono2;
 	 private boolean editer=false;
-	 
 	 JButton GuardarCambios = new JButton("Guardar cambios");
 	 private final Action action = new SwingAction();
-	 
 	 private ArrayList<String> modif ;
 	 private ArrayList<Object[]> modifT ;
+	 private Controlador_Empleados control = new Controlador_Empleados();
+	 private Controlador_Verificar verificador = new Controlador_Verificar();
+	 private Controlador_Telefonos config_telefonos = new Controlador_Telefonos();
+	 List<VOEmpleado> empleados;
+	 private 	JFrame frame = new JFrame("Exito");
 		
 	/**
 	 * Launch the application.
@@ -82,40 +88,39 @@ public class Ver_Empleados extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	/*
+	 *  Activo o desactivo los campos del empleado para la edicion 
+	 */
 	public void setEditableCampos(boolean bandera){
 		 boolean clip = (!listEmpleados.isSelectionEmpty() && (bandera));
 		if (clip){
-			GuardarCambios.setVisible(true);
-			//System.out.println("si");
+			GuardarCambios.setVisible(clip);
 			agregarNombre.setEditable(clip);
 			agregarApellido.setEditable(clip);
 			agregarDireccion.setEditable(clip);
-			//agregarCedula.setEditable(clip);
 			agregarTelefono.setEditable(clip);
 			agregarTelefono2.setEditable(clip);
 		}else{
-			//System.out.println("no");
 			agregarTelefono2.setEditable(clip);
 			agregarNombre.setEditable(clip);
 			agregarApellido.setEditable(clip);
-			//agregarApellido.setText(guia.get(listParticulares.getSelectedIndex()).getApellido());
 			agregarDireccion.setEditable(clip);
-			//agregarDireccion.setText(guia.get(listParticulares.getSelectedIndex()).getDireccion()); 
-			//agregarCedula.setEditable(clip);
-			//agregarCedula.setText(""+guia.get(listParticulares.getSelectedIndex()).getCedula());
 			agregarTelefono.setEditable(clip);
-			//agregarTelefono.setText(guia.get(listParticulares.getSelectedIndex()).getTelefono());
 		}
 	}
 	
-	public void filtrarTuplasEmpleados(String [] tuplasEmpl, String subCadena,List<VOEmpleado> emples){
+	
+	 /////////////////////// Filtra un array de acuerdo a lo que se este buscando en el textField y carga lo filtrado en jList
+	 
+	public void filtrarTuplasEmpleados(String [] tuplasEmpl, String subCadena){
 		// Dado un array de tuplas de pacientes y una subcadena, va filtrando los nombres del jList
 			boolean hayQueFiltrar = false;
 			DefaultListModel modeloSocios = new DefaultListModel();
-			guia= new ArrayList<VOEmpleado>();
+			guia = new ArrayList<VOEmpleado>();
 			for (int i=0; i<tuplasEmpl.length;i++){			
 				if (tuplasEmpl[i].toUpperCase().startsWith(subCadena.toUpperCase())){
-					guia.add(emples.get(i));
+					guia.add(empleados.get(i));
 					hayQueFiltrar = true;
 					modeloSocios.addElement(tuplasEmpl[i]);
 				}
@@ -125,12 +130,24 @@ public class Ver_Empleados extends JFrame {
 			}		
 		}
 	
+	//////////////////////// Devuelve una List<VOEmpleado> para manter actualizada la ventana 
+	
+	public void Listar() throws SQLException{
+			empleados = control.listarEmpleados();
+	}
+	
+	
+	//////////////////////// devuelve un array con nombres de empleados  apartir de List<VOEmpleado>
+	
 	public String[] EmpleadosToString() {
-		// Retorna un array de empleados en el cual cada tupla esta formada por nombre y apellido
-		// Este array luego se le pasa al jlist de empleados
 		
-			List<VOEmpleado> empleados = controlador.listarEmpleados();
-			guia= new ArrayList<VOEmpleado>();
+		try {
+			Listar();
+			// Retorna un array de empleados en el cual cada tupla esta formada por nombre y apellido
+			// Este array luego se le pasa al jlist de empleados
+			
+			//List<VOEmpleado> empleados = control.listarEmpleados();
+			guia = new ArrayList<VOEmpleado>();
 			String[] tuplas = new String[empleados.size()];
 			int i = 0;
 			for (VOEmpleado emple : empleados){
@@ -138,8 +155,17 @@ public class Ver_Empleados extends JFrame {
 				tuplas[i] =  emple.getNombre() + " " + emple.getApellido();
 				i++;
 			}		
-			return tuplas;
+				return tuplas;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			String[] tupla = new String[1];
+			tupla[0] = "Error";	
+			return  tupla;
 		}
+		
+	}
+	
 	
 	public Ver_Empleados() {
 		setTitle("Ver Empleados");
@@ -156,6 +182,7 @@ public class Ver_Empleados extends JFrame {
 		mnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				////////////  Al seleccionar el modo edicion se habilita la edicion de los campos del empleado
 				setEditableCampos(true);
 			}
 		});
@@ -173,19 +200,17 @@ public class Ver_Empleados extends JFrame {
 			StringBuffer txt = new StringBuffer();
 			@Override
 			public void keyTyped(KeyEvent e) {
-				List<VOEmpleado> empleados = controlador.listarEmpleados();
-				char caracter = e.getKeyChar();								
-				if (caracter == KeyEvent.VK_BACK_SPACE){
-					e.consume();	
-					if (txt.length() >=1){
-						txt.setLength(txt.length()-1);
-						filtrarTuplasEmpleados(EmpleadosToString(),txt.toString(),empleados);
+					char caracter = e.getKeyChar();								
+					if (caracter == KeyEvent.VK_BACK_SPACE){
+						e.consume();	
+						if (txt.length() >=1){
+							txt.setLength(txt.length()-1);
+							filtrarTuplasEmpleados(EmpleadosToString(),txt.toString());
+						}
+					}else{
+						txt.append(caracter);					
+						filtrarTuplasEmpleados(EmpleadosToString(),txt.toString());
 					}
-				}else{
-					txt.append(caracter);					
-					filtrarTuplasEmpleados(EmpleadosToString(),txt.toString(),empleados);
-				}
-				
 			}
 		});
 		textField.setBounds(59, 11, 116, 20);
@@ -200,18 +225,15 @@ public class Ver_Empleados extends JFrame {
 		listEmpleados.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				/*nombre.setText(guia.get(listEmpleados.getSelectedIndex()).getNombre());
-				cedula.setText(""+guia.get(listEmpleados.getSelectedIndex()).getCedula());
-				telefono.setText(""+guia.get(listEmpleados.getSelectedIndex()).getTelefono());*/
-				setEditableCampos(false);
-				GuardarCambios.setVisible(false);
-				agregarNombre.setText(guia.get(listEmpleados.getSelectedIndex()).getNombre());
-				agregarApellido.setText(guia.get(listEmpleados.getSelectedIndex()).getApellido());
-				agregarDireccion.setText(guia.get(listEmpleados.getSelectedIndex()).getDireccion()); 
-				agregarCedula.setText(""+guia.get(listEmpleados.getSelectedIndex()).getCedula());
-				agregarTelefono.setText(guia.get(listEmpleados.getSelectedIndex()).getTelefono());
-				agregarTelefono2.setText(guia.get(listEmpleados.getSelectedIndex()).getTelefono2());
-				//System.out.println(guia.get(listEmpleados.getSelectedIndex()).getTelefono2()+" "+guia.get(listEmpleados.getSelectedIndex()).getTelefono());
+				////////////////   Activa campos para la edicion y carga los datos del empleado y activa el boton "guardar"
+					setEditableCampos(false);
+					GuardarCambios.setVisible(false);
+					agregarNombre.setText(guia.get(listEmpleados.getSelectedIndex()).getNombre());
+					agregarApellido.setText(guia.get(listEmpleados.getSelectedIndex()).getApellido());
+					agregarDireccion.setText(guia.get(listEmpleados.getSelectedIndex()).getDireccion()); 
+					agregarCedula.setText(""+guia.get(listEmpleados.getSelectedIndex()).getCedula());
+					agregarTelefono.setText(guia.get(listEmpleados.getSelectedIndex()).getTelefono());
+					agregarTelefono2.setText(guia.get(listEmpleados.getSelectedIndex()).getTelefono2());
 			}
 		});
 		
@@ -281,89 +303,116 @@ public class Ver_Empleados extends JFrame {
 		contentPane.add(agregarTelefono2);
 		GuardarCambios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String espa ="";
-			
-				if(!agregarNombre.getText().equals(espa)){
-					modif = new ArrayList<String>();
-					modifT = new ArrayList<Object[]>();
-					
-					if( Verificar_Tel.veri(agregarTelefono2.getText()) && !agregarTelefono2.getText().trim().toUpperCase().contentEquals(guia.get(listEmpleados.getSelectedIndex()).getTelefono2().trim().toUpperCase()) ){
-						//System.out.println("igual");
-						//modifT.add("`dir`="+"'"+agregarTelefono2.getText().trim());
-						Object[] rec = new Object[2];
-						rec[0]= agregarTelefono2.getText().trim();
-						rec[1]= guia.get(listEmpleados.getSelectedIndex()).getTelefono2();
-						modifT.add(rec);
-						
-					
+				
+				
+				
+				///////////  Obtengo datos  de entrada 
+				String nombre 		= agregarNombre.getText();
+				String apellido 	= agregarApellido.getText();
+				String direccion 	= agregarDireccion.getText();
+				String tel1			= agregarTelefono.getText();
+				String tel2 		= agregarTelefono2.getText();
+				String ci 			= agregarCedula.getText();
+				//////////////////////////
+				boolean error = false;
+				
+				///////////////////////// Verifico que todos los campos esten con datos correctos
+				if (verificador.SoloString_O_Espacios(nombre)) {
+					if( verificador.SoloString_O_Espacios(apellido) || apellido.equals("")){
+						if( verificador.SoloNumeros(tel1) || tel1.equals("") || tel1.equals("No ingresado")){
+							if( verificador.SoloNumeros(tel2) || tel2.equals("") || tel2.equals("No ingresado") ){	
+							}else{
+								error = true;
+								javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+								mensaje.showMessageDialog(null, "tel2 incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+							}
+						}else{
+							error = true;
+							javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+							mensaje.showMessageDialog(null, "Telefono incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+						}
+					}else{
+						error = true;
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Apellido incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
 					}
 					
-					if(  Verificar_Tel.veri(agregarTelefono.getText()) && !agregarTelefono.getText().trim().toUpperCase().contentEquals(guia.get(listEmpleados.getSelectedIndex()).getTelefono().trim().toUpperCase())){
-						//System.out.println("igual");
-						//modifT.add(agregarTelefono.getText().trim());
+				} else {
+					error = true;
+					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+					mensaje.showMessageDialog(null, "Nombre incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+				}
+				//////////////////////////  Control si no se hallo errores
+				if (!error) {
+					////  modif  es una lista con los cambios a realizar
+					modif = new ArrayList<String>();
+					////   modifT es una lista con los cambios a realizar rn telefonos
+					modifT = new ArrayList<Object[]>();
+					if (!nombre.trim().toUpperCase().equals(guia.get(listEmpleados.getSelectedIndex()).getNombre().trim().toUpperCase())){
+						modif.add("`nombre`="+"'"+nombre.trim()+"'");
+					}
+					if (!apellido.trim().toUpperCase().equals(guia.get(listEmpleados.getSelectedIndex()).getApellido().trim().toUpperCase())){
+						modif.add("`apellido`="+"'"+apellido.trim()+"'");
+					}
+					if (!direccion.trim().toUpperCase().equals(guia.get(listEmpleados.getSelectedIndex()).getDireccion().trim().toUpperCase())){
+						modif.add("`direccion`="+"'"+direccion+"'");
+					}
+					//////   agregar va a hacer la variable que tenga concatenado los cambios, menos los de telefonos
+					String agregar="";
+					int i=1;
+					if(modif.size()>0 ){
+						agregar = agregar+""+modif.get(0);
+						while( i < modif.size()){
+							agregar = agregar+","+modif.get(i);
+							i++;
+						}
+					}
+					/////////////  rec es un objeto que guarda el nuevo numero y el viejo
+					if ( !tel1.equals("") && !tel1.equals("No ingresado") && !tel1.trim().toUpperCase().equals(guia.get(listEmpleados.getSelectedIndex()).getTelefono().trim().toUpperCase()) ){
 						Object[] rec = new Object[2];
-						rec[0]= agregarTelefono.getText().trim();
+						rec[0]= tel1.trim();
 						rec[1]= guia.get(listEmpleados.getSelectedIndex()).getTelefono();
 						modifT.add(rec);
 					}
-					if( !agregarNombre.getText().trim().toUpperCase().contentEquals(guia.get(listEmpleados.getSelectedIndex()).getNombre().trim().toUpperCase())){
-						//System.out.println(agregarNombre.getText());
-						modif.add("`nombre`="+"'"+agregarNombre.getText().trim()+"'");
-						//modif.add(agregarNombre.getText()+"");
+					if (!tel2.equals("") && !tel2.equals("No ingresado") && !tel2.trim().toUpperCase().equals(guia.get(listEmpleados.getSelectedIndex()).getTelefono2().trim().toUpperCase())){
+						Object[] rec = new Object[2];
+						rec[0]= tel2.trim();
+						rec[1]= guia.get(listEmpleados.getSelectedIndex()).getTelefono2();
+						modifT.add(rec);
 					}
-					if( !agregarDireccion.getText().trim().toUpperCase().contentEquals(guia.get(listEmpleados.getSelectedIndex()).getDireccion().trim().toUpperCase())){
-						//System.out.println("igual");
-						modif.add("`dir`="+"'"+agregarDireccion.getText().trim()+"'");
-					}
-					if( !agregarApellido.getText().trim().toUpperCase().contentEquals(guia.get(listEmpleados.getSelectedIndex()).getApellido().trim().toUpperCase())){
-						//System.out.println("igual");
-						modif.add("`apellido`="+"'"+agregarApellido.getText().trim()+"'");
-					}
-					String agregar="";
-					int i=1;
-					//System.out.println(modif.size());
-					if(modif.size()>0 ){
-					agregar = agregar+""+modif.get(0);
-					}
-					//System.out.println(agregar);
-					while( i< modif.size()){
-						agregar = agregar+","+modif.get(i);
-						//System.out.println(agregar);
-						i++;
-						}
-					//agregar = agregar+""+modif.get(modif.size()+1);
-					//System.out.println(agregar);
-					Controlador_Modificar_Empleado ModiPart = new Controlador_Modificar_Empleado();
-					Controlador_Modificar_Tel modiTel = new Controlador_Modificar_Tel();
 					try {
-						//System.out.println(guia.get(listParticulares.getSelectedIndex()).getCedula());
-						if(agregar!=""){
-							ModiPart.modificar(agregar, guia.get(listEmpleados.getSelectedIndex()).getCedula());
+						///////  se modifica la db solo si existen cambios en los datos del empleado
+						if (!agregar.equals("")) {
+							System.out.println(agregar);
+							control.modificar(agregar, (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
+						} 
+						try {
+							if(modifT.size()>0){
+								config_telefonos.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
 						}
-						
-						if(modifT.size()>0){
-							modiTel.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
-							//System.out.println((String) modifT.get(0)[0]);
+						try {
+							if(modifT.size()>1){
+								config_telefonos.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
 						}
-						if(modifT.size()>1){
-							modiTel.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
-							//System.out.println((String) modifT.get(1)[0]);
-						}
+						//////  desabilitar camor para la edicion
+						setEditableCampos(false);
+						////// actualizar lista 
+						filtrarTuplasEmpleados(EmpleadosToString(), "");
+						/////////  esconder el boton de guardar cambios
+						GuardarCambios.setVisible(false);
 						
-					} catch (SQLException e) {
-						//System.out.println("Error");
-						e.printStackTrace();
-						
+						JOptionPane.showMessageDialog(frame, "Se ah modificado  Empleado.");
+					} catch (Exception e) {
+						// TODO: handle exception
 					}
-					
-					setEditableCampos(false);
-					List<VOEmpleado> empleado1 = controlador.listarEmpleados();
-					filtrarTuplasEmpleados(EmpleadosToString(),"",empleado1);
-					GuardarCambios.setVisible(false);
-				}else{
-					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
-					mensaje.showMessageDialog(null, "Ingrese el nombre.", "Atención!!!", mensaje.ERROR_MESSAGE);
-				}
+				} 
+				
 			}
 		});
 		

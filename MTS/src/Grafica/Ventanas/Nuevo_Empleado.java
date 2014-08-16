@@ -118,7 +118,7 @@ public class Nuevo_Empleado extends JFrame {
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				///////////  Recojo los datos de entrada 
+				///////////  Obtengo datos  de entrada 
 				String nombreE 		= nombre.getText();
 				String apellidoE 	= apellido.getText();
 				String direccionE 	= direccion.getText();

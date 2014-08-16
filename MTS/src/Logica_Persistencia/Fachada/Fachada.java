@@ -46,7 +46,10 @@ public class Fachada {
 			e.printStackTrace();
 		}
 	}
-	
+	public void EliminarTelefono(String tel, long ci) throws SQLException{
+		AccesoDB a = new AccesoDB();
+		a.Eliminar_Telefono(tel, ci);
+	}
 	//
 	/*public void nuevoTelefono( String tel, int referencia){
 		AccesoDB a = new AccesoDB();
