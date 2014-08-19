@@ -18,11 +18,13 @@ import java.util.List;
 
 
 
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOParticularEmpresa;
 import Logica_Persistencia.Value_Object.VOSocio;
 import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
@@ -49,6 +51,10 @@ public class Fachada {
 	public void EliminarTelefono(String tel, long ci) throws SQLException{
 		AccesoDB a = new AccesoDB();
 		a.Eliminar_Telefono(tel, ci);
+	}
+	public int obtener_idTrabajo_X_ref( long ci) throws SQLException{
+		AccesoDB a = new AccesoDB();
+		return a.obtener_idTrabajo_X_ref(ci);
 	}
 	//
 	/*public void nuevoTelefono( String tel, int referencia){
@@ -97,15 +103,18 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a.obtenerEmpresaXrut(rut);
 		}
-		public List<Object[]> obtenerClientes_Nombre_Referencia(String entradaNombre,String entradareferencia) throws SQLException{
+		public List<Object[]> obtenerClientes_Nombre_Referencia() throws SQLException{
 			AccesoDB a = new AccesoDB();
-			return a.obtenerClientes_Referecia(entradaNombre, entradareferencia);
+			return a.obtenerClientes_Referecia();
 		}
 		public List<Object[]> obtenerTrabajo_TituloXReferencia(long a2) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			return a. obtenerTrabajos_Referecia(a2);
 		}
-		
+		public List<VOCliente> ListarClientes(){
+			AccesoDB a = new AccesoDB();
+			return a.ListarClientes();
+		}
 		public void nuevaEmpresa(long rut, String nombre, String contacto, String direccion) throws SQLException
 		{
 			AccesoDB a = new AccesoDB();
@@ -216,4 +225,29 @@ public class Fachada {
 					a.nuevoEmpleado(nombre, apellido, direccion, cedula);
 					//a.nuevoTelefono(telefono, cedula);
 				}
+				
+	///////////////////////////// ivan 
+				
+				//Envia los datos nuevo trabajo a AccesoDB
+				public void nuevoTrabajo(long cliente, String fecha, int montoTotal, int cuotas,String encargado,String hora, String comentario, String estado){
+					AccesoDB a = new AccesoDB();
+					try {
+						a.nuevoTrabajo(cliente,fecha,montoTotal,cuotas,encargado,hora,comentario,estado);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+		//lista cliente Empresa/particular
+				public List<VOParticularEmpresa> listarClientes(){
+					AccesoDB a = new AccesoDB();
+					return a.listarClientes();
+				}
+		//listar Encargados
+				public List<VOEmpleado> listarEncargados(){
+					AccesoDB a =  new AccesoDB();
+					return a.listarEncargados();
+				}
+		////////////////////
 }

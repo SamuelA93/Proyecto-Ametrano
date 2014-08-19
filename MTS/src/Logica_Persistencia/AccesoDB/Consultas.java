@@ -16,10 +16,10 @@ public class Consultas {
 		return consulta;
 	}
 	// 
-	public String nuevoTrabajo(){
+	/*public String nuevoTrabajo(){
 		String consulta="INSERT INTO trabajos(cuotas_totales,fecha_inicio,monto_total,estado,comentario,referencia) VALUES(?,?,?,?,?,?)";
 		return consulta;
-	}
+	}*/
 	public String fechaTarea(){
 		String consulta="SELECT id FROM `prueba` WHERE id=?;";
 		return consulta;
@@ -40,6 +40,12 @@ public class Consultas {
 		String consulta = "SELECT empleados_tiene_trabajos.fecha as fecha, empleados_tiene_trabajos.hora as hora, e.nombre as nombre , e.rut as rut,e.direccion as direccion,e.contacto,t.telefono as telefono, empleados.nombre as Encargado, empleados.cedula as emcedula,empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas, empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos JOIN empresa e on trabajos.referencia = e.rut JOIN telefonos t on e.rut = t.referencia";
 		return consulta;
 	}
+			
+	public String obtener_idTrabajo_X_Referecncia(){
+		String consulta = "SELECT MAX(`idTrabajos`) as id FROM `trabajos` WHERE `referencia`= ?;";
+		return consulta;
+	}
+	
 	public String DatosTareas(){
 		String consulta =  "SELECT* FROM `empleados_tiene_trabajos` WHERE DATE(`fecha`)>=CURDATE() ORDER BY `fecha` ;";
 		//String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
@@ -179,8 +185,37 @@ public class Consultas {
 		return consulta;
 	}
 	// Retorna la sentencia SQL para registrar un nuevo Empleado
-				public String nuevoEmpleado(){
-					String consulta = "INSERT INTO empleados (cedula,nombre,apellido,direccion) VALUES (?,?,?,?);";
-					return consulta;
-				}
+	public String nuevoEmpleado(){
+		String consulta = "INSERT INTO empleados (cedula,nombre,apellido,direccion) VALUES (?,?,?,?);";
+		return consulta;
+	}
+	
+	///////////////////////////////////////   ivan
+	//Nuevo trabajo
+		public String nuevoTrabajo(){
+			String consulta="INSERT INTO trabajos(cuotas_totales,monto_total,estado,referencia) VALUES(?,?,?,?);";
+			return consulta;
+		}
+		//Nueva Tarea
+		public String nuevaTarea(){
+			String consulta="INSERT INTO empleados_tiene_trabajos(Empleados_cedula,trabajos_idTrabajos,fecha,horas,comentario) VALUES(?,?,?,?,?);";
+			return consulta;
+		}
+		//Traigo el id del ultimo trabajo
+		public String idUltimoTrabajo(){
+			String consulta = "SELECT idTrabajos FROM trabajos ORDER BY idTrabajos DESC LIMIT 1 ;";
+			return consulta;
+		}
+		//clientes
+		public String ListarParticularEmpresa(){
+			String consulta ="SELECT nombre as cliente,cedula as id FROM `particulares` Union SELECT nombre as cliente,rut as id FROM `empresa` ORDER BY cliente ;";
+			return consulta;
+		}
+		//empleados
+		public String ListarEncargados(){
+			String consulta = "SELECT * FROM `empleados` ORDER by nombre;";
+			return consulta;
+		}
+	////////////////////////////////////////
+	
 }

@@ -13,11 +13,13 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
-import Grafica.Controladores.Controlador_Agregar_meses;
-import Grafica.Controladores.Controlador_Cantidad_Registros_Socio;
-import Grafica.Controladores.Controlador_Modificar_Particular;
-import Grafica.Controladores.Controlador_Modificar_Tel;
-import Grafica.Controladores.Controlador_listarParticulares;
+
+
+
+import Grafica.Controladores.Controlador_Particular;
+import Grafica.Controladores.Controlador_Socio;
+import Grafica.Controladores.Controlador_Telefono;
+
 import Grafica.Controladores.Verificar_Tel;
 import Logica_Persistencia.Value_Object.VOParticular;
 
@@ -45,7 +47,7 @@ public class Ver_Particulares extends JFrame {
 	private JTextField textField;
 	private JList listParticulares;
 	private int j=0;
-	private Controlador_listarParticulares controlador = new Controlador_listarParticulares();
+	//private Controlador_listarParticulares controlador = new Controlador_listarParticulares();
 	private List<VOParticular> guia= null;
 	private JTextField agregarNombre;
 	private JTextField agregarApellido;
@@ -57,9 +59,13 @@ public class Ver_Particulares extends JFrame {
 	private JTextField agregarTelefono2;
 	private ArrayList<String> modif ;
 	private ArrayList<Object[]> modifT ;
-	Controlador_Agregar_meses controlSocios = new Controlador_Agregar_meses();
-	Controlador_Cantidad_Registros_Socio cuenta = new Controlador_Cantidad_Registros_Socio();
+	//Controlador_Agregar_meses controlSocios = new Controlador_Agregar_meses();
+	//Controlador_Cantidad_Registros_Socio cuenta = new Controlador_Cantidad_Registros_Socio();
+	Controlador_Socio control_socio = new Controlador_Socio();
+	
 	JCheckBox Socio;
+	private Controlador_Particular control = new Controlador_Particular();
+	private Controlador_Telefono control_tel = new Controlador_Telefono();
 	/**
 	 * Launch the application.
 	 */
@@ -126,7 +132,7 @@ public class Ver_Particulares extends JFrame {
 		// Retorna un array de pacientes en el cual cada tupla esta formada por nombre y apellido
 		// Este array luego se le pasa al jlist de pacientes
 			
-			List<VOParticular> particulares = controlador.listarParticulares();
+			List<VOParticular> particulares = control.listarParticulares();
 			guia= new ArrayList<VOParticular>();
 			String[] tuplas = new String[particulares.size()];
 			int i = 0;
@@ -175,7 +181,7 @@ public class Ver_Particulares extends JFrame {
 			StringBuffer txt = new StringBuffer();
 			@Override
 			public void keyTyped(KeyEvent e) {
-				List<VOParticular> particulares = controlador.listarParticulares();
+				List<VOParticular> particulares = control.listarParticulares();
 				char caracter = e.getKeyChar();								
 				if (caracter == KeyEvent.VK_BACK_SPACE){
 					e.consume();	
@@ -195,7 +201,7 @@ public class Ver_Particulares extends JFrame {
 		textField.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 42, 165, 270);
+		scrollPane.setBounds(10, 42, 165, 302);
 		contentPane.add(scrollPane);
 		
 		 listParticulares = new JList(this.particularesToString());
@@ -204,7 +210,7 @@ public class Ver_Particulares extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				
 				try {
-					long refer= cuenta.registros(guia.get(listParticulares.getSelectedIndex()).getCedula());
+					long refer= control_socio.registros(guia.get(listParticulares.getSelectedIndex()).getCedula());
 					if (refer>0) {
 						Socio.setSelected(true);
 						
@@ -288,7 +294,7 @@ public class Ver_Particulares extends JFrame {
 				String espa ="";
 				if(Socio.isEnabled()&&Socio.isSelected()){
 					try {
-						controlSocios.Nuevo_Socio((long) guia.get(listParticulares.getSelectedIndex()).getCedula());
+						control_socio.Nuevo_Socio((long) guia.get(listParticulares.getSelectedIndex()).getCedula());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -345,20 +351,20 @@ public class Ver_Particulares extends JFrame {
 					}
 				//agregar = agregar+""+modif.get(modif.size()+1);
 				//System.out.println(agregar);
-				Controlador_Modificar_Particular ModiPart = new Controlador_Modificar_Particular();
-				Controlador_Modificar_Tel modiTel = new Controlador_Modificar_Tel();
+				//Controlador_Modificar_Particular ModiPart = new Controlador_Modificar_Particular();
+				//Controlador_Modificar_Tel modiTel = new Controlador_Modificar_Tel();
 				try {
 					//System.out.println(guia.get(listParticulares.getSelectedIndex()).getCedula());
 					if(agregar!=""){
-						ModiPart.modificar(agregar, guia.get(listParticulares.getSelectedIndex()).getCedula());
+						control.modificar(agregar, guia.get(listParticulares.getSelectedIndex()).getCedula());
 					}
 					
 					if(modifT.size()>0){
-						modiTel.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listParticulares.getSelectedIndex()).getCedula());
+						control_tel.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listParticulares.getSelectedIndex()).getCedula());
 						System.out.println((String) modifT.get(0)[0]);
 					}
 					if(modifT.size()>1){
-						modiTel.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listParticulares.getSelectedIndex()).getCedula());
+						control_tel.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listParticulares.getSelectedIndex()).getCedula());
 						System.out.println((String) modifT.get(1)[0]);
 					}
 					
@@ -370,7 +376,7 @@ public class Ver_Particulares extends JFrame {
 					
 				}
 				setEditableCampos(false);
-				List<VOParticular> particulares = controlador.listarParticulares();
+				List<VOParticular> particulares = control.listarParticulares();
 				filtrarTuplasParticulares(particularesToString(),"",particulares);
 				GuardarCambios.setVisible(false);
 				

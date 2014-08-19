@@ -19,6 +19,7 @@ import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOParticularEmpresa;
 import Logica_Persistencia.Value_Object.VOSocio;
 import Logica_Persistencia.Value_Object.VOSocio_Fechas;
 import Logica_Persistencia.Value_Object.VOTarea;
@@ -276,11 +277,11 @@ public class AccesoDB {
 				PreparedStatement pstmt;
 				pstmt = con.prepareStatement(insert);
 				pstmt.setInt(1, cuotas);
-				pstmt.setString(2, fechaInicio);
-				pstmt.setInt(3, montoTotal);
-				pstmt.setString(4, estado);
-				pstmt.setString(5, comentario);
-				pstmt.setLong(6, cedulaRut);
+				
+				pstmt.setInt(2, montoTotal);
+				pstmt.setString(3, estado);
+				pstmt.setLong(4, cedulaRut);
+				
 				pstmt.executeUpdate ();			
 				pstmt.close();					
 				this.desconectarBD(con);
@@ -300,6 +301,22 @@ public class AccesoDB {
 		    pstmt.close();
 			this.desconectarBD(con);
 			return IdMutualista;
+		}
+		
+		public int obtener_idTrabajo_X_ref(long ref) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String strIdMutualista = consultas.obtener_idTrabajo_X_Referecncia();
+			PreparedStatement pstmt = con.prepareStatement (strIdMutualista);
+			pstmt.setLong (1, ref);
+			ResultSet rs = pstmt.executeQuery ();		 	        
+		    rs.next();
+		    int Id  = rs.getInt("id");		
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return Id;
 		}
 		// Modificar Particulares 
 		public void Modificar_Particular(String modi,long l) throws SQLException{	
@@ -556,7 +573,7 @@ public class AccesoDB {
 		    
 		}
 		
-		public List<Object[]> obtenerClientes_Referecia(String entradaNombre,String entradareferencia) throws SQLException{	
+		public List<Object[]> obtenerClientes_Referecia() throws SQLException{	
 			List<Object[]> lstClientes = null;	
 			Connection con = null;	
 			con = this.conectarBD();	
@@ -683,7 +700,7 @@ public class AccesoDB {
 						while (rs.next()) {
 							int cedula = rs.getInt("cedula");
 							String nombre = rs.getString("nombre");
-							//System.out.println(nombre);
+							//System.out.println("estoy");
 							String apellido = rs.getString("apellido");
 							String direccion = rs.getString("direccion");	
 							//String telefono = "";
@@ -702,6 +719,39 @@ public class AccesoDB {
 					return lstEmpleados;
 				} 
 			
+			public List<VOCliente> ListarClientes(){
+				// 	 
+					Connection con = null;				
+					con = this.conectarBD();
+					VOCliente cliente = null;
+					List<VOCliente> lstClientes = null;		
+					// creo un Statement para listar todas las actividades 
+					Statement stmt;
+					try {
+						stmt = con.createStatement();			
+						Consultas consultas = new Consultas();
+						String strClientes = consultas.Clientes_Dir_Ref();
+						ResultSet rs = stmt.executeQuery(strClientes);					
+						lstClientes = new ArrayList<VOCliente>();			
+						while (rs.next()) {
+							int referencia = rs.getInt("referencia");
+							String nombre = rs.getString("nombre");
+							//System.out.println(nombre);
+							String dir = rs.getString("dir");	
+							//String telefono = "";
+							//System.out.println(telefono+"listado");
+							cliente = new VOCliente(referencia, dir, "", nombre);
+							lstClientes.add(cliente);			
+						}
+						rs.close();
+						stmt.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		
+					this.desconectarBD(con);
+					return lstClientes;
+				} 
 			public List<VOCliente> ListarClientes_Dir_Tel_Ref(){	 
 				Connection con = null;				
 				con = this.conectarBD();
@@ -716,12 +766,11 @@ public class AccesoDB {
 					lstCliente= new ArrayList<VOCliente>();		
 					VOCliente Tarea;
 					while (rs.next()) {
-						
 						long ref = rs.getLong("referencia");
 						String dir = rs.getString("dir");
 						String nombre = rs.getString("nombre");
 						Object[]	 telefono = obtenerTelXreferencia(ref);
-						
+						System.out.println(nombre);
 						if(telefono[0]=="No ingresado" && telefono[1]=="No ingresado"){
 							 Tarea =new VOCliente(ref, dir, "No ingresado", nombre);
 							//System.out.println("No ingresado");
@@ -738,9 +787,7 @@ public class AccesoDB {
 									//System.out.println( (String ) telefono[1]+"/"+telefono[0]);
 								}
 							}
-							
 						}
-						
 						//VOCliente Tarea =new VOCliente(ref, dir, (String ) telefono[0]+" / "+telefono[1], nombre);
 						
 						lstCliente.add(Tarea);			
@@ -767,19 +814,131 @@ public class AccesoDB {
 							this.desconectarBD(con);
 						}
 						// Guardar los datos del nuevo empleado 
-						public void nuevoEmpleado(String nombre, String apellido, String direccion, int cedula) throws SQLException{
-							// Ingresa una nueva actividad al sistema
-								Connection con = this.conectarBD();	
-								Consultas consultas = new Consultas();
-								String insert = consultas.nuevoEmpleado();	
-								PreparedStatement pstmt;
-								pstmt = con.prepareStatement(insert);
-								pstmt.setInt(1, cedula);
-								pstmt.setString(2, nombre);
-								pstmt.setString(3, apellido);
-								pstmt.setString(4, direccion);
-								pstmt.executeUpdate ();			
-								pstmt.close();					
-								this.desconectarBD(con);
+		public void nuevoEmpleado(String nombre, String apellido, String direccion, int cedula) throws SQLException{
+			// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.nuevoEmpleado();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setInt(1, cedula);
+			pstmt.setString(2, nombre);
+			pstmt.setString(3, apellido);
+			pstmt.setString(4, direccion);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+		
+		///////////////////////////////////////////////// ivan 
+		
+		//Guardo los Trabajos y tareas
+				public void nuevoTrabajo(long referencia,String fecha, int montoTotal, int cuotas,String encargado,String hora, String comentario,String estado) throws SQLException{
+						// Ingresa una nueva actividad al sistema
+						Connection con = this.conectarBD();	
+						Consultas consultas = new Consultas();
+						String insert = consultas.nuevoTrabajo();	
+						PreparedStatement pstmt;
+						pstmt = con.prepareStatement(insert);
+						pstmt.setInt(1, cuotas);
+						pstmt.setString(2, fecha);
+						pstmt.setInt(3, montoTotal);
+						pstmt.setString(4,estado);
+						pstmt.setLong(5, referencia);
+						pstmt.executeUpdate ();			
+						pstmt.close();					
+						this.desconectarBD(con);
+						
+						//Obtener id del ultimo trabajo
+						Connection con1 = null;
+						con1 =this.conectarBD();
+						Consultas selecId = new Consultas();
+						String strIdTrabajo= selecId.idUltimoTrabajo();
+						PreparedStatement pstmt1 =con1.prepareStatement(strIdTrabajo);
+						ResultSet rs1 = pstmt1.executeQuery();
+						rs1.next();
+						//recupero ultimo id de la tabla trabajos (incluido el registrado anteriormente)
+						String ultimoId = rs1.getString(1);
+						rs1.close();
+						this.desconectarBD(con1);
+						
+						
+						Connection con2 = null;
+						con2 = this.conectarBD();
+						Consultas guardarTarea = new Consultas();
+						String conGuardarTarea = guardarTarea.nuevaTarea();
+						PreparedStatement pstmtTarea;
+						pstmtTarea = con2.prepareStatement(conGuardarTarea);
+						pstmtTarea.setLong(1,referencia);
+						pstmtTarea.setString(2,ultimoId);
+						pstmtTarea.setString(3, fecha);
+						pstmtTarea.setString(4, hora);
+						pstmtTarea.setString(5, comentario);
+						pstmtTarea.executeUpdate();
+						pstmtTarea.close();
+						this.desconectarBD(con2);
+						
+						System.out.println("ULTIMO ID"+ultimoId);
+				}
+
+
+			//Listado de Encargados/Empleados
+					public List <VOEmpleado> listarEncargados(){
+						Connection con = null;
+						con = this.conectarBD();
+						VOEmpleado encargado = null;
+						List<VOEmpleado> lstEncargados=null;
+						//creo un Statement para listar todos los Encargados
+						Statement stmt ;
+						try {
+							stmt = con.createStatement();
+							Consultas consultas = new Consultas();
+							String strEncargados = consultas.ListarEncargados();
+							ResultSet  rs = stmt.executeQuery(strEncargados);
+							lstEncargados = new ArrayList<VOEmpleado>();
+							while(rs.next()){
+								encargado = new VOEmpleado(rs.getInt("cedula"),rs.getString("nombre"),"","","","");
+								lstEncargados.add(encargado);
 							}
+							rs.close();
+							stmt.close();
+						
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						this.desconectarBD(con);
+						return lstEncargados;
+						}
+
+		//listado Clientes union de Particular Empresas
+					public List <VOParticularEmpresa> listarClientes(){
+						Connection con = null;
+						con = this.conectarBD();
+						VOParticularEmpresa cliente = null;
+						List<VOParticularEmpresa> lstClientes=null;
+						//creo un Statement para listar todos los clientes
+						Statement stmt ;
+						try {
+							stmt = con.createStatement();
+							Consultas consultas = new Consultas();
+							String strClientes = consultas.ListarParticularEmpresa();
+							ResultSet  rs = stmt.executeQuery(strClientes);
+							lstClientes = new ArrayList<VOParticularEmpresa>();
+							while(rs.next()){
+								cliente = new VOParticularEmpresa(rs.getLong("id"),rs.getString("cliente"));
+								lstClientes.add(cliente);
+							}
+							rs.close();
+							stmt.close();
+						
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						this.desconectarBD(con);
+						return lstClientes;
+						
+					}
+			///////////////////////////////
 }

@@ -13,9 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-import Grafica.Controladores.Controlador_Nueva_Empresa;
-import Grafica.Controladores.Controlador_Nuevo_Empleado;
-import Grafica.Controladores.Controlador_Nuevo_Particular;
+import Grafica.Controladores.Controlador_Empleado;
+
+
+
 import Grafica.Controladores.Verificar_Ci;
 import Grafica.Controladores.Verificar_Tel;
 
@@ -23,7 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import Grafica.Controladores.Controlador_Empleados;
+
 import Grafica.Controladores.Controlador_Verificar;
 
 public class Nuevo_Empleado extends JFrame {
@@ -37,7 +38,7 @@ public class Nuevo_Empleado extends JFrame {
 	private JTextField celuE;
 	private Controlador_Verificar control = new Controlador_Verificar();
 	private ArrayList<String> telefonos ;
-	private Controlador_Empleados Empleado = new Controlador_Empleados();
+	private Controlador_Empleado Empleado = new Controlador_Empleado();
 	private 	JFrame frame = new JFrame("Exito");
 
 	/**

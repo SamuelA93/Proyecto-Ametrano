@@ -22,12 +22,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import Grafica.Controladores.Controlador_Empleados;
-import Grafica.Controladores.Controlador_Modificar_Empleado;
-import Grafica.Controladores.Controlador_Modificar_Tel;
-import Grafica.Controladores.Controlador_Telefonos;
+import Grafica.Controladores.Controlador_Empleado;
+
+
+
+import Grafica.Controladores.Controlador_Telefono;
+
 import Grafica.Controladores.Controlador_Verificar;
-import Grafica.Controladores.Controlador_listarEmpleados;
+
 import Grafica.Controladores.Verificar_Tel;
 //import Grafica.Controladores.Controlador_listarParticulares;
 import Logica_Persistencia.Value_Object.VOEmpleado;
@@ -50,7 +52,7 @@ public class Ver_Empleados extends JFrame {
 	 private JPanel contentPane;
 	 private JTextField textField;
 	 private JList listEmpleados;
-	 private Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
+	// private Controlador_listarEmpleados controlador = new Controlador_listarEmpleados();
 	 private List<VOEmpleado> guia= null;
 	 private JTextField agregarNombre;
 	 private JTextField agregarApellido;
@@ -63,9 +65,10 @@ public class Ver_Empleados extends JFrame {
 	 private final Action action = new SwingAction();
 	 private ArrayList<String> modif ;
 	 private ArrayList<Object[]> modifT ;
-	 private Controlador_Empleados control = new Controlador_Empleados();
+	 private Controlador_Empleado control = new Controlador_Empleado();
+	 private Controlador_Telefono control_tel = new Controlador_Telefono();
 	 private Controlador_Verificar verificador = new Controlador_Verificar();
-	 private Controlador_Telefonos config_telefonos = new Controlador_Telefonos();
+	 //private Controlador_Telefonos config_telefonos = new Controlador_Telefonos();
 	 List<VOEmpleado> empleados;
 	 private 	JFrame frame = new JFrame("Exito");
 		
@@ -388,14 +391,14 @@ public class Ver_Empleados extends JFrame {
 						} 
 						try {
 							if(modifT.size()>0){
-								config_telefonos.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
+								control_tel.modificar( (String) modifT.get(0)[0],  (String) modifT.get(0)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
 							}
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
 						try {
 							if(modifT.size()>1){
-								config_telefonos.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
+								control_tel.modificar( (String) modifT.get(1)[0],  (String) modifT.get(1)[1], (int) guia.get(listEmpleados.getSelectedIndex()).getCedula());
 							}
 						} catch (Exception e) {
 							// TODO: handle exception

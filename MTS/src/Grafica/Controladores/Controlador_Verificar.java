@@ -49,7 +49,21 @@ public class Controlador_Verificar {
 		} 
 	}
 	
+	/////////////////
 	
+	public static boolean esNumero(String dato){
+		return dato.matches("[-+]?\\d+(\\.\\d+)?");
+	}
+	
+	///////////////
+	
+	public static boolean verificarExistencia(String dato){
+		if(dato.isEmpty()){
+			return false;
+		}else{
+			return true;
+		}
+	}
 	/*public static void main(String[] args) {
 		String d = "dfg";
 		if (Pattern.matches("[[a-zA-Z]|\\s]+",d.trim()) || Pattern.matches("\\s",d.trim())) {

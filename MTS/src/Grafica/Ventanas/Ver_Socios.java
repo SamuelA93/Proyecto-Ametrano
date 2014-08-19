@@ -22,9 +22,11 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 
-import Grafica.Controladores.Controlador_Agregar_meses;
-import Grafica.Controladores.Controlador_Obtener_Cliente_Ref_Dir_Tel;
-import Grafica.Controladores.Controlador_Obtener_Fechas_Socio;
+
+import Grafica.Controladores.Controlador_Cliente;
+
+
+import Grafica.Controladores.Controlador_Socio;
 import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOSocio;
@@ -57,13 +59,14 @@ public class Ver_Socios extends JFrame {
 	int MAX,MIN;
 	JButton menos;
 	JButton mas;
-	private Controlador_Obtener_Cliente_Ref_Dir_Tel control= new Controlador_Obtener_Cliente_Ref_Dir_Tel();
+	private Controlador_Cliente control_Cliente = new Controlador_Cliente();
 	private JTable linea;
-	Controlador_Obtener_Fechas_Socio dato_fechas= new Controlador_Obtener_Fechas_Socio() ;
+	//Controlador_Obtener_Fechas_Socio dato_fechas= new Controlador_Obtener_Fechas_Socio() ;
 	VOSocio socio = new VOSocio();
 	pruebaFechas auxiliar = new pruebaFechas();
 	pruebaFechas auxiliar2 = new pruebaFechas();
-	Controlador_Agregar_meses controlSocios = new Controlador_Agregar_meses();
+	
+	private Controlador_Socio control = new Controlador_Socio();
 	private boolean bandera = false;
 	JFormattedTextField numForma;
 	MaskFormatter mascara;
@@ -131,7 +134,7 @@ public class Ver_Socios extends JFrame {
 	}
 	public void cargarLineaPagos( VOCliente cliente, int pal){
 		try {
-			socio = dato_fechas.ObtenerFechas(cliente.getReferencia());
+			socio = control.ObtenerFechas(cliente.getReferencia());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("error");
@@ -192,7 +195,12 @@ public class Ver_Socios extends JFrame {
 	}
 	public void cargarTabla(){
 		
-		 listCli =  control.obtenerLista();
+		 try {
+			listCli =  control_Cliente.obtenerListaSocios();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		 
 		 modelo2 = new DefaultTableModel(){
 		    @Override
@@ -289,7 +297,7 @@ public class Ver_Socios extends JFrame {
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
-						controlSocios.agregar_Un_Mes(ref, fecha);
+						control.agregar_Un_Mes(ref, fecha);
 						
 					     
 					    // show a joptionpane dialog using showMessageDialog
@@ -308,7 +316,7 @@ public class Ver_Socios extends JFrame {
 					if( fechaVerif.equals("01/01/2000") ){
 						try {
 							System.out.println(fechaVerif);
-							controlSocios.Nuevo_Socio(ref);
+							control.Nuevo_Socio(ref);
 							
 						     
 						    // show a joptionpane dialog using showMessageDialog
@@ -355,7 +363,7 @@ public class Ver_Socios extends JFrame {
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
-						controlSocios.agregar_dos_Mes(ref, fecha);
+						control.agregar_dos_Mes(ref, fecha);
 						JOptionPane.showMessageDialog(frame,
 						        "Se ah agregado dos mes más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e) {
@@ -403,7 +411,7 @@ public class Ver_Socios extends JFrame {
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
-						controlSocios.agregar_tres_Mes(ref, fecha);
+						control.agregar_tres_Mes(ref, fecha);
 						JOptionPane.showMessageDialog(frame,
 						        "Se ah agregado tres mes más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e) {
@@ -468,7 +476,7 @@ public class Ver_Socios extends JFrame {
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
-						controlSocios.agregar_x_Mes(ref, fecha,xF);
+						control.agregar_x_Mes(ref, fecha,xF);
 						JOptionPane.showMessageDialog(frame,
 						        "Se ah agregado "+xF+" meses más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e1) {
@@ -515,7 +523,7 @@ public class Ver_Socios extends JFrame {
 				if( !fechaVerif.equals("01/01/2000") ){
 					try {
 						System.out.println(fechaVerif);
-						controlSocios.agregar_anio_Mes(ref, fecha);
+						control.agregar_anio_Mes(ref, fecha);
 						JOptionPane.showMessageDialog(frame,
 						        "Se ah agregado un año  más de socio ah "+listCli.get(selec).getNombre());
 					} catch (SQLException e4) {
@@ -560,7 +568,7 @@ public class Ver_Socios extends JFrame {
 					
 						System.out.println("si "+fechaVerif);
 						try {
-							controlSocios.Cancelar(ref, fecha);
+							control.Cancelar(ref, fecha);
 							JOptionPane.showMessageDialog(frame,
 							        "Se cancelado la cuenta de "+listCli.get(selec).getNombre());
 						} catch (SQLException e) {

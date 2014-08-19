@@ -16,9 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import Grafica.Controladores.Controlador_Nuevo_Particular;
+
+import Grafica.Controladores.Controlador_Particular;
 import Grafica.Controladores.Verificar_Ci;
-import Grafica.Controladores.Verificar_Existencia;
+
 import Grafica.Controladores.Verificar_Tel;
 
 public class Nuevo_Particular extends JFrame {
@@ -31,6 +32,7 @@ public class Nuevo_Particular extends JFrame {
 	private JTextField dir;
 	private JTextField celu;
 	private JLabel lblCel;
+	private Controlador_Particular control = new Controlador_Particular();
 
 	/**
 	 * Launch the application.
@@ -179,8 +181,8 @@ public class Nuevo_Particular extends JFrame {
 						
 						if(bandera && bandera2){
 							System.out.println("ntro");
-							Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
-							controlador.nuevoParticular(nombreP, apellidoP, dirP, (String) tels[0], Verificar_Ci.numeroCi(ciP),(String) tels[1]);
+							//Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
+							control.nuevoParticular(nombreP, apellidoP, dirP, (String) tels[0], Verificar_Ci.numeroCi(ciP),(String) tels[1]);
 						}
 						
 					}else{

@@ -12,8 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-import Grafica.Controladores.Controlador_Nueva_Empresa;
-import Grafica.Controladores.Controlador_Nuevo_Particular;
+import Grafica.Controladores.Controlador_Empresa;
+
+
 import Grafica.Controladores.Verificar_Ci;
 import Grafica.Controladores.Verificar_Rut;
 import Grafica.Controladores.Verificar_Tel;
@@ -30,7 +31,7 @@ public class Nueva_Empresa extends JFrame {
 	private JTextField Text_Direccion;
 	private JTextField Text_Telefono;
 	private JTextField Text_Celular;
-
+	private Controlador_Empresa control = new Controlador_Empresa();
 	/**
 	 * Launch the application.
 	 */
@@ -106,13 +107,13 @@ public class Nueva_Empresa extends JFrame {
 				String telefono = Text_Telefono.getText(); 
 				String celular = Text_Celular.getText();
 
-				Controlador_Nueva_Empresa controlador = new Controlador_Nueva_Empresa();
+				//Controlador_Nueva_Empresa controlador = new Controlador_Nueva_Empresa();
 				//Verificar_Rut verificador = new Verificar_Rut();
 				//int rut = Integer.parseInt(rutText);
 				
 				
-				if( controlador.verificador.verificarRut(rutText) ){
-					controlador.nuevaEmpresa(rutText,nombre,contacto,direccion,telefono,celular);
+				if( control.verificador.verificarRut(rutText) ){
+					control.nuevaEmpresa(rutText,nombre,contacto,direccion,telefono,celular);
 					Text_Rut.setBorder(BorderFactory.createLineBorder(Color.green));
 				}else{
 						Text_Rut.setBorder(BorderFactory.createLineBorder(Color.red));

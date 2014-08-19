@@ -26,11 +26,13 @@ import java.awt.Color;
 
 import javax.swing.JButton;
 
-import Grafica.Controladores.Controlador_Nueva_Tarea;
-import Grafica.Controladores.Controlador_Obtener_Clientes_Referencia;
-import Grafica.Controladores.Controlador_Tabla_Tareas;
-import Grafica.Controladores.Controlador_Trabajo_TituloXreferencia;
-import Grafica.Controladores.Controlador_listarEmpleados;
+import Grafica.Controladores.Controlador_Cliente;
+import Grafica.Controladores.Controlador_Empleado;
+
+
+
+import Grafica.Controladores.Controlador_Tarea;
+import Grafica.Controladores.Controlador_Trabajo;
 import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOTarea;
@@ -45,6 +47,8 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 
+import sun.org.mozilla.javascript.internal.ast.TryStatement;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -52,23 +56,33 @@ import java.awt.event.MouseEvent;
 
 public class Administrar_tareas extends JFrame {
 
-	private JPanel contentPane;
-	 private List<Object[]> list = null;
-	 private List<VOEmpleado> listE ;
-	 String entradaNombre ="a%";
+		private JPanel contentPane;
+	
+		//private List<VOEmpleado> listE;
+		String entradaNombre ="a%";
 		String entradareferencia="4%";
-	 JComboBox encarSelec = new JComboBox(inici("empleados"));
-	 final JComboBox opcionCliente = new JComboBox(inici("clientes"));
-	  JList list_1 = new JList();
-	  private boolean bandera= false;
-	  pruebaFechas auxiliar =new pruebaFechas();
-	  JFormattedTextField fechaformat;
-	  JFormattedTextField horaformat;
-	  MaskFormatter mascara;
-	  MaskFormatter  mascara2;
-	  List<Object[]> listT=null;
-	  JTextArea ComentIngre;
-	  private 	JFrame frame2 = new JFrame("Exito");
+		JComboBox encarSelec = new JComboBox(inici("empleados"));
+		final JComboBox opcionCliente = new JComboBox(inici("clientes"));
+		JList list_1 = new JList();
+		private boolean bandera= false;
+		pruebaFechas auxiliar =new pruebaFechas();
+		JFormattedTextField fechaformat;
+	  	JFormattedTextField horaformat;
+	  	MaskFormatter mascara;
+	  	MaskFormatter  mascara2;
+	  	List<Object[]> listT=null;
+	  	JTextArea ComentIngre;
+	  	Controlador_Trabajo control_trabajo = new Controlador_Trabajo();
+	  	Controlador_Cliente control_cliente = new Controlador_Cliente();
+	  	Controlador_Empleado control_empleado = new Controlador_Empleado();
+	  	private List<Object[]> list  ;
+	    private List<VOEmpleado> listE ;
+	  	
+	  	//private List<VOEmpleado> listE =  control_empleado.listarEmpleados();
+	  	
+	  	
+	  	Controlador_Tarea control = new Controlador_Tarea();
+	  	private 	JFrame frame2 = new JFrame("Exito");
 	//DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
 
 	/**
@@ -92,11 +106,13 @@ public class Administrar_tareas extends JFrame {
 
 	
 	public void actualizarEmpleado(){
-		Controlador_listarEmpleados empleados = new Controlador_listarEmpleados();
+		DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
 		try {
-			DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
-			 listE = empleados.listarEmpleados();
-			 for (int i=0; i<list.size();i++){						
+			Controlador_Empleado control_empleado = new Controlador_Empleado();
+				 listE = control_empleado.listarEmpleados();
+			
+			 
+			 for (int i=0; i<listE.size();i++){						
 					modelo2.addElement(listE.get(i).getNombre()+" "+listE.get(i).getApellido());
 					//System.out.println(list.get(i)[0]);
 			}
@@ -109,30 +125,30 @@ public class Administrar_tareas extends JFrame {
 	}
 	
 	public DefaultComboBoxModel inici(String lista){
-	DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
+		DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
 		if(lista=="empleados"){
-			Controlador_listarEmpleados empleados = new Controlador_listarEmpleados();
+			Controlador_Empleado control_empleado = new Controlador_Empleado();
 			//DefaultComboBoxModel<String> modelo2 = new DefaultComboBoxModel<String>();
 			try {
-				 listE = empleados.listarEmpleados();
+				listE = control_empleado.listarEmpleados();
 				 for (int i=0; i<listE.size();i++){		
 					String a= listE.get(i).getNombre()+" "+listE.get(i).getApellido();
 						modelo2.addElement(a);
 						//System.out.println(list.get(i)[0]);
 				}
 				return modelo2;
-			} catch (Exception e) {
+			} catch (Exception e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 				modelo2.addElement("No elementos encontrados");
 				return modelo2;
 			}	
 		}
 		if(lista=="clientes"){
-			 Controlador_Obtener_Clientes_Referencia list_cont= new Controlador_Obtener_Clientes_Referencia();
+			Controlador_Cliente control_cliente = new Controlador_Cliente();
 			 DefaultComboBoxModel modelo = new DefaultComboBoxModel();
 			 try {
-				 list = list_cont.obtenerClientes(entradaNombre, entradareferencia);
+				   list =  control_cliente.obtenerClientes();
 				 for (int i=0; i<list.size();i++){						
 						modelo.addElement(list.get(i)[0]);
 						//System.out.println(list.get(i)[0]);
@@ -192,13 +208,14 @@ public class Administrar_tareas extends JFrame {
 			   public void actionPerformed(ActionEvent arg0) {
 				   
 				// cargar lista de trabajos por el cliente elegido en jcombobox
-					Controlador_Trabajo_TituloXreferencia  T =new Controlador_Trabajo_TituloXreferencia ();
+					
 					//int ref= (int) list.get(opcionCliente.getSelectedIndex())[1];
+				   
 					long a= Long.parseLong((String) list.get(opcionCliente.getSelectedIndex())[1]);
 					
 					DefaultListModel modeloT = new DefaultListModel();
 					try {
-						listT = T.obtener_TrabajoId_Titulo(a);
+						listT = control_trabajo.obtener_TrabajoId_Titulo(a);
 						//System.out.println(a);
 						for (int i=0; i<listT.size();i++){			
 							modeloT.addElement(listT.get(i)[0]);
@@ -284,9 +301,9 @@ public class Administrar_tareas extends JFrame {
 					///System.out.println(auxiliar.valid(horaformat.getText()));
 					//System.out.println(auxiliar.validH(horaformat.getText()));
 					//System.out.println(auxiliar.esHora("36:30"));
-					if(auxiliar.validF(fechaformat.getText()) && auxiliar.validH(horaformat.getText())){
+				if(auxiliar.validF(fechaformat.getText()) && auxiliar.validH(horaformat.getText())){
 						System.out.println("bien");
-						Controlador_Nueva_Tarea tareaN = new Controlador_Nueva_Tarea();
+						//Controlador_Nueva_Tarea tareaN = new Controlador_Nueva_Tarea();
 						//tareaN.nuevo(trabajo, encargado, fecha, hora, comentario);
 						System.out.println(listT.get(list_1.getSelectedIndex())[0]);
 						System.out.println(listE.get(encarSelec.getSelectedIndex()).getCedula()+" "+listE.get(encarSelec.getSelectedIndex()).getNombre());
@@ -295,7 +312,7 @@ public class Administrar_tareas extends JFrame {
 						System.out.println(ComentIngre.getText());
 						int t = Integer.parseInt((String) listT.get(list_1.getSelectedIndex())[0]) ;
 						try {
-							tareaN.nuevo(  t,  listE.get(encarSelec.getSelectedIndex()).getCedula(), auxiliar.fechaSQL(fechaformat.getText()), horaformat.getText(), ComentIngre.getText());
+							control.nuevo(  t,  listE.get(encarSelec.getSelectedIndex()).getCedula(), auxiliar.fechaSQL(fechaformat.getText()), horaformat.getText(), ComentIngre.getText());
 							JOptionPane.showMessageDialog(frame2,
 							        "Se guardo nueva tarea. ");
 							
@@ -317,7 +334,7 @@ public class Administrar_tareas extends JFrame {
 					System.out.println("no");
 					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
 					mensaje.showMessageDialog(null, "Seleccione un trabajo y encargado.", "Atención!!!", mensaje.ERROR_MESSAGE); 
-				
+			
 				}
 				
 				

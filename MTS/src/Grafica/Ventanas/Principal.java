@@ -32,10 +32,13 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import Grafica.Controladores.Controlador_Auxiliares;
-import Grafica.Controladores.Controlador_ClienteXreferencia;
-import Grafica.Controladores.Controlador_Eliminar_Tarea;
-import Grafica.Controladores.Controlador_Tabla_Tareas;
-import Grafica.Controladores.Controlador_TrabajoXid;
+import Grafica.Controladores.Controlador_Cliente;
+
+import Grafica.Controladores.Controlador_Empleado;
+
+import Grafica.Controladores.Controlador_Tarea;
+import Grafica.Controladores.Controlador_Trabajo;
+
 import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
@@ -62,10 +65,13 @@ public class Principal extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table= new JTable();
-	public Controlador_Tabla_Tareas controlador = new Controlador_Tabla_Tareas();
+	public Controlador_Tarea controlador = new Controlador_Tarea();
 	//public table = new JTable();
 	List<VOTarea> lstTareas=null;
 	private 	JFrame frame2 = new JFrame("Exito");
+	Controlador_Trabajo control_trabajo = new Controlador_Trabajo();
+	Controlador_Empleado control_empleado = new Controlador_Empleado();
+	Controlador_Cliente control = new Controlador_Cliente();
 	public DefaultTableModel modelo = new DefaultTableModel(){
 
 	    @Override
@@ -128,9 +134,6 @@ public class Principal extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnArchivo = new JMenu("Archivo");
-		menuBar.add(mnArchivo);
-		
 		JMenu mnNuevo = new JMenu("Nuevo");
 		menuBar.add(mnNuevo);
 		
@@ -167,6 +170,13 @@ public class Principal extends JFrame {
 		mnNuevo.add(mntmTrabajo);
 		
 		JMenuItem mntmEmpleado = new JMenuItem("Empleado");
+		mntmEmpleado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Nuevo_Empleado emple = new Nuevo_Empleado();
+				emple.setVisible(true);
+			}
+		});
 		mnNuevo.add(mntmEmpleado);
 		
 		JMenu mnVer = new JMenu("Ver");
@@ -297,20 +307,20 @@ public class Principal extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.getSelectedRow();
 				comentarioP.setText( lstTareas.get(row).getComentario());
-				Controlador_TrabajoXid trabajoXid = new  Controlador_TrabajoXid();
+				//Controlador_TrabajoXid trabajoXid = new  Controlador_TrabajoXid();
 				//System.out.println(lstTareas.get(row).getTrabajo());
 				try {
 					//System.out.println(lstTareas.get(row).getTrabajo());
-					VOTrabajo trabajo = trabajoXid.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
+					VOTrabajo trabajo = control_trabajo.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
 					
 					estado.setText(trabajo.getEstado());
 					monto.setText(""+trabajo.getMontoTotal());
 					cuotas.setText(trabajo.getCuotas()+"");
-					Controlador_Auxiliares empleadoNombre = new Controlador_Auxiliares();
+					//Controlador_Auxiliares empleadoNombre = new Controlador_Auxiliares();
 					//empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula());
 					
-					encargado.setText(empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula()));
-					Controlador_ClienteXreferencia control = new Controlador_ClienteXreferencia();
+					encargado.setText(control_empleado.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula()));
+					
 					//System.out.println(trabajo.getReferencia());
 					if (control.esCedula(trabajo.getReferencia())){
 						VOParticular particular = new VOParticular();
@@ -323,7 +333,7 @@ public class Principal extends JFrame {
 						tel.setText(particular.getTelefono()+" / "+particular.getTelefono2());
 					}else{
 						VOEmpresa empresa = new VOEmpresa();
-						empresa = control.EmpresaXcedula(trabajo.getReferencia());
+						empresa = control.EmpresaXrut(trabajo.getReferencia());
 						cliente.setText(empresa.getNombre());
 						lblContacto.setText("CONTACTO : ");
 						contacto.setText(empresa.getContacto());
@@ -392,13 +402,13 @@ public class Principal extends JFrame {
 				
 				int row = table.getSelectedRow();
 				pruebaFechas aux = new pruebaFechas();
-				Controlador_Eliminar_Tarea eli = new Controlador_Eliminar_Tarea();
+				//Controlador_Eliminar_Tarea eli = new Controlador_Eliminar_Tarea();
 				
 				try {
 					System.out.println(lstTareas.get(row).getTrabajo());
 					System.out.println(lstTareas.get(row).getEmpleado_cedula());
 					System.out.println(aux.fechaSQL(lstTareas.get(row).getFecha()));
-					eli.eliminar(lstTareas.get(row).getTrabajo(), lstTareas.get(row).getEmpleado_cedula(),aux.fechaSQL(lstTareas.get(row).getFecha()) );
+					controlador.eliminar(lstTareas.get(row).getTrabajo(), lstTareas.get(row).getEmpleado_cedula(),aux.fechaSQL(lstTareas.get(row).getFecha()) );
 					actualizar_Tabla();
 					
 				} catch (SQLException e) {
