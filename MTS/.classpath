@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/mysql-connector-java-3.0.17-ga-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/mysql-connector-java-3.0.17-ga-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/poi-3.10-FINAL-20140208.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -15,6 +15,10 @@ public class Consultas {
 		String consulta = "INSERT INTO `Telefonos` (`telefono`,`referencia`) VALUES (?,?),(?,?);";
 		return consulta;
 	}
+	public String Socios_ref(){
+		String consulta = "SELECT distinct( `referencia`) FROM `socios` ;";
+		return consulta;
+	}
 	// 
 	/*public String nuevoTrabajo(){
 		String consulta="INSERT INTO trabajos(cuotas_totales,fecha_inicio,monto_total,estado,comentario,referencia) VALUES(?,?,?,?,?,?)";
@@ -216,6 +220,11 @@ public class Consultas {
 			String consulta = "SELECT * FROM `empleados` ORDER by nombre;";
 			return consulta;
 		}
-	////////////////////////////////////////
+		
+		public String actualizarTarea(String cambios){
+			String consulta = "UPDATE `empleados_tiene_trabajos` SET "+cambios+" WHERE `Empleados_cedula`=? AND `fecha`=? AND `Trabajos_idTrabajos`= ?;";
+			return consulta;
+		}
+	
 	
 }

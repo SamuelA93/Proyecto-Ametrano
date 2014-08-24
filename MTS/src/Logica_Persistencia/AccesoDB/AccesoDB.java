@@ -37,7 +37,7 @@ public class AccesoDB {
 	private String pass;
 	private String url;
 	private String base;
-	
+	pruebaFechas auxiliar =new pruebaFechas();
 	public Connection conectarBD() {
 		// Cargo los datos desde el archivo de configuracion y conecto al servidor de BD
 		Connection con = null;
@@ -301,6 +301,26 @@ public class AccesoDB {
 		    pstmt.close();
 			this.desconectarBD(con);
 			return IdMutualista;
+		}
+		
+		public ArrayList Socios_ref() throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String strIdMutualista = consultas.Socios_ref();
+			PreparedStatement pstmt = con.prepareStatement (strIdMutualista);
+			ResultSet rs = pstmt.executeQuery ();
+			ArrayList socios = new  ArrayList();
+			
+			    while(rs.next()){
+			    	socios.add(rs.getLong("referencia"));
+			    	System.out.println(rs.getLong("referencia"));
+			    }
+				
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return socios;
 		}
 		
 		public int obtener_idTrabajo_X_ref(long ref) throws SQLException{	
@@ -734,7 +754,7 @@ public class AccesoDB {
 						ResultSet rs = stmt.executeQuery(strClientes);					
 						lstClientes = new ArrayList<VOCliente>();			
 						while (rs.next()) {
-							int referencia = rs.getInt("referencia");
+							long referencia = rs.getLong("referencia");
 							String nombre = rs.getString("nombre");
 							//System.out.println(nombre);
 							String dir = rs.getString("dir");	
@@ -809,6 +829,20 @@ public class AccesoDB {
 							PreparedStatement pstmt;
 							pstmt = con.prepareStatement(insert);
 							pstmt.setInt(1, ced);
+							pstmt.executeUpdate ();			
+							pstmt.close();					
+							this.desconectarBD(con);
+						}
+						
+						public void Modificar_Tarea(String modi,VOTarea tarea) throws SQLException{	
+							Connection con = this.conectarBD();	
+							Consultas consultas = new Consultas();
+							String insert = consultas.actualizarTarea(modi);	
+							PreparedStatement pstmt;
+							pstmt = con.prepareStatement(insert);
+							pstmt.setInt(1, (int) tarea.getEmpleado_cedula());
+							pstmt.setString(2, (String) auxiliar.fechaSQL(tarea.getFecha()));
+							pstmt.setInt(3, (int) tarea.getTrabajo());
 							pstmt.executeUpdate ();			
 							pstmt.close();					
 							this.desconectarBD(con);
@@ -940,5 +974,6 @@ public class AccesoDB {
 						return lstClientes;
 						
 					}
-			///////////////////////////////
+					
+					
 }

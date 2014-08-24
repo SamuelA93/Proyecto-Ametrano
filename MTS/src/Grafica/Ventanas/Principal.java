@@ -49,7 +49,7 @@ import Logica_Persistencia.Value_Object.VOTrabajo;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import Grafica.Ventanas.Editar_Tarea;
 import javax.swing.JEditorPane;
 import javax.swing.JTextField;
 
@@ -72,6 +72,12 @@ public class Principal extends JFrame {
 	Controlador_Trabajo control_trabajo = new Controlador_Trabajo();
 	Controlador_Empleado control_empleado = new Controlador_Empleado();
 	Controlador_Cliente control = new Controlador_Cliente();
+	private int row = -2;
+	private boolean banderaEditable= false;
+	private VOEmpresa empresa = new VOEmpresa();
+	private VOParticular particular = new VOParticular();
+	private long refEditar;
+	VOTrabajo trabajo  ;
 	public DefaultTableModel modelo = new DefaultTableModel(){
 
 	    @Override
@@ -305,38 +311,35 @@ public class Principal extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				int row = table.getSelectedRow();
+				banderaEditable= true;
+				 row = table.getSelectedRow();
 				comentarioP.setText( lstTareas.get(row).getComentario());
-				//Controlador_TrabajoXid trabajoXid = new  Controlador_TrabajoXid();
-				//System.out.println(lstTareas.get(row).getTrabajo());
 				try {
 					//System.out.println(lstTareas.get(row).getTrabajo());
-					VOTrabajo trabajo = control_trabajo.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
+					 trabajo = control_trabajo.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
 					
 					estado.setText(trabajo.getEstado());
 					monto.setText(""+trabajo.getMontoTotal());
 					cuotas.setText(trabajo.getCuotas()+"");
-					//Controlador_Auxiliares empleadoNombre = new Controlador_Auxiliares();
-					//empleadoNombre.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula());
-					
 					encargado.setText(control_empleado.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula()));
-					
 					//System.out.println(trabajo.getReferencia());
 					if (control.esCedula(trabajo.getReferencia())){
-						VOParticular particular = new VOParticular();
+						
 						particular = control.ParticularXcedula(trabajo.getReferencia());
 						cliente.setText(particular.getNombre());
 						lblContacto.setText("APELLIDO : ");
 						contacto.setText(particular.getApellido());
+						refEditar=particular.getCedula();
 						referencia.setText(""+particular.getCedula());
 						direccion.setText(particular.getDireccion());
 						tel.setText(particular.getTelefono()+" / "+particular.getTelefono2());
 					}else{
-						VOEmpresa empresa = new VOEmpresa();
+						
 						empresa = control.EmpresaXrut(trabajo.getReferencia());
 						cliente.setText(empresa.getNombre());
 						lblContacto.setText("CONTACTO : ");
 						contacto.setText(empresa.getContacto());
+						refEditar=empresa.getRut();
 						referencia.setText(""+empresa.getRut());
 						direccion.setText(empresa.getDireccion());
 						tel.setText(empresa.getTelefono()+" / "+empresa.getTelefono2());
@@ -381,18 +384,23 @@ public class Principal extends JFrame {
 				
 			}
 		});
-		mnNuevo_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
+		
 		bar_sub1.add(mnNuevo_1);
 		
 		JMenu mnEditar = new JMenu("Editar");
-		mnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		mnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(banderaEditable){
+					Editar_Tarea editarTarea = new Editar_Tarea(refEditar,trabajo.getId(),lstTareas.get(row).getEmpleado_cedula(),lstTareas.get(row));
+					editarTarea.setVisible(true);
+				}else{
+					System.out.println(row);
+				}
+				
 			}
 		});
+		
 		bar_sub1.add(mnEditar);
 		
 		JMenu mnEliminar = new JMenu("Eliminar");

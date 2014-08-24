@@ -95,6 +95,11 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a.obtenerEmpleadoXcedula(id);
 		}
+		
+		public ArrayList Socios_Ref() throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.Socios_ref();
+		}
 		public VOParticular particularXcedula(long cedula) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			return a.obtenerParticularXcedula(cedula);
@@ -220,34 +225,43 @@ public class Fachada {
 			return a.obtenerCantiadXref_Socio(ref);
 		}
 		// Envia los datos del Nuevo Empleado al AccesoDB mediante un metodo adecuado
-				public void nuevoEmpleado(String nombre, String apellido, String direccion, int cedula) throws SQLException{
-					AccesoDB a = new AccesoDB();
-					a.nuevoEmpleado(nombre, apellido, direccion, cedula);
-					//a.nuevoTelefono(telefono, cedula);
-				}
+		public void nuevoEmpleado(String nombre, String apellido, String direccion, int cedula) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			a.nuevoEmpleado(nombre, apellido, direccion, cedula);
+			//a.nuevoTelefono(telefono, cedula);
+		}
+		
+		public void ActualizarTarea(String modi, VOTarea tarea) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			a.Modificar_Tarea(modi, tarea);
+			//a.nuevoTelefono(telefono, cedula);
+		}
 				
 	///////////////////////////// ivan 
 				
-				//Envia los datos nuevo trabajo a AccesoDB
-				public void nuevoTrabajo(long cliente, String fecha, int montoTotal, int cuotas,String encargado,String hora, String comentario, String estado){
-					AccesoDB a = new AccesoDB();
-					try {
-						a.nuevoTrabajo(cliente,fecha,montoTotal,cuotas,encargado,hora,comentario,estado);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+		//Envia los datos nuevo trabajo a AccesoDB
+		public void nuevoTrabajo(long cliente, String fecha, int montoTotal, int cuotas,String encargado,String hora, String comentario, String estado){
+			AccesoDB a = new AccesoDB();
+			try {
+				a.nuevoTrabajo(cliente,fecha,montoTotal,cuotas,encargado,hora,comentario,estado);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 		//lista cliente Empresa/particular
-				public List<VOParticularEmpresa> listarClientes(){
-					AccesoDB a = new AccesoDB();
-					return a.listarClientes();
-				}
+		public List<VOParticularEmpresa> listarClientes(){
+			AccesoDB a = new AccesoDB();
+			return a.listarClientes();
+		}
 		//listar Encargados
-				public List<VOEmpleado> listarEncargados(){
-					AccesoDB a =  new AccesoDB();
-					return a.listarEncargados();
-				}
-		////////////////////
+		public List<VOEmpleado> listarEncargados(){
+			AccesoDB a =  new AccesoDB();
+			return a.listarEncargados();
+		}
+
+				
+		
+				
 }

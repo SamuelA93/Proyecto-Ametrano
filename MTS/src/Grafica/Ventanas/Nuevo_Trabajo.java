@@ -147,6 +147,7 @@ public class Nuevo_Trabajo extends JFrame {
 			while(iterClientes.hasNext()){
 				VOCliente datoCliente = iterClientes.next();
 				comboBoxCliente.addItem(datoCliente.getNombre());
+				System.out.println(datoCliente.getReferencia());
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -485,6 +486,7 @@ public class Nuevo_Trabajo extends JFrame {
 			if (!err) {
 				System.out.println("ok");
 				try {
+					//System.out.println(referencia);
 					control.nuevoTrabajo(referencia, hora, monto, cuotasP, textArea.getText());
 					try {
 						int id = control.obtener_idTrabajo_X_ref(referencia);

@@ -1,6 +1,7 @@
 package Grafica.Controladores;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Logica_Persistencia.Fachada.Fachada;
 import Logica_Persistencia.Value_Object.VOSocio;
@@ -23,6 +24,11 @@ public class Controlador_Socio {
 		Fachada f = new Fachada();
 		System.out.println("contrAgre");
 		f.agregar_tres_Mes(ref, fecha);
+	}
+	
+	public ArrayList Socio_ref() throws SQLException{
+		Fachada f = new Fachada();
+		return f.Socios_Ref();
 	}
 	public void agregar_anio_Mes(long ref, String fecha) throws SQLException{
 		Fachada f = new Fachada();

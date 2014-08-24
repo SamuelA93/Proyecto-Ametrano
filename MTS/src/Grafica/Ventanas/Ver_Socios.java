@@ -88,11 +88,6 @@ public class Ver_Socios extends JFrame {
 				}
 			}
 		});
-		/*try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-			} catch (Exception e) {
-			  }*/
 	}
 
 	/**

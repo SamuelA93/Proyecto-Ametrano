@@ -28,4 +28,9 @@ public class Controlador_Tarea {
 			Fachada f = new Fachada();
 			return f.listarTareas();
 		}
+		
+		public void ActualizarTarea(String modi, VOTarea tarea) throws SQLException{
+			Fachada f = new Fachada();
+			 f.ActualizarTarea(modi, tarea);
+		}
 }

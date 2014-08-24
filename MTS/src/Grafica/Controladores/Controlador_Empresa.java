@@ -1,7 +1,9 @@
 package Grafica.Controladores;
 
 import java.sql.SQLException;
+import java.util.List;
 
+import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Fachada.Fachada;
 
 public class Controlador_Empresa {
@@ -26,5 +28,10 @@ public class Controlador_Empresa {
 		}
 		
 	}
+	
+	///////////////////////
+	
+	
 
+	
 }
