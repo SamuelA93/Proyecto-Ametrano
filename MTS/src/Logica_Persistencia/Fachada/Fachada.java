@@ -87,9 +87,18 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a.ListarTareas();
 		}
+		
 		public VOTrabajo trabajoXid(int id) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			return a.obtenerTrabajoXid(id);
+		}
+		public List<VOEmpresa> ListarEmpresas() throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.listarEmpresas();
+		}
+		public List<VOTrabajo> listar_Trabajos() throws SQLException{
+			AccesoDB a = new AccesoDB();
+			return a.Listar_Trabajos();
 		}
 		public String empleadoXcedula(long id) throws SQLException{
 			AccesoDB a = new AccesoDB();

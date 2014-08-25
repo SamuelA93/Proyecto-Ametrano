@@ -226,6 +226,15 @@ public class Principal extends JFrame {
 		JMenu mnInformes = new JMenu("Informes");
 		menuBar.add(mnInformes);
 		
+		JMenuItem mntmExportar = new JMenuItem("Exportar");
+		mntmExportar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				export_Particulares ex = new export_Particulares();
+				ex.setVisible(true);
+			}
+		});
+		mnInformes.add(mntmExportar);
+		
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
 		

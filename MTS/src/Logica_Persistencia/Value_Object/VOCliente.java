@@ -5,6 +5,7 @@ public class VOCliente {
 	private long referencia;
 	private String dir;
 	private String Tel;
+	private String Tel2;
 	private String nombre;
 	public long getReferencia() {
 		return referencia;
@@ -23,6 +24,13 @@ public class VOCliente {
 	}
 	public void setTel(String tel) {
 		Tel = tel;
+	}
+	
+	public String getTel2() {
+		return Tel2;
+	}
+	public void setTel2(String tel) {
+		Tel2 = tel;
 	}
 	public String getNombre() {
 		return nombre;

@@ -4,5 +4,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/mysql-connector-java-3.0.17-ga-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/poi-3.10-FINAL-20140208.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/poi-ooxml-3.10-FINAL-20140208.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/poi-ooxml-schemas-3.10-FINAL-20140208.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/poi-scratchpad-3.10-FINAL-20140208.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/ooxml-lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Samuel/Documents/Proyecto-Ametrano/MTS/lib/ooxml-lib/xmlbeans-2.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -82,7 +82,7 @@ public class AccesoDB {
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.Agregar_un_mes();
-			System.out.println("acceso");
+			//System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
@@ -96,7 +96,7 @@ public class AccesoDB {
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.Agregar_dos_mes();
-			System.out.println("acceso");
+			//System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
@@ -110,7 +110,7 @@ public class AccesoDB {
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.Agregar_tres_mes();
-			System.out.println("acceso");
+			//System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
@@ -124,7 +124,7 @@ public class AccesoDB {
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.Agregar_tres_mes();
-			System.out.println("acceso");
+			//System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
@@ -138,7 +138,7 @@ public class AccesoDB {
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.Agregar_X_mes(x);
-			System.out.println("acceso");
+		//	System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
@@ -154,7 +154,7 @@ public class AccesoDB {
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.Cancelar_Socio();
-			System.out.println("acceso");
+		//	System.out.println("acceso");
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
@@ -314,7 +314,7 @@ public class AccesoDB {
 			
 			    while(rs.next()){
 			    	socios.add(rs.getLong("referencia"));
-			    	System.out.println(rs.getLong("referencia"));
+			    	//System.out.println(rs.getLong("referencia"));
 			    }
 				
 		    rs.close();
@@ -558,6 +558,40 @@ public class AccesoDB {
 				this.desconectarBD(con);
 				return lstTareas;
 			}
+		
+		public List<VOTrabajo> Listar_Trabajos(){	 
+			Connection con = null;				
+			con = this.conectarBD();
+			List<VOTrabajo> lstTrabajos = null;		
+			/*  */
+			Statement stmt;
+			try {
+				stmt = con.createStatement();			
+				Consultas consultas = new Consultas();
+				String strTrabajo = consultas.Trabajos_Lista();
+				ResultSet rs = stmt.executeQuery(strTrabajo);					
+				lstTrabajos= new ArrayList<VOTrabajo>();			
+				while (rs.next()) {
+					
+					int id_Trabajo = rs.getInt("trabajo");
+					long ci_cliente = rs.getLong("referencia");
+					float monto = rs.getFloat("monto");
+					int cuotas = rs.getInt("cuotas");
+					String estado = rs.getString("estado");
+					
+					VOTrabajo trabaj =new VOTrabajo(id_Trabajo, cuotas, monto, estado, ci_cliente);
+					
+					lstTrabajos.add(trabaj);			
+				}
+				rs.close();
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			this.desconectarBD(con);
+			return lstTrabajos;
+		}
 		public Object[] obtenerTelXreferencia(long referencia) throws SQLException{	
 			Connection con = null;				
 			con = this.conectarBD();	
@@ -580,7 +614,7 @@ public class AccesoDB {
 				}else{
 					tels[1]= "No ingresado";
 				}
-				
+				//System.out.println(tels[0]+" "+tels[1]+" desde telefono");
 				 rs.close();
 				 pstmt.close();
 				 this.desconectarBD(con);
@@ -702,7 +736,42 @@ public class AccesoDB {
 					}		
 					this.desconectarBD(con);
 					return lstParticulares;
-				}  
+				} 
+			public List<VOEmpresa> listarEmpresas(){
+				// devuelve un listado de los datos de los particulares		 
+					Connection con = null;				
+					con = this.conectarBD();
+					VOEmpresa empresa = null;
+					List<VOEmpresa> lstEmpresas = null;		
+					// creo un Statement para listar todas las actividades 
+					Statement stmt;
+					try {
+						stmt = con.createStatement();			
+						Consultas consultas = new Consultas();
+						String strEmpresas = consultas.ListarEmpresas();
+						ResultSet rs = stmt.executeQuery(strEmpresas);					
+						lstEmpresas = new ArrayList<VOEmpresa>();			
+						while (rs.next()) {
+							long rut = rs.getLong("rut");
+							String nombre = rs.getString("nombre");
+							//System.out.println(nombre);
+							String contacto = rs.getString("contacto");
+							String direccion = rs.getString("direccion");	
+							//String telefono = "";
+							Object[]	 telefono = obtenerTelXreferencia(rut);
+							//System.out.println(telefono[0]+" "+telefono[1]+" comprobacion ");
+							empresa = new VOEmpresa(rut, nombre, contacto, direccion,(String) telefono[0],(String)telefono[1]);
+							lstEmpresas.add(empresa);			
+						}
+						rs.close();
+						stmt.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}		
+					this.desconectarBD(con);
+					return lstEmpresas;
+				}
 			public List<VOEmpleado> listarEmpleados(){
 				// devuelve un listado de los datos de los particulares		 
 					Connection con = null;				
@@ -760,7 +829,9 @@ public class AccesoDB {
 							String dir = rs.getString("dir");	
 							//String telefono = "";
 							//System.out.println(telefono+"listado");
-							cliente = new VOCliente(referencia, dir, "", nombre);
+							Object[]	 telefono = obtenerTelXreferencia(referencia);
+							cliente = new VOCliente(referencia, dir, (String)telefono[0], nombre);
+							cliente.setTel2( (String)telefono[1]);
 							lstClientes.add(cliente);			
 						}
 						rs.close();
@@ -790,7 +861,7 @@ public class AccesoDB {
 						String dir = rs.getString("dir");
 						String nombre = rs.getString("nombre");
 						Object[]	 telefono = obtenerTelXreferencia(ref);
-						System.out.println(nombre);
+						//System.out.println(nombre);
 						if(telefono[0]=="No ingresado" && telefono[1]=="No ingresado"){
 							 Tarea =new VOCliente(ref, dir, "No ingresado", nombre);
 							//System.out.println("No ingresado");

@@ -68,4 +68,11 @@ public class Controlador_Trabajo {
 		Fachada a = new Fachada();
 		return a.trabajoXid(id);
 	}
+	
+	//////////////////////
+	
+	public List<VOTrabajo> Listar_Trabajos() throws SQLException{
+		Fachada f =new Fachada();
+		return f.listar_Trabajos();
+	}
 }

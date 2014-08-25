@@ -28,7 +28,10 @@ public class Controlador_Empresa {
 		}
 		
 	}
-	
+	public List<VOEmpresa> Listar_Empresas() throws SQLException{
+		Fachada f = new Fachada();
+		return f.ListarEmpresas();
+	}
 	///////////////////////
 	
 	

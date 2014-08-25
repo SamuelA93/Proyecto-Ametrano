@@ -19,6 +19,10 @@ public class Consultas {
 		String consulta = "SELECT distinct( `referencia`) FROM `socios` ;";
 		return consulta;
 	}
+	public String Trabajos_Lista(){
+		String consulta = "SELECT `idTrabajos` as trabajo, `cuotas_totales` as cuotas, `monto_total` as monto, `estado`, `referencia` FROM `trabajos`;";
+		return consulta;
+	}
 	// 
 	/*public String nuevoTrabajo(){
 		String consulta="INSERT INTO trabajos(cuotas_totales,fecha_inicio,monto_total,estado,comentario,referencia) VALUES(?,?,?,?,?,?)";
@@ -26,6 +30,10 @@ public class Consultas {
 	}*/
 	public String fechaTarea(){
 		String consulta="SELECT id FROM `prueba` WHERE id=?;";
+		return consulta;
+	}
+	public String ListarEmpresas(){
+		String consulta="SELECT * FROM `empresa`; ";
 		return consulta;
 	}
 	public String EliminarTelefono(){
