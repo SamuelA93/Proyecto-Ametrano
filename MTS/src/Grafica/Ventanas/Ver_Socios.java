@@ -224,6 +224,7 @@ public class Ver_Socios extends JFrame {
 		
 	}
 	public Ver_Socios() {
+		setTitle("Ver socios");
 		try{
 			 mascara =new MaskFormatter("#");
 			mascara.setPlaceholderCharacter('_');
@@ -237,10 +238,6 @@ public class Ver_Socios extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
-		
-		JMenu mnNuevo = new JMenu("Nuevo");
-		menuBar.add(mnNuevo);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

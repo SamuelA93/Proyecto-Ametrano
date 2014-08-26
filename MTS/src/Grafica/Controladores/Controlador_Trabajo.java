@@ -8,6 +8,7 @@ import Logica_Persistencia.Fachada.Fachada;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOParticularEmpresa;
 import Logica_Persistencia.Value_Object.VOTrabajo;
+import Logica_Persistencia.Value_Object.VOUnTrabajo;
 
 public class Controlador_Trabajo {
 	
@@ -74,5 +75,17 @@ public class Controlador_Trabajo {
 	public List<VOTrabajo> Listar_Trabajos() throws SQLException{
 		Fachada f =new Fachada();
 		return f.listar_Trabajos();
+	}
+	
+	////////////////////////// ivan 25
+	
+	public void editarTrabajo(int cuotas,String estado,float monto, long id) throws SQLException{
+		Fachada f =new Fachada();
+		f.editarTrabajo(cuotas, estado, id,monto);
+	}
+	
+	public VOUnTrabajo verTrabajo(int id){
+		Fachada f = new Fachada();
+		return f.verTrabajo(id);
 	}
 }

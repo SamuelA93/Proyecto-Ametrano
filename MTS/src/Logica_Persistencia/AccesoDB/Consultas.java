@@ -233,6 +233,22 @@ public class Consultas {
 			String consulta = "UPDATE `empleados_tiene_trabajos` SET "+cambios+" WHERE `Empleados_cedula`=? AND `fecha`=? AND `Trabajos_idTrabajos`= ?;";
 			return consulta;
 		}
-	
+	/////////////////////////////////// ivan 25
+		
+		//Retorna los trabajos con sus clientes ***
+		public String ListarTrabajos(){
+			String consulta ="SELECT * FROM trabajos LEFT JOIN ( SELECT nombre as cliente,cedula as id FROM `particulares` Union SELECT nombre as cliente,rut as id FROM `empresa` ORDER BY cliente ) foo ON trabajos.referencia = foo.id ;";
+			return consulta;
+		}
+		//Edita cuotas totales y estado de los trabajos.
+		public String editarTrabajos(){
+			String consulta ="UPDATE trabajos SET cuotas_totales=?, estado=?, monto_total=? WHERE idTrabajos=? ;";
+			return consulta;
+		}
+		//ver trabajo
+		public String verTrabajo(){
+			String consulta="SELECT idTrabajos,cuotas_totales,fecha_inicio,monto_total,estado,referencia FROM `trabajos` WHERE idTrabajos=? ";
+			return consulta;
+		}
 	
 }

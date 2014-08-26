@@ -16,7 +16,15 @@ public class Controlador_Verificar {
 			return false;
 		} 
 	}
-	
+	public static boolean espacios(String texto){
+		Pattern pat = Pattern.compile(" *");
+		Matcher mat = pat.matcher(texto.trim());
+		if (mat.matches()) {
+			return true;
+		}else{
+			return false;
+		}	
+	}
 	//////////////// retorna  true si una variable String  es solo letras 
 	public boolean SoloString(String texto){
 		Pattern pat = Pattern.compile("[a-zA-Z]+");
@@ -64,13 +72,14 @@ public class Controlador_Verificar {
 			return true;
 		}
 	}
-	/*public static void main(String[] args) {
-		String d = "dfg";
-		if (Pattern.matches("[[a-zA-Z]|\\s]+",d.trim()) || Pattern.matches("\\s",d.trim())) {
+/*	public static void main(String[] args) {
+		String d = "";
+		/*if (Pattern.matches("[[a-zA-Z]|\\s]+",d.trim()) || Pattern.matches("\\s",d.trim())) {
 			System.out.println("1");
 		}else{
 			System.out.println("2");
 		}
+		System.out.println(espacios(d));
 	}*/
 	
 }

@@ -146,6 +146,7 @@ public class Ver_Particulares extends JFrame {
 		}
 	
 	public Ver_Particulares() {
+		setTitle("Particulares");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 434);
 		

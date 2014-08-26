@@ -212,6 +212,13 @@ public class Principal extends JFrame {
 		mnVer.add(mntmEmpresas);
 		
 		JMenuItem mntmTrabajos = new JMenuItem("Trabajos");
+		mntmTrabajos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				Ver_Trabajo verTrabajo = new Ver_Trabajo();
+				verTrabajo.setVisible(true);
+			}
+		});
 		mnVer.add(mntmTrabajos);
 		
 		JMenuItem mntmEmpleados = new JMenuItem("Empleados");

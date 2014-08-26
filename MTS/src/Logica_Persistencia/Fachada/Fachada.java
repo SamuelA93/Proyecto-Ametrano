@@ -19,6 +19,8 @@ import java.util.List;
 
 
 
+
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
@@ -30,6 +32,8 @@ import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
 import Logica_Persistencia.Value_Object.VOTrabajo;
+import Logica_Persistencia.Value_Object.VOTrabajosClientes;
+import Logica_Persistencia.Value_Object.VOUnTrabajo;
 
 
 public class Fachada {
@@ -270,7 +274,23 @@ public class Fachada {
 			return a.listarEncargados();
 		}
 
-				
+		///////////////////////////////  ivan 25
+		
+		//listar Trabajos de Clientes ***
+				public  List<VOTrabajosClientes> listarTrabajosClientes(){
+					AccesoDB a = new AccesoDB();
+					return a.listarTrabajosClientes();
+				}
+				//***
+				public void editarTrabajo(int cuotas,String estado,long id,float monto) throws SQLException{
+					AccesoDB a =new AccesoDB();
+					a.editarTrabajo(cuotas, estado, monto,id);
+				}
+				//***
+				public VOUnTrabajo verTrabajo(int id){
+					AccesoDB a = new  AccesoDB();
+					return a.verTrabajo(id);
+				}
 		
 				
 }

@@ -171,7 +171,7 @@ public class Ver_Empleados extends JFrame {
 	
 	
 	public Ver_Empleados() {
-		setTitle("Ver Empleados");
+		setTitle("Empleados");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 394);
 		

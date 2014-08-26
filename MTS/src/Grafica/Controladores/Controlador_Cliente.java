@@ -7,6 +7,7 @@ import Logica_Persistencia.Fachada.Fachada;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
+import Logica_Persistencia.Value_Object.VOTrabajosClientes;
 
 public class Controlador_Cliente {
 
@@ -49,5 +50,12 @@ public class Controlador_Cliente {
 	public List<Object[]> obtenerClientes() throws SQLException{
 		Fachada f =new Fachada();
 		return f.obtenerClientes_Nombre_Referencia();
+	}
+	
+	////////////////////// ivan 25
+	
+	public List<VOTrabajosClientes> listarTrabajosClientes(){
+		Fachada f = new Fachada();
+		return f.listarTrabajosClientes();
 	}
 }

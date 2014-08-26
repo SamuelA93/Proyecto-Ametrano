@@ -169,6 +169,14 @@ public class pruebaFechas {
 		}
 		return true;
 	}
+	public String horaActualDate(){
+		Calendar calendario = GregorianCalendar.getInstance();
+		Date hora = calendario.getTime();
+		
+		SimpleDateFormat formatoDeFecha = new SimpleDateFormat("HH-mm-ss");
+		//System.out.println(formatoDeFecha.format(fecha));
+		return formatoDeFecha.format(hora);
+	}
 	public String fechaActualDate(){
 		Calendar calendario = GregorianCalendar.getInstance();
 		Date fecha = calendario.getTime();

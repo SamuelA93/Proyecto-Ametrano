@@ -17,7 +17,10 @@ public class test {
   	
   	public static void actualizarEmpleado(){
 		
-		try {
+  		pruebaFechas f = new pruebaFechas();
+  		System.out.println(f.horaActualDate());
+  		System.out.println(f.horaActualDate());
+		/*try {
 			
 			 listE = control_empleado.listarEmpleados();
 			 for (int i=0; i<listE.size();i++){						
@@ -28,7 +31,7 @@ public class test {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
   	public static void inici(){
@@ -36,7 +39,7 @@ public class test {
 	
 			
 			
-			try {
+			/*try {
 					listE = control_empleado.listarEmpleados();
 				 for (int i=0; i<listE.size();i++){		
 					System.out.println( listE.get(i).getNombre()+" "+listE.get(i).getApellido());
@@ -48,14 +51,15 @@ public class test {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				
-			}	
+			}	*/
 		
   	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//actualizarEmpleado();
-		inici();
+		//inici();
+		actualizarEmpleado();
 	}
 
 }

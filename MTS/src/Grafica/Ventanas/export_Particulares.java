@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ import Grafica.Controladores.Controlador_Particular;
 import Grafica.Controladores.Controlador_Socio;
 import Grafica.Controladores.Controlador_Tarea;
 import Grafica.Controladores.Controlador_Trabajo;
+import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
@@ -84,13 +86,16 @@ public class export_Particulares extends JFrame {
 	private List<VOEmpleado> empleados = null;
 	private List socios = null;
 	private List exporta = null;
+	private int versionDOC=0;
+	private 	JFrame frame = new JFrame("Exito");
+	Workbook wb;
 	JCheckBox parti = new JCheckBox("Particulares");
 	JCheckBox empre = new JCheckBox("Empresas");
 	JCheckBox emple = new JCheckBox("Empleados");
 	JCheckBox trabajo = new JCheckBox("Trabajos");
 	JCheckBox soci = new JCheckBox("Socios");
 	JCheckBox cli = new JCheckBox("Clientes");
-	Workbook wb = new XSSFWorkbook();
+	
 	private ArrayList hojas = new ArrayList();
 	public DefaultTableModel modelo = new DefaultTableModel(){
 	    @Override
@@ -527,6 +532,7 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 		JButton btnExportar = new JButton("Exportar ");
 		btnExportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				 wb = new XSSFWorkbook();
 				ArrayList<Sheet> pag= new ArrayList();
 				if(hojas.size()>0){
 					int i = 0;
@@ -556,9 +562,14 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 						i++;
 					}
 					try{
-						FileOutputStream out = new FileOutputStream("workbook400.xlsx");
+						String ext = ".xlsx";
+						String nom = "Datos MTS ";
+						pruebaFechas f = new pruebaFechas();
+						String tirar = nom+f.horaActualDate()+ext;
+						FileOutputStream out = new FileOutputStream(tirar);
 						wb.write(out);
 						out.close();
+						JOptionPane.showMessageDialog(frame, "Se ah exportado con exito.");
 					} catch (FileNotFoundException ex) {
 						Logger.getLogger(ExportToExcel.class.getName()).log(Level.SEVERE, null, ex);
 					} catch (IOException ex) {

@@ -26,6 +26,8 @@ import Logica_Persistencia.Value_Object.VOTarea;
 import Logica_Persistencia.Value_Object.VOTareaEmpresa;
 import Logica_Persistencia.Value_Object.VOTareaParticular;
 import Logica_Persistencia.Value_Object.VOTrabajo;
+import Logica_Persistencia.Value_Object.VOTrabajosClientes;
+import Logica_Persistencia.Value_Object.VOUnTrabajo;
 
 
 
@@ -1044,6 +1046,80 @@ public class AccesoDB {
 						this.desconectarBD(con);
 						return lstClientes;
 						
+					}
+					
+					////////////////////////////////// ivan 25
+					
+					//VO Trabajos + particularEmpresa
+					public List <VOTrabajosClientes> listarTrabajosClientes(){
+						Connection con = null;
+						con = this.conectarBD();
+						VOTrabajosClientes trabajos = null;
+						List<VOTrabajosClientes> lstTrabajos=null;
+						//creo un Statement para listar todos los clientes
+						Statement stmt ;
+						try {
+							stmt = con.createStatement();
+							Consultas consultas = new Consultas();
+							String strTrabajosClientes = consultas.ListarTrabajos();
+							ResultSet  rs = stmt.executeQuery(strTrabajosClientes);
+							lstTrabajos = new ArrayList<VOTrabajosClientes>();
+							while(rs.next()){
+								trabajos = new VOTrabajosClientes(rs.getInt("idTrabajos"),rs.getInt("cuotas_Totales"), rs.getString("fecha_inicio"), rs.getInt("monto_total"),rs.getString("estado"),rs.getString("referencia"),rs.getString("cliente"),rs.getLong("id"));
+								lstTrabajos.add(trabajos);
+							}
+
+							rs.close();
+							stmt.close();
+						
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						this.desconectarBD(con);
+						return lstTrabajos;
+						
+					}
+					//***
+					//Editar trabajos.
+					public void editarTrabajo(int cuotas,String estado,float monto,long id) throws SQLException{
+						Connection con = this.conectarBD();
+						Consultas consultas = new Consultas();
+						String update = consultas.editarTrabajos();
+						PreparedStatement pstmt;
+						pstmt = con.prepareStatement(update);
+						pstmt.setInt(1,cuotas);
+						pstmt.setString(2, estado);
+						pstmt.setFloat(3, monto);
+						pstmt.setLong(4, id);
+						pstmt.executeUpdate();
+						pstmt.close();
+						this.desconectarBD(con);
+					}
+					//***
+					//ver 1 trabajo en particular
+					public VOUnTrabajo verTrabajo(int id){
+						Connection con = null;
+						con = this.conectarBD();
+						VOUnTrabajo trabajo = null;
+						//creo un Statement para listar todos los trabajos
+						
+						try {
+							Consultas consultas = new Consultas();
+							String strTrabajo = consultas.verTrabajo();
+							PreparedStatement pstmt  = con.prepareStatement(strTrabajo);
+							pstmt.setInt(1,id);
+							ResultSet  rs = pstmt.executeQuery();
+							rs.next();
+							trabajo = new VOUnTrabajo(rs.getInt("idTrabajos"),rs.getInt("cuotas_totales"),rs.getFloat("monto_total"),rs.getLong("referencia"),rs.getString("fecha_inicio"),rs.getString("estado"));
+							rs.close();
+							pstmt.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						this.desconectarBD(con);
+						return trabajo;
 					}
 					
 					
