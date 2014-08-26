@@ -27,9 +27,7 @@ import Grafica.Controladores.Controlador_Empleado;
 
 
 import Grafica.Controladores.Controlador_Telefono;
-
 import Grafica.Controladores.Controlador_Verificar;
-
 import Grafica.Controladores.Verificar_Tel;
 //import Grafica.Controladores.Controlador_listarParticulares;
 import Logica_Persistencia.Value_Object.VOEmpleado;
@@ -179,6 +177,20 @@ public class Ver_Empleados extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu mnNuevo = new JMenu("Nuevo");
+		mnNuevo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Nuevo_Empleado n= new Nuevo_Empleado();
+				n.setVisible(true);
+				
+			}
+		});
+		mnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Nuevo_Empleado n= new Nuevo_Empleado();
+				n.setVisible(true);
+			}
+		});
 		menuBar.add(mnNuevo);
 		
 		JMenu mnEditar = new JMenu("Editar");

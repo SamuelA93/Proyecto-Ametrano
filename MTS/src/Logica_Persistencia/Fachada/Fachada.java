@@ -42,15 +42,9 @@ public class Fachada {
 	public Fachada(){}
 	
 	// Envia los datos del Nuevo Particular al AccesoDB mediante un metodo adecuado
-	public void nuevoParticular(String nombre, String apellido, String dir, String tel, int ci){
+	public void nuevoParticular(String nombre, String apellido, String dir, int ci) throws SQLException{
 		AccesoDB a = new AccesoDB();
-		try {
 			a.nuevoParticular(nombre, apellido, dir, ci);
-			//a.nuevoTelefono(tel, ci);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	public void EliminarTelefono(String tel, long ci) throws SQLException{
 		AccesoDB a = new AccesoDB();

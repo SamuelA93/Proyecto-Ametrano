@@ -7,19 +7,24 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 
-import Grafica.Controladores.Controlador_Particular;
-import Grafica.Controladores.Verificar_Ci;
 
+
+
+import Grafica.Controladores.Controlador_Particular;
+import Grafica.Controladores.Controlador_Verificar;
+import Grafica.Controladores.Verificar_Ci;
 import Grafica.Controladores.Verificar_Tel;
 
 public class Nuevo_Particular extends JFrame {
@@ -32,6 +37,9 @@ public class Nuevo_Particular extends JFrame {
 	private JTextField dir;
 	private JTextField celu;
 	private JLabel lblCel;
+	private ArrayList<String> telefonos ;
+	private 	JFrame frame = new JFrame("Exito");
+	private Controlador_Particular control_particular = new Controlador_Particular();
 	private Controlador_Particular control = new Controlador_Particular();
 
 	/**
@@ -120,29 +128,115 @@ public class Nuevo_Particular extends JFrame {
 		JButton btnNewButton = new JButton("Guardar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				Controlador_Verificar v = new Controlador_Verificar();
 				String nombreP 		= nombre.getText();
 				String apellidoP 	= apellido.getText();
 				String dirP 		= dir.getText();
 				String telP			= tel.getText();
 				String ciP 			= ci.getText();
 				String celuP 			= celu.getText();
-				Object[] tels = new Object[2];
-				String espa ="";
+				//Object[] tels = new Object[2];
+				/*String espa ="";
 				boolean bandera = false;
-				boolean bandera2 = false;
-				/*if(){
-					
+				boolean bandera2 = false;*/
+				
+				telefonos= new ArrayList<String>();
+				boolean error = false;
+				if( v.SoloString_O_Espacios(nombreP)){
+					if( Verificar_Ci.verificar(ciP) ){
+						ci.setBorder(BorderFactory.createLineBorder(Color.green));
+						if( v.SoloString_O_Espacios(apellidoP) || apellidoP.trim().equals("")){
+							if( v.SoloNumeros(telP) || telP.equals("")){
+								if(!telP.trim().equals("")){
+									telefonos.add(telP);
+								}
+								if( v.SoloNumeros(celuP) || celuP.trim().equals("")){
+									if(!celuP.trim().equals("")){
+										telefonos.add(celuP);
+									}	
+								}else{
+									error = true;
+									javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+									mensaje.showMessageDialog(null, "Celular incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+								}
+							}else{
+								error = true;
+								javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+								mensaje.showMessageDialog(null, "Telefono incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+							}
+						}else{
+							error = true;
+							javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+							mensaje.showMessageDialog(null, "Apellido incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+						}	
+					}else{
+						error = true;
+						ci.setBorder(BorderFactory.createLineBorder(Color.red));
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						mensaje.showMessageDialog(null, "Cedula ingresada incorrecta.", "Atención!!!", mensaje.ERROR_MESSAGE);
+					}	
 				}else{
-					
-				}*/
-				if(!nombreP.equals(espa) ){
+					error = true;
+					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+					mensaje.showMessageDialog(null, "Nombre incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+				}
+				////////  la variable booleana error detecta si no se cumple algun requerimiento con las inputs
+				if (!error) {
+					try {
+						 control_particular.nuevoParticular(nombreP, apellidoP, dirP, telefonos, Verificar_Ci.numeroCi(ciP));
+						 nombre.setText("");
+						 apellido.setText("");
+						 dir.setText("");
+						 tel.setText("");
+						 ci.setText("");
+						 celu.setText("");
+						 ci.setBorder(BorderFactory.createLineBorder(Color.gray));
+						 JOptionPane.showMessageDialog(frame, "Se ah agregado un nuevo Empleado, edite sus datos en Ver > Empleados ");
+					} catch (Exception e2) {
+						//e2.printStackTrace();
+						javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
+						ci.setBorder(BorderFactory.createLineBorder(Color.red));
+						mensaje.showMessageDialog(null, "Ya existe usuario con la cedula "+ci.getText(), "Atención!!!", mensaje.ERROR_MESSAGE);
+					}	
+				} else {
+					//System.out.println("no");
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				/*if(!nombreP.trim().equals("") && v.SoloString(nombreP.trim()) ){
 					if(	Verificar_Ci.verificar(ciP) ){
-						/*controlador.nuevoParticular(nombreP,apellidoP,dirP,telP,Verificar_Ci.numeroCi(ciP),celuP);*/
+						
 						ci.setBorder(BorderFactory.createLineBorder(Color.green));
 						
-						if(!telP.equals(espa) ){
-					  
+						if(!telP.trim().equals("") ){
 							//Controlador_Nuevo_Particular controlador = new Controlador_Nuevo_Particular();
 							if(Verificar_Tel.isNumeric(telP)){
 								tels[0]=telP;	
@@ -190,8 +284,8 @@ public class Nuevo_Particular extends JFrame {
 						}
 				}else{
 					javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
-					mensaje.showMessageDialog(null, "Ingrese el nombre.", "Atención!!!", mensaje.ERROR_MESSAGE);
-				}
+					mensaje.showMessageDialog(null, "Nombre incorrecto.", "Atención!!!", mensaje.ERROR_MESSAGE);
+				}*/
 				
 				
 			}

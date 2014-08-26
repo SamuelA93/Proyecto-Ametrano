@@ -616,7 +616,7 @@ public class AccesoDB {
 				}else{
 					tels[1]= "No ingresado";
 				}
-				//System.out.println(tels[0]+" "+tels[1]+" desde telefono");
+				System.out.println(tels[0]+" "+tels[1]+" desde telefono");
 				 rs.close();
 				 pstmt.close();
 				 this.desconectarBD(con);
@@ -796,7 +796,7 @@ public class AccesoDB {
 							String direccion = rs.getString("direccion");	
 							//String telefono = "";
 							Object[]	 telefono = obtenerTelXreferencia(cedula);
-							//System.out.println(telefono+"listado");
+							//System.out.println(telefono[0]+" "+(String ) telefono[1]);
 							empleado = new VOEmpleado(cedula, nombre, apellido, direccion, (String ) telefono[0],  (String ) telefono[1]);
 							lstEmpleados.add(empleado);			
 						}

@@ -154,6 +154,19 @@ public class Ver_Particulares extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu mnNuevo = new JMenu("Nuevo");
+		mnNuevo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Nuevo_Particular n= new Nuevo_Particular();
+				n.setVisible(true);
+			}
+		});
+		mnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+		
+			}
+		});
 		menuBar.add(mnNuevo);
 		
 		JMenu mnEditar = new JMenu("Editar");

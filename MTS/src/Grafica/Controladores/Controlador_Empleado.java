@@ -34,8 +34,8 @@ public class Controlador_Empleado {
 		if (!(telefonos.isEmpty()) ) {
 		/////   Controlos si se ingreso 1 o 2 telefonos 
 			if (telefonos.size()>1) {
-				System.out.println(telefonos.get(0));	
-				System.out.println(telefonos.get(1));
+				//System.out.println(telefonos.get(0));	
+				//System.out.println(telefonos.get(1));
 				try {
 					f.nuevos_2_Telefonos(telefonos, ced);
 				} catch (Exception e) {
@@ -43,7 +43,7 @@ public class Controlador_Empleado {
 					mensaje.showMessageDialog(null, "Error al guardar los telefonos, edite estos en  Ver > Empleados ", "Atención!!!", mensaje.ERROR_MESSAGE);
 				}
 			}else{
-				System.out.println(telefonos.get(0));
+				//System.out.println(telefonos.get(0));
 				try {
 					f.nuevoTelefono((String) telefonos.get(0), ced);
 				} catch (Exception e) {

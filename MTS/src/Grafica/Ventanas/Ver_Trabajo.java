@@ -95,12 +95,12 @@ public class Ver_Trabajo extends JFrame {
 			agregarMonto.setEditable(clip);
 			agregarCuotas.setEditable(clip);
 			comboEstado.setEnabled(clip);
-			
+			GuardarCambios.setVisible(clip);
 		}else{
 			//System.out.println("no");
 			agregarCliente.setEditable(clip);
 			comboEstado.setEnabled(clip);
-			
+			GuardarCambios.setVisible(clip);
 			agregarCuotas.setEditable(clip); 
 			agregarMonto.setEditable(clip);
 			
@@ -162,6 +162,19 @@ public class Ver_Trabajo extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu mnNuevo = new JMenu("Nuevo");
+		mnNuevo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Nuevo_Trabajo t = new Nuevo_Trabajo();
+				t.setVisible(true);
+			}
+		});
+		mnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Nuevo_Trabajo t = new Nuevo_Trabajo();
+				t.setVisible(true);
+			}
+		});
 		menuBar.add(mnNuevo);
 		
 		JMenu mnEditar = new JMenu("Editar");
@@ -170,7 +183,7 @@ public class Ver_Trabajo extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 
 					setEditableCampos(true);
-					GuardarCambios.setVisible(true);
+					//GuardarCambios.setVisible(true);
 					//asigno valor del objeto al comboBox
 					/*if(agregarEstado.getText().equals("Activo")){
 						comboEstado.setSelectedIndex(0);

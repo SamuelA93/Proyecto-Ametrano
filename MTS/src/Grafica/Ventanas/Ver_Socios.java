@@ -294,7 +294,7 @@ public class Ver_Socios extends JFrame {
 					     
 					    // show a joptionpane dialog using showMessageDialog
 						JOptionPane.showMessageDialog(frame,
-						        "Se ah agregado un mes más de socio ah "+listCli.get(selec).getNombre());
+						        "Se a agregado un mes más de socio a "+listCli.get(selec).getNombre());
 						
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
@@ -313,7 +313,7 @@ public class Ver_Socios extends JFrame {
 						     
 						    // show a joptionpane dialog using showMessageDialog
 							JOptionPane.showMessageDialog(frame,
-							        "Se ah agregado un mes más de socio ah "+listCli.get(selec).getNombre());
+							        "Se a agregado un mes más de socio a "+listCli.get(selec).getNombre());
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							System.out.println("Duplica key");
@@ -357,7 +357,7 @@ public class Ver_Socios extends JFrame {
 						System.out.println(fechaVerif);
 						control.agregar_dos_Mes(ref, fecha);
 						JOptionPane.showMessageDialog(frame,
-						        "Se ah agregado dos mes más de socio ah "+listCli.get(selec).getNombre());
+						        "Se a agregado dos mes más de socio a "+listCli.get(selec).getNombre());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
@@ -405,7 +405,7 @@ public class Ver_Socios extends JFrame {
 						System.out.println(fechaVerif);
 						control.agregar_tres_Mes(ref, fecha);
 						JOptionPane.showMessageDialog(frame,
-						        "Se ah agregado tres mes más de socio ah "+listCli.get(selec).getNombre());
+						        "Se a agregado tres mes más de socio a "+listCli.get(selec).getNombre());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
@@ -470,7 +470,7 @@ public class Ver_Socios extends JFrame {
 						System.out.println(fechaVerif);
 						control.agregar_x_Mes(ref, fecha,xF);
 						JOptionPane.showMessageDialog(frame,
-						        "Se ah agregado "+xF+" meses más de socio ah "+listCli.get(selec).getNombre());
+						        "Se a agregado "+xF+" meses más de socio a "+listCli.get(selec).getNombre());
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");
@@ -517,7 +517,7 @@ public class Ver_Socios extends JFrame {
 						System.out.println(fechaVerif);
 						control.agregar_anio_Mes(ref, fecha);
 						JOptionPane.showMessageDialog(frame,
-						        "Se ah agregado un año  más de socio ah "+listCli.get(selec).getNombre());
+						        "Se a agregado un año  más de socio a "+listCli.get(selec).getNombre());
 					} catch (SQLException e4) {
 						// TODO Auto-generated catch block
 						System.out.println("error nuvo");

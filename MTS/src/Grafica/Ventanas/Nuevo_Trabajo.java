@@ -57,8 +57,6 @@ public class Nuevo_Trabajo extends JFrame {
 	private JTextField fechaInicio;
 	private JTextField montoTotal;
 	private JTextField cuotas;
-	//private String clienteId;
-	//private String hora;
 	private MaskFormatter mascara;
 	private JComboBox comboBoxCliente = new JComboBox();
 	private JComboBox comboBoxEncargado = new JComboBox();
@@ -66,8 +64,6 @@ public class Nuevo_Trabajo extends JFrame {
 	Controlador_Tarea control_tarea = new Controlador_Tarea();
 	private Controlador_Empleado empleado = new Controlador_Empleado();
 	private Controlador_Cliente clientes = new Controlador_Cliente();
-	//private Controlador_Nueva_Tarea tarea = new Controlador_Nueva_Tarea();
-	//private String encargadoCedula;
 	List<VOCliente> lstClientes;
 	List<VOEmpleado> lstEncargados;
 	boolean banderaCliente = false;
@@ -147,8 +143,9 @@ public class Nuevo_Trabajo extends JFrame {
 			while(iterClientes.hasNext()){
 				VOCliente datoCliente = iterClientes.next();
 				comboBoxCliente.addItem(datoCliente.getNombre());
-				System.out.println(datoCliente.getReferencia());
+				//System.out.println(datoCliente.getReferencia());
 			}
+			comboBoxCliente.setSelectedIndex(-1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -169,7 +166,7 @@ public class Nuevo_Trabajo extends JFrame {
 				VOEmpleado datoCliente = iterClientes.next();
 				comboBoxEncargado.addItem(datoCliente.getNombre());
 			}
-			
+			comboBoxEncargado.setSelectedIndex(-1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -254,34 +251,13 @@ public class Nuevo_Trabajo extends JFrame {
 		comboBoxCliente.setBounds(100, 22, 260, 20);
 		contentPane.add(comboBoxCliente);
 		Cargar_Lista_Clientes();
-		//Logica componenete Cliente 
-		//Controlador_Nuevo_Trabajo ControladorCliente =new Controlador_Nuevo_Trabajo(); 
-		
 		
 		//Creo Lista para obtener id
 		final List myList = new ArrayList();
 		
-		/*Iterator<VOParticularEmpresa> iterClientes = lstClientes.iterator();
-		while(iterClientes.hasNext()){
-			VOParticularEmpresa datoCliente = iterClientes.next();
-			comboBoxCliente.addItem(datoCliente.getCliente());
-			myList.add(datoCliente.getId());
-			
-		}*/
-		//Capturo el primer id del comboBox Cliente
-		//clienteId =""+myList.get(0);
-		//////////////////////
 		comboBoxCliente.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				banderaCliente = true;
-				//clienteId=(String) myList.get(comboBoxCliente.getSelectedIndex());
-				/*//Recorro los id de la lista
-				for(int i =0;i<myList.size();i++){
-					if(i==comboBoxCliente.getSelectedIndex()){
-						clienteId =""+myList.get(i);
-						System.out.println(clienteId);
-					}
-				}*/
 			}
 		});
 		//////////////////////
@@ -391,42 +367,17 @@ public class Nuevo_Trabajo extends JFrame {
 		comboBoxEncargado.setBounds(100, 54, 168, 20);
 		contentPane.add(comboBoxEncargado);
 		Cargar_Lista_Empleados();
-		//Agrego items a el componente Encargado
-		//Controlador_Nuevo_Trabajo ControladorEncargado =new Controlador_Nuevo_Trabajo(); 
-		
-		/*final List ListaEncargado = new ArrayList();
-		
-		Iterator<VOEmpleado> iterEncargados = lstEncargados.iterator();
-		while(iterEncargados.hasNext()){
-			VOEmpleado datoEncargado = iterEncargados.next();
-			comboBoxEncargado.addItem(datoEncargado.getNombre());
-			ListaEncargado.add(datoEncargado.getCedula());
-			
-		}
-		/////////////////
-		encargadoCedula = ""+ListaEncargado.get(0);*/
+
 		comboBoxEncargado.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				banderaEmpleado= true;
-				//recorro las cedulas de la lista
-				//encargadoCedula = (String) ListaEncargado.get(comboBoxEncargado.getSelectedIndex());
-				/*for(int i=0;i<ListaEncargado.size();i++){
-					if(i==comboBoxEncargado.getSelectedIndex()){
-						encargadoCedula=""+ListaEncargado.get(i);
-						System.out.println(encargadoCedula);
-					}
-				}*/
-				//System.out.println(comboBoxEncargado.getSelectedItem());
+				
 			}
 		});
-		/////////////////
-		
-		
-			final JFormattedTextField horaT = new JFormattedTextField(mascara);
-			horaT.setBounds(100, 134, 38, 20);
-			contentPane.add(horaT);
-		
-		
+
+		final JFormattedTextField horaT = new JFormattedTextField(mascara);
+		horaT.setBounds(100, 134, 38, 20);
+		contentPane.add(horaT);
 		
 		//Componente Comentario
 		final JTextArea textArea = new JTextArea();
@@ -458,10 +409,18 @@ public class Nuevo_Trabajo extends JFrame {
 					 hora = horaT.getText();
 					Controlador_Verificar a = new Controlador_Verificar();
 					if (!a.verificarExistencia(montoTotal.getText().trim()) || a.SoloNumeros_O_Espacios(montoTotal.getText().trim())) {
-						 monto = montoTotal.getText();
+						if(montoTotal.getText().trim().equals("")){
+							monto = ""+0;
+						}else{
+							monto = montoTotal.getText();
+						}
 						if (!a.verificarExistencia(cuotas.getText().trim()) || a.SoloNumeros_O_Espacios(cuotas.getText().trim())) {
-							 cuotasP = cuotas.getText();
-							
+							 
+							if(cuotas.getText().trim().equals("")){
+								cuotasP =""+0;
+							}else{
+								cuotasP = cuotas.getText();
+							}
 						} else {
 							err = true;
 							javax.swing.JOptionPane mensaje = new javax.swing.JOptionPane(); 
@@ -498,71 +457,8 @@ public class Nuevo_Trabajo extends JFrame {
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-			} else {
+			} 
 
-			}
-		/*	
-				String referencia 	= clienteId;
-				String cliente      = ""+comboBoxCliente.getItemAt(comboBoxCliente.getSelectedIndex());
-				String fecha 		= ""+(int)comboBoxDia.getItemAt(comboBoxDia.getSelectedIndex())+"/"+(int)comboBoxMes.getItemAt(comboBoxMes.getSelectedIndex())+"/"+(int)comboBoxYear.getItemAt(comboBoxYear.getSelectedIndex());
-				String montoTotalT  = montoTotal.getText();
-				String cuotasT      = cuotas.getText();
-				String horarioT 	= hora;
-				String encargado 	= ""+comboBoxEncargado.getItemAt(comboBoxEncargado.getSelectedIndex());
-				String comentarioT  = textArea.getText();
-				String estado 		= "Activo";
-				//control de errores
-				boolean error=false;
-				String rojo ="setBorder(BorderFactory.createLineBorder(Color.red)";
-				Verificar_Existencia a = new Verificar_Existencia();
-				
-				
-				if(a.verificarExistencia(montoTotalT)&& a.esNumero(montoTotalT)){
-					montoTotal.setBorder(BorderFactory.createLineBorder(Color.green));
-				}else{
-					montoTotal.setBorder(BorderFactory.createLineBorder(Color.red));
-					error=true;
-				}
-				
-				if(a.verificarExistencia(cuotasT) && a.esNumero(cuotasT)){
-					cuotas.setBorder(BorderFactory.createLineBorder(Color.green));
-				}else{
-					cuotas.setBorder(BorderFactory.createLineBorder(Color.red));
-					error=true;
-				}
-				
-				if(!error){
-					//Horario con problemas va como null
-					
-					hora = "15:00";
-					//Controlador_Nuevo_Trabajo controlador = new Controlador_Nuevo_Trabajo(); 
-					control.nuevoTrabajo(referencia,fecha,montoTotalT,cuotasT,encargadoCedula,hora,comentarioT,estado);
-					//agregar campos, como por ejemplo en trabajo-activo
-					System.out.println("referencia "+clienteId);
-					System.out.println("fecha "+fecha);
-					System.out.println("montoTotalT "+montoTotalT);
-					System.out.println("cuotasT "+cuotasT);
-					System.out.println("horarioT "+ horarioT);
-					System.out.println("encargado "+encargado);
-					System.out.println("encargado cedula  "+encargadoCedula);
-					System.out.println("comentarioT "+comentarioT);
-					System.out.println("estado "+estado);
-					
-				}
-		*/
-				///////////////////////////////////////  nueva version de chequeo 
-				//System.out.println();
-				//System.out.println("referencia "+lstClientes.get(comboBoxCliente.getSelectedIndex()).getId());
-				//System.out.println("referencia "+lstClientes.get(comboBoxCliente.getSelectedIndex()).getCliente());
-				//System.out.println("fecha "+fechaInicio.getText());
-				/*System.out.println("montoTotalT "+montoTotal.getText());
-				System.out.println("cuotasT "+cuotas.getText());
-				System.out.println("horarioT "+ horaT.getText());
-				System.out.println("encargado "+lstEncargados.get(comboBoxEncargado.getSelectedIndex()).getCedula());
-				System.out.println("encargado cedula  "+lstEncargados.get(comboBoxEncargado.getSelectedIndex()).getCedula());
-				System.out.println("comentarioT "+textArea.getText());*/
-				//System.out.println("estado "+estado);
-			
  			}
 		});
 		btnRegistrar.setBounds(278, 385, 89, 23);
@@ -577,7 +473,6 @@ public class Nuevo_Trabajo extends JFrame {
 		contentPane.add(menuBar_1);
 		
 	}
-
 	private List ArrayList() {
 		// TODO Auto-generated method stub
 		return null;
