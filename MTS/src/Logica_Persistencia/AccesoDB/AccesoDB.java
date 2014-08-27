@@ -616,7 +616,7 @@ public class AccesoDB {
 				}else{
 					tels[1]= "No ingresado";
 				}
-				System.out.println(tels[0]+" "+tels[1]+" desde telefono");
+				//System.out.println(tels[0]+" "+tels[1]+" desde telefono");
 				 rs.close();
 				 pstmt.close();
 				 this.desconectarBD(con);

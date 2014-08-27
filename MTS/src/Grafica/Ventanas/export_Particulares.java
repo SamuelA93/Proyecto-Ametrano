@@ -39,9 +39,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,6 +68,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JCheckBox;
 import javax.swing.JMenuBar;
+import javax.swing.JTextField;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class export_Particulares extends JFrame {
@@ -86,9 +94,14 @@ public class export_Particulares extends JFrame {
 	private List<VOEmpleado> empleados = null;
 	private List socios = null;
 	private List exporta = null;
+	pruebaFechas f = new pruebaFechas();
 	private int versionDOC=0;
 	private 	JFrame frame = new JFrame("Exito");
 	Workbook wb;
+	private ArrayList<String> caracterEspecial = new ArrayList();
+	
+	//private enum caracteresEspe {<, NICKLE, DIME, QUARTER};
+	
 	JCheckBox parti = new JCheckBox("Particulares");
 	JCheckBox empre = new JCheckBox("Empresas");
 	JCheckBox emple = new JCheckBox("Empleados");
@@ -144,6 +157,8 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 	private JTable tabla_empleados;
 	private JTable tabla_socios;
 	private JTable tabla_trabajos;
+	private JTextField archivoNombre;
+	private JTextField nombreC;
 	
 	/**
 	 * Launch the application.
@@ -517,13 +532,25 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 		}
 	}
  */
-	
+	public void CargarNombreArchivo(String txt){
+		//nombreC.setText(txt);
+		if (txt.trim().equals("")) {
+			nombreC.setText("Datos MTS "+f.fechaActualDate2());
+		} else {
+			nombreC.setText(WorkbookUtil.createSafeSheetName(txt)+" "+f.fechaActualDate2());
+		}
+		
+	}
 	
 	public export_Particulares() {
-		
+		caracterEspecial.add("<");
+		caracterEspecial.add(">");
+		caracterEspecial.add("?");
+		caracterEspecial.add("|");
+		caracterEspecial.add("¿");
 		setTitle("Exportar Datos");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 724, 484);
+		setBounds(100, 100, 724, 560);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -563,13 +590,11 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 					}
 					try{
 						String ext = ".xlsx";
-						String nom = "Datos MTS ";
-						pruebaFechas f = new pruebaFechas();
-						String tirar = nom+f.horaActualDate()+ext;
+						String tirar = nombreC.getText()+ext;
 						FileOutputStream out = new FileOutputStream(tirar);
 						wb.write(out);
 						out.close();
-						JOptionPane.showMessageDialog(frame, "Se ah exportado con exito.");
+						JOptionPane.showMessageDialog(frame, "Se a exportado con exito.");
 					} catch (FileNotFoundException ex) {
 						Logger.getLogger(ExportToExcel.class.getName()).log(Level.SEVERE, null, ex);
 					} catch (IOException ex) {
@@ -590,7 +615,7 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 		JLabel lblHojasExcel = new JLabel("Hojas Excel");
 		lblHojasExcel.setBounds(10, 4, 127, 14);
 		contentPane.add(lblHojasExcel);
-		btnExportar.setBounds(609, 412, 89, 23);
+		btnExportar.setBounds(598, 488, 89, 23);
 		contentPane.add(btnExportar);
 		
 		JLabel lblFormatoDeLas = new JLabel("Formato de las tablas ");
@@ -737,9 +762,81 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 		cargartablaTrabajos();
 		scrollPane_5.setViewportView(tabla_trabajos);
 		
+		JLabel lblNombreDelArchivo = new JLabel("Nombre del Archivo :");
+		lblNombreDelArchivo.setBounds(10, 433, 127, 14);
+		contentPane.add(lblNombreDelArchivo);
+		
+		archivoNombre = new JTextField();
+		archivoNombre.setText("Datos MTS "+f.fechaActualDate2());
+		archivoNombre.addKeyListener(new KeyAdapter() {
+			StringBuffer txt = new StringBuffer();
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char caracter = e.getKeyChar();	
+					if (caracter == KeyEvent.VK_BACK_SPACE){
+						e.consume();	
+						if (txt.length() >=1){
+							txt.setLength(txt.length()-1);
+							String k = txt.toString();
+							StringBuilder m = new StringBuilder(txt.toString());
+							for(int i = 0;i<k.length();i++){
+								if(caracterEspecial.contains(k.charAt(i)+"")){
+								m.setCharAt(i, ' ');
+								}
+							}
+							
+								CargarNombreArchivo(m.toString());
+							
+						}
+					}else{
+						txt.append(caracter);	
+						String k = txt.toString();
+						StringBuilder m = new StringBuilder(txt.toString());
+						for(int i = 0;i<k.length();i++){
+							if(caracterEspecial.contains(k.charAt(i)+"")){
+							m.setCharAt(i, ' ');
+							}
+						}
+						if(m.toString().length()>0){
+							//System.out.println(m.toString());
+							CargarNombreArchivo(m.toString());
+						}
+						/*String k = txt.toString().charAt(txt.length()-1)+"";
+						if(caracterEspecial.contains(k)){
+							//System.out.println(txt.toString().substring(0, txt.length()-2)+"8");
+							StringBuilder m = new StringBuilder(txt.toString());
+							m.setCharAt(txt.length()-1, ' ');
+							System.out.println(m.toString());
+							//CargarNombreArchivo(m.toString());
+						}else{
+							//System.out.println(txt.toString());
+							System.out.println(txt.toString());
+							//CargarNombreArchivo(txt.toString());
+						}*/
+						//CargarNombreArchivo(txt.toString());
+					}
+				
+			}
+		});
+		archivoNombre.setBounds(275, 430, 155, 20);
+		contentPane.add(archivoNombre);
+		archivoNombre.setColumns(10);
+		
+		JLabel lblCorreccionDeCaracteres = new JLabel("Correcci\u00F3n de caracteres inv\u00E1lidos :");
+		lblCorreccionDeCaracteres.setBounds(10, 458, 257, 14);
+		contentPane.add(lblCorreccionDeCaracteres);
+		
+		nombreC = new JTextField();
+		nombreC.setText("Datos MTS "+f.fechaActualDate2());
+		nombreC.setEditable(false);
+		nombreC.setBounds(275, 455, 155, 20);
+		contentPane.add(nombreC);
+		nombreC.setColumns(10);
+		
 		JEditorPane editorPane = new JEditorPane();
 		editorPane.setEditable(false);
-		editorPane.setBounds(0, 58, 708, 462);
+		editorPane.setBounds(0, 58, 708, 471);
 		contentPane.add(editorPane);
 	}
 }

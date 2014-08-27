@@ -185,6 +185,15 @@ public class pruebaFechas {
 		//System.out.println(formatoDeFecha.format(fecha));
 		return formatoDeFecha.format(fecha);
 	}
+	public String fechaActualDate2(){
+		Calendar calendario = GregorianCalendar.getInstance();
+		Date fecha = calendario.getTime();
+		
+		SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd-MM-yyyy");
+		//System.out.println(formatoDeFecha.format(fecha));
+		return formatoDeFecha.format(fecha);
+	}
+	
 	public boolean validH(String fech){
 		
 		java.text.DateFormat df = java.text.DateFormat.getInstance(); 
