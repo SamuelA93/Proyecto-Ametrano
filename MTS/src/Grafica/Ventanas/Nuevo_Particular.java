@@ -22,7 +22,9 @@ import javax.swing.border.EmptyBorder;
 
 
 
+
 import Grafica.Controladores.Controlador_Particular;
+import Grafica.Controladores.Controlador_Socio;
 import Grafica.Controladores.Controlador_Verificar;
 import Grafica.Controladores.Verificar_Ci;
 import Grafica.Controladores.Verificar_Tel;
@@ -40,6 +42,7 @@ public class Nuevo_Particular extends JFrame {
 	private ArrayList<String> telefonos ;
 	private 	JFrame frame = new JFrame("Exito");
 	private Controlador_Particular control_particular = new Controlador_Particular();
+	private Controlador_Socio control_socio = new Controlador_Socio();
 	private Controlador_Particular control = new Controlador_Particular();
 
 	/**
@@ -184,6 +187,8 @@ public class Nuevo_Particular extends JFrame {
 				if (!error) {
 					try {
 						 control_particular.nuevoParticular(nombreP, apellidoP, dirP, telefonos, Verificar_Ci.numeroCi(ciP));
+						 //int u = Integer.parseInt(Verificar_Ci.numeroCi(ciP));
+						 //control_socio.LitaSocios(u, 0);
 						 nombre.setText("");
 						 apellido.setText("");
 						 dir.setText("");

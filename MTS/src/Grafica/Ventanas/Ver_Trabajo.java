@@ -1,12 +1,17 @@
 package Grafica.Ventanas;
 
 
+
+
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -44,6 +49,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class Ver_Trabajo extends JFrame {
 
@@ -67,6 +73,7 @@ public class Ver_Trabajo extends JFrame {
 	private 	JFrame frame = new JFrame("Exito");
 	private Controlador_Tarea control_tarea = new Controlador_Tarea();
 	private List<VOCliente> clientes = null;
+	static ArrayList lateralTrabajo=new ArrayList();
 	private List<VOTrabajo> trabajos = null;
 	private List<VOTarea> tareas = null;
 	/**
@@ -88,6 +95,34 @@ public class Ver_Trabajo extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	 private static class WhiteYellowCellRenderer extends DefaultListCellRenderer {  
+	        public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected, boolean cellHasFocus ) {  
+	            Component c = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );  
+	            //System.out.println((int)lateralTrabajo.get(index));
+	            
+	            /*if ( (int)lateralTrabajo.get(index)==0) {  
+	                c.setBackground( Color.gray );  
+	            }  
+	            else {  
+	                c.setBackground( Color.white );  
+	            } */ 
+	           switch ((int)lateralTrabajo.get(index)) {
+				case 0:  c.setBackground( Color.gray );  
+					
+					break;
+				case 1:	 c.setBackground( Color.white );  
+					
+					break;
+				case 2:  c.setBackground( Color.green );  
+					
+					break;
+				default: c.setBackground( Color.white );
+					break;
+				}
+	            return c;  
+	        }  
+	    }  
+	 
 	public void setEditableCampos(boolean bandera){
 		 boolean clip = (!listClientes.isSelectionEmpty() && (bandera));
 		if (clip){
@@ -112,15 +147,36 @@ public class Ver_Trabajo extends JFrame {
 			boolean hayQueFiltrar = false;
 			DefaultListModel modeloSocios = new DefaultListModel();
 			guia= new ArrayList<VOTrabajo>();
+			lateralTrabajo=new ArrayList();
 			for (int i=0; i<tuplasClien.length;i++){			
 				if (tuplasClien[i].toUpperCase().startsWith(subCadena.toUpperCase())){
 					guia.add(clie.get(i));
 					hayQueFiltrar = true;			
 					modeloSocios.addElement(tuplasClien[i]);
+					
+					switch (clie.get(i).getEstado()) {
+					case "Activo": lateralTrabajo.add(1);
+					//System.out.println(1);
+						break;
+					case "Finalizado": lateralTrabajo.add(2);
+					//System.out.println(2);
+						break;
+					case "Cancelado": lateralTrabajo.add(0);
+					//System.out.println(0);
+						break;
+					default:
+						break;
+					}
+					/*if (clie.get(i).getEstado().equals("Activo")) {
+						lateralTrabajo.add(0);
+					} else {
+						
+					}*/
 				}
 			}
 			if (hayQueFiltrar){
-				listClientes.setModel(modeloSocios);			
+				listClientes.setModel(modeloSocios);	
+				listClientes.setCellRenderer( new WhiteYellowCellRenderer() ); 
 			}		
 		}
 	//function independienta lista que aparece en la lista de particulares
@@ -137,10 +193,25 @@ public class Ver_Trabajo extends JFrame {
 			}
 			//List<VOTrabajosClientes> trabajosCliente = contro_cliente.listarTrabajosClientes();
 			guia= new ArrayList<VOTrabajo>();
+			//lateralTrabajo.clear();
 			String[] tuplas = new String[trabajos.size()];
 			int i = 0;
 			for (VOTrabajo x : trabajos){
 				guia.add(x);
+				
+				switch (x.getEstado()) {
+				case "Activo": lateralTrabajo.add(1);
+				//System.out.println(1);
+					break;
+				case "Finalizado": lateralTrabajo.add(2);
+				//System.out.println(2);
+					break;
+				case "Cancelado": lateralTrabajo.add(0);
+				//System.out.println(0);
+					break;
+				default:
+					break;
+				}
 				int j=0;
 				while( (j<clientes.size()) && (clientes.get(j).getReferencia() != x.getReferencia()) ){
 					j++;
@@ -236,6 +307,7 @@ public class Ver_Trabajo extends JFrame {
 		contentPane.add(scrollPane);
 		//retocada listClientes
 		listClientes = new JList(this.trabajosToString());
+		listClientes.setCellRenderer( new WhiteYellowCellRenderer() ); 
 		listClientes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -252,7 +324,12 @@ public class Ver_Trabajo extends JFrame {
 				if(guia.get(listClientes.getSelectedIndex()).getEstado().equals("Activo")){
 					comboEstado.setSelectedIndex(0);
 				}else{
-					comboEstado.setSelectedIndex(1);
+					if(guia.get(listClientes.getSelectedIndex()).getEstado().equals("Finalizado")){
+						comboEstado.setSelectedIndex(1);
+					}else{
+						comboEstado.setSelectedIndex(2);
+					}
+					
 				}
 				agregarCuotas.setText(""+guia.get(listClientes.getSelectedIndex()).getCuotas());
 				//System.out.println("estado objeto:"+ agregarEstado.getText());
@@ -328,17 +405,25 @@ public class Ver_Trabajo extends JFrame {
 					
 				}
 				if (!err) {
-					System.out.println(agregarMonto.getText());
+					/*System.out.println(agregarMonto.getText());
 					System.out.println(agregarCuotas.getText());
 					System.out.println(comboEstado.getSelectedItem());
-					System.out.println(agregarCliente.getText());
+					System.out.println(agregarCliente.getText());*/
 					float monto = Float.parseFloat(agregarMonto.getText());
 					int id = Integer.parseInt(agregarCliente.getText());
 					int cuotas = Integer.parseInt(agregarCuotas.getText());
 					try {
 						control_trabajo.editarTrabajo(cuotas, (String) comboEstado.getSelectedItem(), monto, id);
+						if(!comboEstado.getSelectedItem().toString().equals("Activo")){
+							if (comboEstado.getSelectedItem().toString().equals("Finalizado")) {
+								control_tarea.Hecha_O_Cancelada_GENERAL("Hecho", id);
+							} else {
+								control_tarea.Hecha_O_Cancelada_GENERAL("Cancelada", id);
+							}
+							
+						}
 						JOptionPane.showMessageDialog(frame,
-						        "Se ah modificado el trabajo ");
+						        "Se ha modificado el trabajo ");
 						
 						trabajos = control_trabajo.Listar_Trabajos();
 						setEditableCampos(false);
@@ -359,11 +444,12 @@ public class Ver_Trabajo extends JFrame {
 		GuardarCambios.setVisible(false);
 		GuardarCambios.setBounds(194, 276, 199, 23);
 		contentPane.add(GuardarCambios);
+		comboEstado.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Finalizado", "Cancelado"}));
 		
 		comboEstado.setBounds(277, 93, 116, 20);
 		contentPane.add(comboEstado);
-		comboEstado.addItem("Activo");
-		comboEstado.addItem("Finalizado");
+		//comboEstado.addItem("Activo");
+		//comboEstado.addItem("Finalizado");
 		//comboEstado.setSelectedItem("Activo");
 		comboEstado.setEnabled(false);
 		

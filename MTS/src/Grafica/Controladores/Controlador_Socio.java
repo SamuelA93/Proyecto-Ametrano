@@ -25,10 +25,23 @@ public class Controlador_Socio {
 		System.out.println("contrAgre");
 		f.agregar_tres_Mes(ref, fecha);
 	}
-	
+	public void LitaSocios(long ref, int x ) throws SQLException{
+		Fachada f = new Fachada();
+		//System.out.println("contrAgre");
+		f.LitaSocios(ref, x);
+	}
+	public void ActuaLizarSocios(long ref, int x ) throws SQLException{
+		Fachada f = new Fachada();
+		//System.out.println("contrAgre");
+		f.ActuaLizarSocios(ref, x);
+	}
 	public ArrayList Socio_ref() throws SQLException{
 		Fachada f = new Fachada();
 		return f.Socios_Ref();
+	}
+	public long obtener_Existencia_de_Socio( long id) throws SQLException{
+		Fachada f = new Fachada();
+		return f.obtener_Existencia_de_Socio(id);
 	}
 	public void agregar_anio_Mes(long ref, String fecha) throws SQLException{
 		Fachada f = new Fachada();
@@ -60,7 +73,17 @@ public class Controlador_Socio {
 		Fachada f= new Fachada();
 		return f.Socio_Fechas(ref);
 	}
-	
-	
+	public void eliminarSocio(long identificacion) throws SQLException
+	{
+		Fachada f = new Fachada();
+		f.eliminarSocio(identificacion);
+	}
+	public boolean esSocioAmadeo(long rut) throws SQLException
+	{
+		boolean salida;
+		Fachada f = new Fachada();
+		salida = f.esSocio(rut) ==rut;
+		return (salida);
+	}
 
 }

@@ -25,20 +25,19 @@ import java.awt.Color;
 import java.awt.SystemColor;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import Grafica.Controladores.Controlador_Auxiliares;
 import Grafica.Controladores.Controlador_Cliente;
-
 import Grafica.Controladores.Controlador_Empleado;
-
 import Grafica.Controladores.Controlador_Tarea;
 import Grafica.Controladores.Controlador_Trabajo;
-
 import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
@@ -49,7 +48,9 @@ import Logica_Persistencia.Value_Object.VOTrabajo;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import Grafica.Ventanas.Editar_Tarea;
+
 import javax.swing.JEditorPane;
 import javax.swing.JTextField;
 
@@ -59,6 +60,9 @@ import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 
 
 public class Principal extends JFrame {
@@ -73,11 +77,16 @@ public class Principal extends JFrame {
 	Controlador_Empleado control_empleado = new Controlador_Empleado();
 	Controlador_Cliente control = new Controlador_Cliente();
 	private int row = -2;
+	ArrayList<VOTarea> todo=new ArrayList();
+	JCheckBox realiza;
+	private String etapa = "";
 	private boolean banderaEditable= false;
 	private VOEmpresa empresa = new VOEmpresa();
+	JCheckBox cancela;
 	private VOParticular particular = new VOParticular();
 	private long refEditar;
 	VOTrabajo trabajo  ;
+	pruebaFechas fech_Aux = new pruebaFechas();
 	public DefaultTableModel modelo = new DefaultTableModel(){
 
 	    @Override
@@ -108,6 +117,11 @@ public class Principal extends JFrame {
 	 */
 	public void actualizar_Tabla(){
 		 lstTareas = controlador.listarTareas();
+		 ArrayList<Object[]> pend=new ArrayList();
+		 ArrayList<Object[]> atra=new ArrayList();
+		 
+		 ArrayList<VOTarea> todo1=new ArrayList();
+		 ArrayList<VOTarea> todo2=new ArrayList();
 		//System.out.println("sfgahg");
 		DefaultTableModel modelo = new DefaultTableModel(){
 			
@@ -117,25 +131,57 @@ public class Principal extends JFrame {
 		       return false;
 		    }
 		};
+		
 		modelo.addColumn("Fecha");
 		modelo.addColumn("Hora");
+		modelo.addColumn("Trabajo");
+		pruebaFechas aux = new pruebaFechas();
 		if (lstTareas.size() > 0){	
 			Iterator<VOTarea> iterT = lstTareas.iterator();
 			while (iterT.hasNext()){
 				VOTarea Tarea = iterT.next();
-				Object[] fila = new Object[2];
-				fila[0] = Tarea.getFecha();
-				fila[1] = Tarea.getHora();
-				modelo.addRow(fila);
-			}		
+				Object[] fila = new Object[3];
+				if (!(aux.reciente(aux.dateJAVA(Tarea.getFecha()), aux.dateJAVA("28/08/2014"))<0)) {
+					fila[0] = Tarea.getFecha();
+					fila[1] = Tarea.getHora();
+					fila[2] = Tarea.getTrabajo();
+					//System.out.println(Tarea.getFecha());
+					//modelo.addRow(fila);
+					pend.add(fila);
+					todo1.add(Tarea);
+				} else {
+					//System.out.println(Tarea.getFecha());
+					fila[0] = Tarea.getFecha();
+					fila[1] = Tarea.getHora();
+					fila[2] = Tarea.getTrabajo();
+					//modelo2.addRow(fila);
+					atra.add(fila);
+					todo2.add(Tarea);
+				}
+			}
 		}	
-		table.setModel(modelo);
+		for(int i = 0;i<todo1.size();i++){
+			todo.add(todo1.get(i));
+		}
+		for(int i = 0;i<todo2.size();i++){
+			todo.add(todo2.get(i));
+		}
+		//System.out.println(pend.get(0)[0]);
+		for(int i = 0;i<pend.size();i++	){
+			modelo.addRow( pend.get(i) );
+		}
 		
+		for(int i = 0;i<atra.size();i++	){
+			modelo.addRow( atra.get(i));
+		}
+		table.setModel(modelo);
+		//table.setDefaultRenderer(Object.class, new CustomCellTabla());
+		table.setDefaultRenderer(Object.class, new CustonRowTable());
 	}
 	public Principal() {
 		setTitle("Administracion ");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 586, 452);
+		setBounds(100, 100, 824, 478);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -270,13 +316,81 @@ public class Principal extends JFrame {
 			}
 		});
 		
+		JButton btnNewButton = new JButton("Modificar Etapa");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(table.getSelectedRow()>= 0){
+					try {
+						/*System.out.println(etapa);
+						System.out.println(todo.get(table.getSelectedRow()).getEmpleado_cedula());
+						System.out.println(todo.get(table.getSelectedRow()).getTrabajo());
+						System.out.println(fech_Aux.fechaSQL(todo.get(table.getSelectedRow()).getFecha()));  */               
+						
+						controlador.modificar_etapa(etapa, todo.get(table.getSelectedRow()).getEmpleado_cedula(), todo.get(table.getSelectedRow()).getTrabajo(), fech_Aux.fechaSQL(todo.get(table.getSelectedRow()).getFecha()));
+					    cancela.setSelected(false);
+					    realiza.setSelected(false);
+					    etapa="";
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		});
+		btnNewButton.setBounds(650, 0, 152, 19);
+		contentPane.add(btnNewButton);
+		
 		
 		actualizar.setBackground(SystemColor.control);
 		actualizar.setBounds(180, 19, 102, 21);
 		contentPane.add(actualizar);
 		
+		 realiza = new JCheckBox("Hecho");
+		realiza.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//System.out.println("r");
+				if (cancela.isSelected()) {
+					cancela.setSelected(false);
+				} 
+				realiza.setSelected(true);
+				etapa="Hecho";
+				
+			}
+		});
+		realiza.setBackground(SystemColor.inactiveCaptionBorder);
+		realiza.setBounds(450, 0, 97, 19);
+		contentPane.add(realiza);
+		
+	 cancela = new JCheckBox("Cancelada");
+		cancela.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		
+				if (realiza.isSelected()) {
+					realiza.setSelected(false);
+				} 
+				cancela.setSelected(true);
+				etapa="Cancelada";
+				System.out.println(etapa);
+			}
+		});
+		cancela.setBackground(SystemColor.inactiveCaptionBorder);
+		cancela.setBounds(550, 0, 97, 19);
+		contentPane.add(cancela);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(5, 45, 277, 207);
+		scrollPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				cancela.setSelected(false);
+				realiza.setSelected(false);
+			}
+		});
+		scrollPane.setBounds(5, 45, 277, 368);
 		contentPane.add(scrollPane);
 		
 		
@@ -294,11 +408,12 @@ public class Principal extends JFrame {
 				modelo.addRow(fila);
 			}		
 		}	*/
-		table = new JTable();
+		//table = new JTable();
+		
 		actualizar_Tabla();
 		//table.setModel(modelo);
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(5, 281, 277, 108);
+		scrollPane_1.setBounds(287, 281, 277, 132);
 		contentPane.add(scrollPane_1);
 		final JTextPane comentarioP = new JTextPane();
 		comentarioP.setEditable(false);
@@ -329,15 +444,15 @@ public class Principal extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				banderaEditable= true;
 				 row = table.getSelectedRow();
-				comentarioP.setText( lstTareas.get(row).getComentario());
+				comentarioP.setText( todo.get(row).getComentario());
 				try {
 					//System.out.println(lstTareas.get(row).getTrabajo());
-					 trabajo = control_trabajo.obtenerTrabajoXid(lstTareas.get(row).getTrabajo());
+					 trabajo = control_trabajo.obtenerTrabajoXid(todo.get(row).getTrabajo());
 					
-					estado.setText(trabajo.getEstado());
+					estado.setText(todo.get(row).getEtapa());
 					monto.setText(""+trabajo.getMontoTotal());
 					cuotas.setText(trabajo.getCuotas()+"");
-					encargado.setText(control_empleado.empleadoXcedula(lstTareas.get(row).getEmpleado_cedula()));
+					encargado.setText(control_empleado.empleadoXcedula(todo.get(row).getEmpleado_cedula()));
 					//System.out.println(trabajo.getReferencia());
 					if (control.esCedula(trabajo.getReferencia())){
 						
@@ -368,25 +483,25 @@ public class Principal extends JFrame {
 			}
 		});
 		scrollPane.setViewportView(table);
-		JLabel lblComentario = new JLabel("COMENTARIO");
-		lblComentario.setBounds(8, 259, 80, 14);
+		JLabel lblComentario = new JLabel("Comentario");
+		lblComentario.setBounds(290, 259, 80, 14);
 		contentPane.add(lblComentario);
 		
-		JLabel lblInformacionDelCliente = new JLabel("INFORMACION DEL CLIENTE  ");
+		JLabel lblInformacionDelCliente = new JLabel("Informaci\u00F3n del cliente  ");
 		lblInformacionDelCliente.setBounds(290, 24, 214, 14);
 		contentPane.add(lblInformacionDelCliente);
 		
-		JLabel lblEstadoDePago = new JLabel("INFORMACION DE PAGO");
-		lblEstadoDePago.setBounds(290, 259, 203, 14);
+		JLabel lblEstadoDePago = new JLabel("Informaci\u00F3n de pago");
+		lblEstadoDePago.setBounds(571, 259, 203, 14);
 		contentPane.add(lblEstadoDePago);
 		
 		JMenuBar menuBar_1 = new JMenuBar();
 		menuBar_1.setToolTipText("");
-		menuBar_1.setBounds(0, 256, 600, 21);
+		menuBar_1.setBounds(290, 256, 512, 21);
 		contentPane.add(menuBar_1);
 		
 		JMenuBar bar_sub1 = new JMenuBar();
-		bar_sub1.setBounds(0, 20, 570, 21);
+		bar_sub1.setBounds(0, 20, 813, 21);
 		contentPane.add(bar_sub1);
 		
 		JMenu mnNuevo_1 = new JMenu("Nuevo");
@@ -408,7 +523,7 @@ public class Principal extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(banderaEditable){
-					Editar_Tarea editarTarea = new Editar_Tarea(refEditar,trabajo.getId(),lstTareas.get(row).getEmpleado_cedula(),lstTareas.get(row));
+					Editar_Tarea editarTarea = new Editar_Tarea(refEditar,todo.get(row).getTrabajo(),todo.get(row).getEmpleado_cedula(),todo.get(row));
 					editarTarea.setVisible(true);
 				}else{
 					System.out.println(row);
@@ -429,9 +544,9 @@ public class Principal extends JFrame {
 				//Controlador_Eliminar_Tarea eli = new Controlador_Eliminar_Tarea();
 				
 				try {
-					System.out.println(lstTareas.get(row).getTrabajo());
-					System.out.println(lstTareas.get(row).getEmpleado_cedula());
-					System.out.println(aux.fechaSQL(lstTareas.get(row).getFecha()));
+					//System.out.println(lstTareas.get(row).getTrabajo());
+					//System.out.println(lstTareas.get(row).getEmpleado_cedula());
+					//System.out.println(aux.fechaSQL(lstTareas.get(row).getFecha()));
 					controlador.eliminar(lstTareas.get(row).getTrabajo(), lstTareas.get(row).getEmpleado_cedula(),aux.fechaSQL(lstTareas.get(row).getFecha()) );
 					actualizar_Tabla();
 					
@@ -460,11 +575,11 @@ public class Principal extends JFrame {
 		contentPane.add(lblParticulares);
 		
 		JMenuBar menuBar_3 = new JMenuBar();
-		menuBar_3.setBounds(0, 0, 575, 21);
+		menuBar_3.setBounds(0, 0, 812, 21);
 		contentPane.add(menuBar_3);
 		
 		
-		encargado.setBounds(400, 56, 108, 21);
+		encargado.setBounds(400, 56, 214, 21);
 		contentPane.add(encargado);
 		
 		
@@ -472,7 +587,7 @@ public class Principal extends JFrame {
 		contentPane.add(lblEncargado);
 		
 		
-		cliente.setBounds(400, 86, 108, 21);
+		cliente.setBounds(400, 86, 233, 21);
 		contentPane.add(cliente);
 		
 		JLabel lblCliente = new JLabel("CLIENTE : ");
@@ -480,7 +595,7 @@ public class Principal extends JFrame {
 		contentPane.add(lblCliente);
 		
 		
-		contacto.setBounds(400, 116, 108, 21);
+		contacto.setBounds(400, 116, 233, 21);
 		contentPane.add(contacto);
 		
 		
@@ -488,7 +603,7 @@ public class Principal extends JFrame {
 		contentPane.add(lblContacto);
 		
 		
-		referencia.setBounds(400, 146, 108, 21);
+		referencia.setBounds(400, 146, 170, 21);
 		contentPane.add(referencia);
 		
 		JLabel lblRutCi = new JLabel("RUT / CI : ");
@@ -497,7 +612,7 @@ public class Principal extends JFrame {
 		contentPane.add(lblRutCi);
 		
 		
-		direccion.setBounds(400, 176, 108, 21);
+		direccion.setBounds(400, 176, 402, 21);
 		contentPane.add(direccion);
 		
 		JLabel lblDireccion = new JLabel("DIRECCION : ");
@@ -505,7 +620,7 @@ public class Principal extends JFrame {
 		contentPane.add(lblDireccion);
 		
 		
-		tel.setBounds(400, 206, 160, 21);
+		tel.setBounds(400, 206, 328, 21);
 		contentPane.add(tel);
 		
 		JLabel lblTelefono = new JLabel("TELEFONO : ");
@@ -515,36 +630,36 @@ public class Principal extends JFrame {
 		
 		JLabel lblMontoTotal = new JLabel("MONTO TOTAL : ");
 		lblMontoTotal.setHorizontalAlignment(SwingConstants.LEFT);
-		lblMontoTotal.setBounds(300, 295, 108, 14);
+		lblMontoTotal.setBounds(580, 295, 108, 14);
 		contentPane.add(lblMontoTotal);
 		
 		
 		monto.setHorizontalAlignment(SwingConstants.LEFT);
-		monto.setBounds(400, 295, 108, 14);
+		monto.setBounds(700, 295, 66, 14);
 		contentPane.add(monto);
 		
 		
 		cuotas.setHorizontalAlignment(SwingConstants.LEFT);
-		cuotas.setBounds(400, 320, 108, 14);
+		cuotas.setBounds(700, 320, 59, 14);
 		contentPane.add(cuotas);
 		
 		JLabel lblCuotas = new JLabel("CUOTAS : ");
 		lblCuotas.setHorizontalAlignment(SwingConstants.LEFT);
-		lblCuotas.setBounds(300, 320, 108, 14);
+		lblCuotas.setBounds(580, 320, 108, 14);
 		contentPane.add(lblCuotas);
 		
 		
 		estado.setHorizontalAlignment(SwingConstants.LEFT);
-		estado.setBounds(400, 345, 108, 14);
+		estado.setBounds(699, 390, 85, 14);
 		contentPane.add(estado);
 		
 		JLabel lblEstado = new JLabel("ESTADO : ");
 		lblEstado.setHorizontalAlignment(SwingConstants.LEFT);
-		lblEstado.setBounds(300, 345, 108, 14);
+		lblEstado.setBounds(580, 390, 108, 14);
 		contentPane.add(lblEstado);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(287, 45, 279, 206);
+		scrollPane_2.setBounds(287, 45, 515, 206);
 		contentPane.add(scrollPane_2);
 		
 		JEditorPane editorPane = new JEditorPane();
@@ -552,12 +667,27 @@ public class Principal extends JFrame {
 		scrollPane_2.setViewportView(editorPane);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(287, 281, 279, 108);
+		scrollPane_3.setBounds(569, 281, 233, 71);
 		contentPane.add(scrollPane_3);
 		
 		JEditorPane editorPane_1 = new JEditorPane();
 		editorPane_1.setEditable(false);
 		scrollPane_3.setViewportView(editorPane_1);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(569, 382, 233, 31);
+		contentPane.add(scrollPane_4);
+		
+		JEditorPane editorPane_2 = new JEditorPane();
+		scrollPane_4.setViewportView(editorPane_2);
+		
+		JLabel lblEtapaDeTarea = new JLabel("Etapa de tarea");
+		lblEtapaDeTarea.setBounds(580, 358, 97, 14);
+		contentPane.add(lblEtapaDeTarea);
+		
+		JMenuBar menuBar_2 = new JMenuBar();
+		menuBar_2.setBounds(569, 356, 235, 21);
+		contentPane.add(menuBar_2);
 		//
 		DefaultTableModel modeloEmpresa = new DefaultTableModel(){
 

@@ -21,6 +21,8 @@ import java.util.List;
 
 
 
+
+
 import Logica_Persistencia.AccesoDB.AccesoDB;
 import Logica_Persistencia.Value_Object.VOCliente;
 import Logica_Persistencia.Value_Object.VOEmpleado;
@@ -69,7 +71,19 @@ public class Fachada {
 		AccesoDB a = new AccesoDB();
 		a.nuevos_2_Telefonos(tel, referencia);
 	}
+	public void Hecha_O_Cancelada_GENERAL(String etapa, long id) throws SQLException{
+		AccesoDB a = new AccesoDB();
+		a.Hecha_O_Cancelada_GENERAL(etapa, id);
+	}
 	
+	public void LitaSocios(long ref, int x ) throws SQLException{
+		AccesoDB a = new AccesoDB();
+		a.LitaSocios(ref, x);
+	}
+	public long obtener_Existencia_de_Socio( long id) throws SQLException{
+		AccesoDB a = new AccesoDB();
+		return a.obtener_Existencia_de_Socio(id);
+	}
 	//Envia los datos nuevo trabajo a AccesoDB
 		public void nuevoTrabajo(long cedulaRut1, String fechaInicio, int montoTotal, int cuotas, String comentario, String estado){
 			AccesoDB a = new AccesoDB();
@@ -148,7 +162,10 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			return a.ListarClientes_Dir_Tel_Ref();
 		}
-		
+		public List<VOCliente> listarClientes_Dir_Tel_Ref2(){
+			AccesoDB a = new AccesoDB();
+			return a.ListarClientes_Dir_Tel_Ref();
+		}
 		public List<VOEmpleado> listarEmpleados(){
 			AccesoDB a = new AccesoDB();
 			//System.out.println("adfasdgdfga");
@@ -158,6 +175,16 @@ public class Fachada {
 			AccesoDB a = new AccesoDB();
 			//System.out.println("adfasdgdfga");
 			a.Modificar_Particular( modi,l);
+		}
+		public void ActuaLizarSocios(long ref, int x ) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			a.ActuaLizarSocios( ref,x);
+		}
+		public void Eliminar_Particular(int ref) throws SQLException{
+			AccesoDB a = new AccesoDB();
+			//System.out.println("adfasdgdfga");
+			a.Eliminar_Particular( ref);
 		}
 		public void ModificarTel(String modi,String viejo , int ci) throws SQLException{
 			AccesoDB a = new AccesoDB();
@@ -207,10 +234,10 @@ public class Fachada {
 			
 		}
 		
-		public void Nueva_Tarea(int trabajo, int encargado, String fecha, String hora, String comentario) throws SQLException{
+		public void Nueva_Tarea(int trabajo, int encargado, String fecha, String hora, String comentario,String etapa) throws SQLException{
 			AccesoDB a = new AccesoDB();
 			System.out.println("fach");
-			a.nuevaTarea(trabajo, encargado, fecha, hora, comentario);;
+			a.nuevaTarea(trabajo, encargado, fecha, hora, comentario,etapa);
 			
 		}
 		public void EliminarTarea(int trabajo, long l, String fecha) throws SQLException{
@@ -267,7 +294,10 @@ public class Fachada {
 			AccesoDB a =  new AccesoDB();
 			return a.listarEncargados();
 		}
-
+		public void CambiarEtapaDeTrarea(String etapa , long emple, int trabajo, String fecha) throws SQLException{
+			AccesoDB a =  new AccesoDB();
+			 a.CambiarEtapaDeTrarea( etapa , emple, trabajo,  fecha);
+		}
 		///////////////////////////////  ivan 25
 		
 		//listar Trabajos de Clientes ***
@@ -285,6 +315,69 @@ public class Fachada {
 					AccesoDB a = new  AccesoDB();
 					return a.verTrabajo(id);
 				}
+				
+				
+				
+////////////////////////////////////////////////////////AMADEO////////////////////////
+public void actualizarEmpresa(long ruti, String nombreNuevo, String contactoNuevo, String direccionNueva, String telefonoi1, String telefonoi2, boolean socio, String telefonoViejo1, String telefonoViejo2)
+{
+AccesoDB a = new AccesoDB();
+try
+{
+a.actualizarEmpresa(ruti, nombreNuevo, contactoNuevo, direccionNueva, telefonoi1);
+a.Modificar_Tel_long(telefonoi1, telefonoViejo1, ruti);
+a.Modificar_Tel_long(telefonoi2, telefonoViejo2, ruti);
+}catch(SQLException e)
+{
+e.printStackTrace();
+}
+
+}
+
+public void borrarEmpresa(long unRut)
+{
+AccesoDB a = new AccesoDB();
+try
+{
+a.borrarEmpresa(unRut);
+}catch(SQLException e)
+{
+e.printStackTrace();
+}
+}
+
+//
+public void nuevoTelefonoXRUT( String tel, long rut){
+AccesoDB a = new AccesoDB();
+try {
+a.nuevoTelefonoXRUT(tel,rut);
+//System.out.println("alli");
+} catch (SQLException e) {
+// TODO Auto-generated catch block
+e.printStackTrace();
+}
+}
+
+
+
+
+public List<VOEmpresa> listarEmpresas() throws SQLException {
+AccesoDB a = new AccesoDB();
+return a.ListarEmpresas();
+}
+
+
+public void eliminarSocio(long identificacion) throws SQLException {
+AccesoDB a = new AccesoDB();
+a.eliminarSocio(identificacion);
+
+}
+
+public long esSocio(long identificacion) throws SQLException{
+AccesoDB a = new AccesoDB();
+//System.out.println(a.esSocio(identificacion)+"Este es el print de la fachada.");
+return a.esSocio(identificacion);
+}
 		
 				
 }

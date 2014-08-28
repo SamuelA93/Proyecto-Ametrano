@@ -46,6 +46,10 @@ public class Controlador_Cliente {
 		return a.listarClientes_Dir_Tel_Ref();	
 	}
 	
+	public List<VOCliente> obtenerListaSocios2() throws SQLException{
+		Fachada a =new Fachada();
+		return a.listarClientes_Dir_Tel_Ref();	
+	}
 	///////////////////// devuelve una lista de objetos con nombre y referencia
 	public List<Object[]> obtenerClientes() throws SQLException{
 		Fachada f =new Fachada();

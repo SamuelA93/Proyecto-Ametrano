@@ -51,6 +51,7 @@ public class Ver_Particulares extends JFrame {
 	private List<VOParticular> guia= null;
 	private JTextField agregarNombre;
 	private JTextField agregarApellido;
+	boolean eraSocio=false;
 	private JTextField agregarCedula;
 	private JTextField agregarDireccion;
 	private JTextField agregarTelefono;
@@ -97,8 +98,10 @@ public class Ver_Particulares extends JFrame {
 			//agregarCedula.setEditable(clip);
 			agregarTelefono.setEditable(clip);
 			agregarTelefono2.setEditable(clip);
+			Socio.setEnabled(clip);
 		}else{
 			System.out.println("no");
+			Socio.setEnabled(clip);
 			agregarTelefono2.setEditable(clip);
 			agregarNombre.setEditable(clip);
 			agregarApellido.setEditable(clip);
@@ -173,9 +176,9 @@ public class Ver_Particulares extends JFrame {
 		mnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-					if(!Socio.isSelected()){
+					/*if(!Socio.isSelected()){
 						Socio.setEnabled(true);
-					}
+					}*/
 					setEditableCampos(true);
 					
 }
@@ -184,6 +187,21 @@ public class Ver_Particulares extends JFrame {
 		menuBar.add(mnEditar);
 		
 		JMenu mnEliminar = new JMenu("Eliminar");
+		mnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+	
+				/*try {
+					System.out.println("ed");
+					control.Eliminar_Particular((int)guia.get(listParticulares.getSelectedIndex()).getCedula());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				
+			}
+		});
 		menuBar.add(mnEliminar);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -224,8 +242,10 @@ public class Ver_Particulares extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				
 				try {
-					long refer= control_socio.registros(guia.get(listParticulares.getSelectedIndex()).getCedula());
-					if (refer>0) {
+					//long refer= control_socio.registros(guia.get(listParticulares.getSelectedIndex()).getCedula());
+					long y = control_socio.obtener_Existencia_de_Socio(guia.get(listParticulares.getSelectedIndex()).getCedula());
+					if (y>0) {
+						eraSocio=true;
 						Socio.setSelected(true);
 						
 					}else{
@@ -306,15 +326,31 @@ public class Ver_Particulares extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				String espa ="";
-				if(Socio.isEnabled()&&Socio.isSelected()){
-					try {
-						control_socio.Nuevo_Socio((long) guia.get(listParticulares.getSelectedIndex()).getCedula());
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					//System.out.println("gusrdar");
-				}
+				
+				
+						try {
+							long v = control_socio.obtener_Existencia_de_Socio((long) guia.get(listParticulares.getSelectedIndex()).getCedula());
+							System.out.println(v);
+							if (v==1) {
+								if(!Socio.isSelected()){
+									
+									control_socio.ActuaLizarSocios((long) guia.get(listParticulares.getSelectedIndex()).getCedula(), 0);
+								}
+							} else {
+								if (v==0) {
+									if(Socio.isSelected()){
+										control_socio.ActuaLizarSocios((long) guia.get(listParticulares.getSelectedIndex()).getCedula(), 1);
+									}
+								} else {
+									control_socio.LitaSocios((long) guia.get(listParticulares.getSelectedIndex()).getCedula(), 1);
+								}
+							}
+							
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 				
 				if(!agregarNombre.getText().equals(espa)){
 					

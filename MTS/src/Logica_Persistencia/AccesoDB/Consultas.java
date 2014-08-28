@@ -46,13 +46,32 @@ public class Consultas {
 		
 		return consulta;
 	}
-	
+	public String CambiarEtapaDeTarea(){
+		String consulta= "UPDATE `empleados_tiene_trabajos` SET `etapa`=? WHERE  `Empleados_cedula`=? AND `Trabajos_idTrabajos`=? AND `fecha`=?;";
+		
+		return consulta;
+	}
 	
 	public String DatosTareaEmpresas(){
 		String consulta = "SELECT empleados_tiene_trabajos.fecha as fecha, empleados_tiene_trabajos.hora as hora, e.nombre as nombre , e.rut as rut,e.direccion as direccion,e.contacto,t.telefono as telefono, empleados.nombre as Encargado, empleados.cedula as emcedula,empleados_tiene_trabajos.comentario as comentario,empleados_tiene_trabajos.horas as horas, empleados_tiene_trabajos.Trabajos_idTrabajos as trabajo FROM empleados_tiene_trabajos JOIN empleados ON empleados_tiene_trabajos.Empleados_cedula = empleados.cedula JOIN trabajos ON empleados_tiene_trabajos.Trabajos_idTrabajos = trabajos.idTrabajos JOIN empresa e on trabajos.referencia = e.rut JOIN telefonos t on e.rut = t.referencia";
 		return consulta;
 	}
-			
+	public String Hecha_O_Cancelada_GENERAL(){
+		String consulta = "UPDATE `empleados_tiene_trabajos` SET etapa=? WHERE Trabajos_idTrabajos=? ;";
+		return consulta;
+	}	
+	public String LitaSocios(){
+		String consulta = "INSERT INTO socios_lista VALUES (?,?);";
+		return consulta;
+	}
+	public String ActuaLizarSocios(){
+		String consulta = "UPDATE socios_lista SET esSocio=? WHERE referencia=?;";
+		return consulta;
+	}
+	public String ES_Socios(){
+		String consulta = "SELECT esSocio FROM socios_lista WHERE referencia = ?;";
+		return consulta;
+	}
 	public String obtener_idTrabajo_X_Referecncia(){
 		String consulta = "SELECT MAX(`idTrabajos`) as id FROM `trabajos` WHERE `referencia`= ?;";
 		return consulta;
@@ -60,6 +79,11 @@ public class Consultas {
 	
 	public String DatosTareas(){
 		String consulta =  "SELECT* FROM `empleados_tiene_trabajos` WHERE DATE(`fecha`)>=CURDATE() ORDER BY `fecha` ;";
+		//String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
+		return consulta;
+	}
+	public String DatosTareas_por_etapa(){
+		String consulta =  "SELECT* FROM `empleados_tiene_trabajos` WHERE etapa<>'Hecho' AND etapa<>'Cancelada' ORDER BY `fecha` ;";
 		//String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
 		return consulta;
 	}
@@ -84,7 +108,7 @@ public class Consultas {
 		return consulta;
 	}
 	public String NuevaTarea(){
-		String consulta = "INSERT INTO `empleados_tiene_trabajos` (`Empleados_cedula`, `Trabajos_idTrabajos`, `fecha`, `hora`,  `comentario`) VALUES (?,?,?,?,?);";
+		String consulta = "INSERT INTO `empleados_tiene_trabajos` (`Empleados_cedula`, `Trabajos_idTrabajos`, `fecha`, `hora`,  `comentario`,`etapa`) VALUES (?,?,?,?,?,?);";
 		return consulta;
 	}
 	public String obtenerClientes_Referencias(){
@@ -131,6 +155,11 @@ public class Consultas {
 		//System.out.println(consulta);
 		return consulta;
 	}
+	public String Eliminar_Particular(){
+		String consulta = "DELETE FROM particulares WHERE cedula=? ;";
+		//System.out.println(consulta);
+		return consulta;
+	}
 	public String ultimoMesPago_X_Referencia(){
 		String consulta = "SELECT `referencia`, `fecha_inscripcion`, `fecha_finalizacion` FROM `socios` WHERE `fecha_finalizacion`=(SELECT MAX(`fecha_finalizacion`) FROM `socios` where `referencia`=4854911)";
 		return consulta;
@@ -145,6 +174,10 @@ public class Consultas {
 	}
 	public String Clientes_Dir_Ref_union_socios(){
 		String consulta = "Select CONCAT(`particulares`.`nombre`,' ',`particulares`.`apellido`) as nombre, `particulares`.`cedula` as referencia, `particulares`.`dir` from `particulares` join `socios` on `particulares`.`cedula`=`socios`.`referencia` union select `nombre`, `rut` , `direccion` FROM `empresa` join `socios` on `empresa`.`rut`=`socios`.`referencia`";
+		return consulta;
+	}
+	public String Clientes_Dir_Ref_union_socios2(){
+		String consulta = "select nombre, pre.referencia,dir from (Select CONCAT(`particulares`.`nombre`,' ',`particulares`.`apellido`) as nombre, `particulares`.`cedula` as referencia, `particulares`.`dir` from `particulares` join `socios` on `particulares`.`cedula`=`socios`.`referencia` union select `nombre`, `rut` , `direccion` FROM `empresa` join `socios` on `empresa`.`rut`=`socios`.`referencia` ) as pre join `socios_lista` on pre.referencia = `socios_lista`.`referencia` where  `socios_lista`.`esSocio` = 1;";
 		return consulta;
 	}
 	
@@ -250,5 +283,50 @@ public class Consultas {
 			String consulta="SELECT idTrabajos,cuotas_totales,fecha_inicio,monto_total,estado,referencia FROM `trabajos` WHERE idTrabajos=? ";
 			return consulta;
 		}
+		
+		
+/////////////////////////////////AMADEO////////////////////////////////////////////////
+		
+/**/	public String nuevaEmpresa(long rut, String nombre, String contacto, String direccion){
+String consulta = "INSERT INTO empresa VALUES ('"+rut+"','"+nombre+"','"+contacto+"','"+direccion+"');";
+return consulta;
+}
+
+/**/public String actualizarEmpresaXRUT(long ruti, String nombreNuevo, String contactoNuevo, String direccionNueva)
+{
+//UPDATE `empresa` SET `nombre`='"+nombreNuevo+"', `contacto`='"+contactoNuevo+"', `direccion`='"+direccionNueva+"' WHERE `rut` = "+ ruti;
+//System.out.println(" UPDATE `empresa` SET `nombre`='g',`contacto`='l',`direccion`='lolo' WHERE `rut`=123456789123);
+String consulta = "UPDATE `empresa` SET `nombre`='"+nombreNuevo+"',`contacto`='"+contactoNuevo+"',`direccion`='"+direccionNueva+"' WHERE `rut`="+ruti;
+return consulta;
+}
+
+/**/public String ModificarTel(String tel,String vie, long ref){
+String consulta = "UPDATE telefonos SET telefono = '"+tel+"' WHERE telefono = '"+vie+"' AND referencia= "+ref+" ";
+
+//System.out.println(consulta);
+return consulta;
+}
+
+public String borrarEmpresaXRut(long ruti){
+String consulta = "DELETE from empresa where rut = "+ruti;
+return consulta;
+}
+
+
+/**/	public String DatosTareaEmpresasSolo(){
+String consulta = "SELECT e.rut, e.nombre, e.contacto, e.direccion FROM empresa e";
+return consulta;
+}
+
+public String eliminarSocioXIdentificacion(long identificacion) {
+String consulta = "DELETE from socios where referencia = "+identificacion;
+return consulta;
+}
+
+public String socioXReferencia(long referencia)
+{
+String consulta = "SELECT referencia FROM socios where referencia="+referencia;
+return consulta;
+}
 	
 }

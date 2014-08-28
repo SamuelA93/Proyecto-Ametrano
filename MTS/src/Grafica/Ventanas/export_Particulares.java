@@ -537,7 +537,7 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 		if (txt.trim().equals("")) {
 			nombreC.setText("Datos MTS "+f.fechaActualDate2());
 		} else {
-			nombreC.setText(WorkbookUtil.createSafeSheetName(txt)+" "+f.fechaActualDate2());
+			nombreC.setText(WorkbookUtil.createSafeSheetName(txt).trim()+" "+f.fechaActualDate2());
 		}
 		
 	}
@@ -774,6 +774,7 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char caracter = e.getKeyChar();	
+				String palabra ="";
 					if (caracter == KeyEvent.VK_BACK_SPACE){
 						e.consume();	
 						if (txt.length() >=1){
@@ -790,31 +791,28 @@ private DefaultTableModel modelo_Clientes= new DefaultTableModel(){
 							
 						}
 					}else{
+						
 						txt.append(caracter);	
 						String k = txt.toString();
 						StringBuilder m = new StringBuilder(txt.toString());
 						for(int i = 0;i<k.length();i++){
 							if(caracterEspecial.contains(k.charAt(i)+"")){
-							m.setCharAt(i, ' ');
+							m.setCharAt(i,' ');
+							
 							}
 						}
-						if(m.toString().length()>0){
-							//System.out.println(m.toString());
-							CargarNombreArchivo(m.toString());
+						palabra  = m.toString().trim();
+						String sinespa="";
+						for(int i = 0;i<palabra.length();i++){
+							sinespa = sinespa+palabra.charAt(i);
+							sinespa = sinespa.trim();
 						}
-						/*String k = txt.toString().charAt(txt.length()-1)+"";
-						if(caracterEspecial.contains(k)){
-							//System.out.println(txt.toString().substring(0, txt.length()-2)+"8");
-							StringBuilder m = new StringBuilder(txt.toString());
-							m.setCharAt(txt.length()-1, ' ');
-							System.out.println(m.toString());
-							//CargarNombreArchivo(m.toString());
-						}else{
-							//System.out.println(txt.toString());
-							System.out.println(txt.toString());
-							//CargarNombreArchivo(txt.toString());
-						}*/
-						//CargarNombreArchivo(txt.toString());
+						System.out.println(sinespa);
+						if(sinespa.length()>0){
+							//System.out.println(m.toString());
+							CargarNombreArchivo( sinespa);
+						}
+						
 					}
 				
 			}

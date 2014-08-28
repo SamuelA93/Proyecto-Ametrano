@@ -60,9 +60,7 @@ public class pruebaFechas {
 	}
 	public int reciente(Date f1,Date f2){
 		return f1.compareTo(f2);
-			
-		
-	}
+}
 	/*public String intervalo(String fecha){
 		
 		int i=0;

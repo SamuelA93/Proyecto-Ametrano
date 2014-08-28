@@ -71,6 +71,7 @@ public class Administrar_tareas extends JFrame {
 	  	MaskFormatter mascara;
 	  	MaskFormatter  mascara2;
 	  	List<Object[]> listT=null;
+	  	
 	  	JTextArea ComentIngre;
 	  	Controlador_Trabajo control_trabajo = new Controlador_Trabajo();
 	  	Controlador_Cliente control_cliente = new Controlador_Cliente();
@@ -312,7 +313,7 @@ public class Administrar_tareas extends JFrame {
 						System.out.println(ComentIngre.getText());
 						int t = Integer.parseInt((String) listT.get(list_1.getSelectedIndex())[0]) ;
 						try {
-							control.nuevo(  t,  listE.get(encarSelec.getSelectedIndex()).getCedula(), auxiliar.fechaSQL(fechaformat.getText()), horaformat.getText(), ComentIngre.getText());
+							control.nuevo(  t,  listE.get(encarSelec.getSelectedIndex()).getCedula(), auxiliar.fechaSQL(fechaformat.getText()), horaformat.getText(), ComentIngre.getText(),"Pendiente");
 							JOptionPane.showMessageDialog(frame2,
 							        "Se guardo nueva tarea. ");
 							

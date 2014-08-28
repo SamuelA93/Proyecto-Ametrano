@@ -61,6 +61,10 @@ public class Controlador_Particular {
 		Fachada a = new Fachada();
 		a.ModificarParticular(modi,l);
 	}
+	public void Eliminar_Particular (int l) throws SQLException{
+		Fachada a = new Fachada();
+		a.Eliminar_Particular(l);
+	}
 	
 	
 }

@@ -7,16 +7,24 @@ public class VOTarea {
 	private String encanombre;
 	private String hora;
 	private String horas;
+	private String etapa;
 	private String comentario;
 	public VOTarea(){}
 	public VOTarea(long empleado_cedula, int trabajo, String fecha, String hora,
-			String horas, String comentario) {
+			String horas, String comentario,String eta) {
 		this.empleado_cedula = empleado_cedula;
 		this.trabajo = trabajo;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.horas = horas;
 		this.comentario = comentario;
+		this.etapa= eta;
+	}
+	public String getEtapa() {
+		return etapa;
+	}
+	public void setEtapa(String etapa) {
+		this.etapa = etapa;
 	}
 	public long getEmpleado_cedula() {
 		return empleado_cedula;

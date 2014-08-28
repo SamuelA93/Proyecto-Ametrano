@@ -93,6 +93,43 @@ public class AccesoDB {
 			pstmt.close();					
 			this.desconectarBD(con);
 		}
+	public void Hecha_O_Cancelada_GENERAL(String etapa, long id) throws SQLException{
+		Connection con = this.conectarBD();	
+		Consultas consultas = new Consultas();
+		String insert = consultas.Hecha_O_Cancelada_GENERAL();
+		//System.out.println("acceso");
+		PreparedStatement pstmt;
+		pstmt = con.prepareStatement(insert);
+		/*System.out.println(etapa);
+		System.out.println(emple);
+		System.out.println(trabajo);
+		System.out.println(fecha);**/
+		pstmt.setString(1,etapa);
+		pstmt.setLong(2, id);
+		pstmt.executeUpdate ();			
+		pstmt.close();					
+		this.desconectarBD(con);
+	}
+	public void CambiarEtapaDeTrarea(String etapa , long emple, int trabajo, String fecha ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.CambiarEtapaDeTarea();
+			//System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			System.out.println(etapa);
+			System.out.println(emple);
+			System.out.println(trabajo);
+			System.out.println(fecha);
+			pstmt.setString(1,etapa);
+			pstmt.setLong(2, emple);
+			pstmt.setInt(3, trabajo);
+			pstmt.setString(4, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
 	public void Socio_dos_Mes_Mas(long ref, String fecha ) throws SQLException{
 		// Ingresa una nueva actividad al sistema
 			Connection con = this.conectarBD();	
@@ -103,6 +140,49 @@ public class AccesoDB {
 			pstmt = con.prepareStatement(insert);
 			pstmt.setLong(1,ref);
 			pstmt.setString(2, fecha);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	
+	public void LitaSocios(long ref, int x ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.LitaSocios();
+			//System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.setInt(2, x);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void ActuaLizarSocios(long ref, int x ) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.ActuaLizarSocios();
+			//System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(2,ref);
+			pstmt.setInt(1, x);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	public void Eliminar_Particular(int ref) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.Eliminar_Particular();
+			//System.out.println("acceso");
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+		
 			pstmt.executeUpdate ();			
 			pstmt.close();					
 			this.desconectarBD(con);
@@ -207,19 +287,21 @@ public class AccesoDB {
 			this.desconectarBD(con);
 		}
 	// Ingresar nueva Tarea
-	public void nuevaTarea(int trabajo, int encargado, String fecha, String hora,String comentario) throws SQLException{
+	public void nuevaTarea(int trabajo, int encargado, String fecha, String hora,String comentario,String etapa) throws SQLException{
 		// Ingresa una nueva actividad al sistema
 			Connection con = this.conectarBD();	
 			Consultas consultas = new Consultas();
 			String insert = consultas.NuevaTarea();	
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement(insert);
+			
 			pstmt.setInt(2, trabajo);
 			pstmt.setInt(1, encargado);
 			pstmt.setString(3, fecha);
 			pstmt.setString(4, hora);
-			//pstmt.setInt(5, horas);
 			pstmt.setString(5, comentario);
+			//pstmt.setInt(5, horas);
+			pstmt.setString(6, etapa);
 			pstmt.executeUpdate ();			
 			pstmt.close();					
 			this.desconectarBD(con);
@@ -335,6 +417,27 @@ public class AccesoDB {
 			ResultSet rs = pstmt.executeQuery ();		 	        
 		    rs.next();
 		    int Id  = rs.getInt("id");		
+		    rs.close();
+		    pstmt.close();
+			this.desconectarBD(con);
+			return Id;
+		}
+		public long obtener_Existencia_de_Socio(long ref) throws SQLException{	
+			Connection con = null;				
+			con = this.conectarBD();	
+			Consultas consultas = new Consultas ();
+			String strIdMutualista = consultas.ES_Socios();
+			PreparedStatement pstmt = con.prepareStatement (strIdMutualista);
+			pstmt.setLong (1, ref);
+			ResultSet rs = pstmt.executeQuery ();		 	        
+		    rs.next();
+		    int Id = -1;
+		    try {
+		    	Id  = rs.getInt("esSocio");		
+			} catch (Exception e) {
+				
+			}
+		   
 		    rs.close();
 		    pstmt.close();
 			this.desconectarBD(con);
@@ -531,7 +634,7 @@ public class AccesoDB {
 				try {
 					stmt = con.createStatement();			
 					Consultas consultas = new Consultas();
-					String strTarea = consultas.DatosTareas();
+					String strTarea = consultas.DatosTareas_por_etapa();
 					ResultSet rs = stmt.executeQuery(strTarea);					
 					lstTareas= new ArrayList<VOTarea>();			
 					while (rs.next()) {
@@ -547,7 +650,8 @@ public class AccesoDB {
 						String hora = rs.getString("hora");//System.out.println(hora);
 						String horas = rs.getString("horas");
 						String comentario = rs.getString("comentario");
-						VOTarea Tarea =new VOTarea(ci_encargado, id_Trabajo, fecha, hora, horas, comentario);
+						String etapa = rs.getString("etapa");
+						VOTarea Tarea =new VOTarea(ci_encargado, id_Trabajo, fecha, hora, horas, comentario,etapa);
 						
 						lstTareas.add(Tarea);			
 					}
@@ -894,6 +998,56 @@ public class AccesoDB {
 				this.desconectarBD(con);
 				return lstCliente;
 			}
+			
+			public List<VOCliente> ListarClientes_Dir_Tel_Ref2(){	 
+				Connection con = null;				
+				con = this.conectarBD();
+				List<VOCliente> lstCliente = null;		
+				/*  */
+				Statement stmt;
+				try {
+					stmt = con.createStatement();			
+					Consultas consultas = new Consultas();
+					String strTarea = consultas.Clientes_Dir_Ref_union_socios();
+					ResultSet rs = stmt.executeQuery(strTarea);					
+					lstCliente= new ArrayList<VOCliente>();		
+					VOCliente Tarea;
+					while (rs.next()) {
+						long ref = rs.getLong("referencia");
+						String dir = rs.getString("dir");
+						String nombre = rs.getString("nombre");
+						Object[]	 telefono = obtenerTelXreferencia(ref);
+						//System.out.println(nombre);
+						if(telefono[0]=="No ingresado" && telefono[1]=="No ingresado"){
+							 Tarea =new VOCliente(ref, dir, "No ingresado", nombre);
+							//System.out.println("No ingresado");
+						}else{
+							if(telefono[0]!="No ingresado" && telefono[1]=="No ingresado"){
+								 Tarea =new VOCliente(ref, dir, (String ) telefono[0], nombre);
+								//System.out.println((String ) telefono[0]);
+							}else{
+								if(telefono[0]=="No ingresado" && telefono[1]!="No ingresado"){
+									 Tarea =new VOCliente(ref, dir, (String ) telefono[1], nombre);
+									//System.out.println( (String ) telefono[1]);
+								}else{
+									 Tarea =new VOCliente(ref, dir, (String ) telefono[1]+" / "+telefono[0], nombre);
+									//System.out.println( (String ) telefono[1]+"/"+telefono[0]);
+								}
+							}
+						}
+						//VOCliente Tarea =new VOCliente(ref, dir, (String ) telefono[0]+" / "+telefono[1], nombre);
+						
+						lstCliente.add(Tarea);			
+					}
+					rs.close();
+					stmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}		
+				this.desconectarBD(con);
+				return lstCliente;
+			}
 			// Modificar Empleados
 						public void Modificar_Empleado(String modi,int ced) throws SQLException{	
 							Connection con = this.conectarBD();	
@@ -1121,6 +1275,180 @@ public class AccesoDB {
 						this.desconectarBD(con);
 						return trabajo;
 					}
+					
+					
+////////////////////////////////AMADEO//////////////////////////////////////
+					
+					
+		/*Este*/	public void borrarEmpresa(long unRut) throws SQLException
+		{
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String delete = consultas.borrarEmpresaXRut(unRut);	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(delete);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+			
+		}
+		
+	/*Este*/	public void eliminarSocio(long identificacion) throws SQLException
+		{
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String delete = consultas.eliminarSocioXIdentificacion(identificacion);	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(delete);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+			
+		}
+		
+	/*Este*/	public void actualizarEmpresa(long ruti, String nombreNuevo, String contactoNuevo, String direccionNueva, String telefonoi) throws SQLException
+		{
+			Connection con = this.conectarBD();
+			Consultas consultas = new Consultas();
+			String actualizarEmpresa = consultas.actualizarEmpresaXRUT(ruti, nombreNuevo, contactoNuevo, direccionNueva);
+			//System.out.println(actualizarEmpresa);
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(actualizarEmpresa);
+			pstmt.executeUpdate();
+			
+			
+			
+			//String actualizarTelefono = consultas.ModificarTel(telefonoi, vie, ruti);//falta borrar el telefono anterior!!!!!
+			
+			//pstmt = con.prepareStatement(actualizarTelefono);
+			//pstmt.executeUpdate();
+			pstmt.close();
+			this.desconectarBD(con);
+		
+		}
+	
+	public List<VOEmpresa> ListarEmpresas() throws SQLException{
+		Connection con = null;
+		con = this.conectarBD();
+		
+		List <VOEmpresa> lstEmpresas= null;
+		Statement stmt;
+		/*try{*/
+			stmt = con.createStatement();
+			Consultas consultas = new Consultas();
+			String strEmpresa = consultas.DatosTareaEmpresasSolo();
+			ResultSet rs = stmt.executeQuery(strEmpresa);
+			lstEmpresas = new ArrayList<VOEmpresa>();
+			while (rs.next()){
+				
+				long rut = rs.getLong("rut");
+				String nombre = rs.getString("nombre");
+				String contacto = rs.getString("contacto");
+				String direccion = rs.getString("direccion");
+				
+
+					Object[]	 telefono = obtenerTelXreferencia(rut);
+					 
+				VOEmpresa empresa = new VOEmpresa(rut,nombre,contacto,direccion,(String)telefono[0],(String)telefono[1]);
+				lstEmpresas.add(empresa);
+			}
+			rs.close();
+			stmt.close();
+		/*} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/		
+		this.desconectarBD(con);
+		return lstEmpresas;
+	}
+
+	
+	
+	//Guardo los datos de la empresa y el telefono por rut
+/*	DUPLICADO			public void nuevaEmpresa(long rut, String nombre, String contacto, String direccion) throws SQLException{
+			Connection con = this.conectarBD();
+			Consultas consultas = new Consultas();
+			String insert = consultas.nuevaEmpresa(rut, nombre, contacto, direccion);
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.executeUpdate();
+			
+			//-->Si no se puede guardar telefono, borrar empresa!!!!!!, hacerlo con try and catch!!!!insert=consultas.nuevoCelTel(/*rut, telefono*//*);
+			/*pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1, rut);
+			//pstmt.setString(2, telefono);
+			pstmt.executeUpdate();*/
+		/*	pstmt.close();
+			
+			
+			this.desconectarBD(con);
+	} */
+	
+	
+	public void nuevoTelefonoXRUT( String tel, long referencia) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.nuevoCelTel();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1, referencia);
+			pstmt.setString(2, tel);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}
+	
+	public void Modificar_Tel_long(String modi,String viejo,long rut) throws SQLException{	
+		Connection con = this.conectarBD();	
+		Consultas consultas = new Consultas();
+		String insert = consultas.ModificarTel(modi,viejo, rut);	
+		PreparedStatement pstmt;
+		pstmt = con.prepareStatement(insert);
+		
+		/*pstmt.setString(1, modi);
+		pstmt.setString(2, viejo);*/
+		//pstmt.setLong(1, rut);
+		//System.out.println(insert);
+		pstmt.executeUpdate ();			
+		pstmt.close();					
+		this.desconectarBD(con);
+	}
+	
+/*	DUPLICADO			public void Nuevo_Socio(long ref) throws SQLException{
+		// Ingresa una nueva actividad al sistema
+			Connection con = this.conectarBD();	
+			Consultas consultas = new Consultas();
+			String insert = consultas.nuevoSocio();	
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(insert);
+			pstmt.setLong(1,ref);
+			pstmt.executeUpdate ();			
+			pstmt.close();					
+			this.desconectarBD(con);
+		}*/
+
+	public long esSocio(long referencia) throws SQLException
+	{
+		Connection con = this.conectarBD();
+		Consultas consulta = new Consultas();
+		String esSocio = consulta.socioXReferencia(referencia);
+		//System.out.println(esSocio);
+		PreparedStatement pstmt = con.prepareStatement(esSocio);
+		ResultSet rs = pstmt.executeQuery();
+		//System.out.println(rs.next());
+		long salida;
+		
+		salida = 0;
+		
+		
+		if(rs.first()){
+			salida = rs.getLong("referencia");
+			//System.out.println(salida);
+		}
+		return salida;
+		
+	}
 					
 					
 }

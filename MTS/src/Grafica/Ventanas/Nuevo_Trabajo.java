@@ -14,6 +14,7 @@ import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
@@ -28,7 +29,6 @@ import Grafica.Controladores.Controlador_Tarea;
 import Grafica.Controladores.Controlador_Trabajo;
 import Grafica.Controladores.Controlador_Verificar;
 import Grafica.Controladores.Verificar_Ci;
-
 import Grafica.Controladores.Verificar_Rut;
 import Grafica.Controladores.pruebaFechas;
 import Logica_Persistencia.Fachada.Fecha;
@@ -66,6 +66,7 @@ public class Nuevo_Trabajo extends JFrame {
 	private Controlador_Cliente clientes = new Controlador_Cliente();
 	List<VOCliente> lstClientes;
 	List<VOEmpleado> lstEncargados;
+	private 	JFrame frame = new JFrame("Exito");
 	boolean banderaCliente = false;
 	boolean banderaEmpleado = false;
 	pruebaFechas auxiliar = new pruebaFechas();
@@ -449,10 +450,19 @@ public class Nuevo_Trabajo extends JFrame {
 					control.nuevoTrabajo(referencia, hora, monto, cuotasP, textArea.getText());
 					try {
 						int id = control.obtener_idTrabajo_X_ref(referencia);
-						control_tarea.nuevo(id, referenciaE, auxiliar.fechaSQL(fecha), hora, textArea.getText());
+						if (auxiliar.reciente(auxiliar.dateJAVA(fecha), auxiliar.dateJAVA(auxiliar.fechaActualDate()))<0) {
+							//System.out.println("vieja");
+							control_tarea.nuevo(id, referenciaE, auxiliar.fechaSQL(fecha), hora, textArea.getText(),"Atrazado");
+						} else {
+							System.out.println("nueva");
+							control_tarea.nuevo(id, referenciaE, auxiliar.fechaSQL(fecha), hora, textArea.getText(),"Pendiente");
+						}
+						 JOptionPane.showMessageDialog(frame, "Se ha guardado nuevo trabajo. ");
+						//control_tarea.nuevo(id, referenciaE, auxiliar.fechaSQL(fecha), hora, textArea.getText());
 						dispose();
 					} catch (Exception e) {
 						// TODO: handle exception
+						e.printStackTrace();
 					}
 				} catch (Exception e) {
 					// TODO: handle exception
