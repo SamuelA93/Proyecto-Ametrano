@@ -19,6 +19,9 @@ public class VOTrabajo {
 		
 		this.referencia = referencia;
 	}
+	public VOTrabajo() {
+		// TODO Auto-generated constructor stub
+	}
 	public int getId() {
 		return id;
 	}

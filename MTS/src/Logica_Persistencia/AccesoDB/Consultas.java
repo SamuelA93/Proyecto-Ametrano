@@ -83,7 +83,7 @@ public class Consultas {
 		return consulta;
 	}
 	public String DatosTareas_por_etapa(){
-		String consulta =  "SELECT* FROM `empleados_tiene_trabajos` WHERE etapa<>'Hecho' AND etapa<>'Cancelada' ORDER BY `fecha` ;";
+		String consulta =  "SELECT* FROM `empleados_tiene_trabajos` WHERE etapa='Pendiente'  ORDER BY `fecha` ;";
 		//String consulta = "SELECT* FROM `empleados_tiene_trabajos` ORDER BY `fecha` ;";
 		return consulta;
 	}

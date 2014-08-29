@@ -39,6 +39,7 @@ import Grafica.Controladores.Controlador_Empleado;
 import Grafica.Controladores.Controlador_Tarea;
 import Grafica.Controladores.Controlador_Trabajo;
 import Grafica.Controladores.pruebaFechas;
+import Logica_Persistencia.Value_Object.VOEmpleado;
 import Logica_Persistencia.Value_Object.VOEmpresa;
 import Logica_Persistencia.Value_Object.VOParticular;
 import Logica_Persistencia.Value_Object.VOTarea;
@@ -85,7 +86,7 @@ public class Principal extends JFrame {
 	JCheckBox cancela;
 	private VOParticular particular = new VOParticular();
 	private long refEditar;
-	VOTrabajo trabajo  ;
+	private VOTrabajo trabajo = new  VOTrabajo();
 	pruebaFechas fech_Aux = new pruebaFechas();
 	public DefaultTableModel modelo = new DefaultTableModel(){
 
@@ -117,6 +118,7 @@ public class Principal extends JFrame {
 	 */
 	public void actualizar_Tabla(){
 		 lstTareas = controlador.listarTareas();
+		 todo = new ArrayList<>();
 		 ArrayList<Object[]> pend=new ArrayList();
 		 ArrayList<Object[]> atra=new ArrayList();
 		 
@@ -326,11 +328,16 @@ public class Principal extends JFrame {
 						System.out.println(todo.get(table.getSelectedRow()).getEmpleado_cedula());
 						System.out.println(todo.get(table.getSelectedRow()).getTrabajo());
 						System.out.println(fech_Aux.fechaSQL(todo.get(table.getSelectedRow()).getFecha()));  */               
+						if(cancela.isSelected() && !realiza.isSelected()){
+							controlador.modificar_etapa("Cancelada", todo.get(table.getSelectedRow()).getEmpleado_cedula(), todo.get(table.getSelectedRow()).getTrabajo(), fech_Aux.fechaSQL(todo.get(table.getSelectedRow()).getFecha()));
+						}
+						if(realiza.isSelected() && !cancela.isSelected()){
+							controlador.modificar_etapa("Hecha", todo.get(table.getSelectedRow()).getEmpleado_cedula(), todo.get(table.getSelectedRow()).getTrabajo(), fech_Aux.fechaSQL(todo.get(table.getSelectedRow()).getFecha()));
+						}
 						
-						controlador.modificar_etapa(etapa, todo.get(table.getSelectedRow()).getEmpleado_cedula(), todo.get(table.getSelectedRow()).getTrabajo(), fech_Aux.fechaSQL(todo.get(table.getSelectedRow()).getFecha()));
 					    cancela.setSelected(false);
 					    realiza.setSelected(false);
-					    etapa="";
+					    actualizar_Tabla();
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -355,8 +362,8 @@ public class Principal extends JFrame {
 				if (cancela.isSelected()) {
 					cancela.setSelected(false);
 				} 
-				realiza.setSelected(true);
-				etapa="Hecho";
+				//realiza.setSelected(true);
+				//etapa="Hecho";
 				
 			}
 		});
@@ -372,9 +379,9 @@ public class Principal extends JFrame {
 				if (realiza.isSelected()) {
 					realiza.setSelected(false);
 				} 
-				cancela.setSelected(true);
-				etapa="Cancelada";
-				System.out.println(etapa);
+				//cancela.setSelected(true);
+				//etapa="Cancelada";
+				//System.out.println(etapa);
 			}
 		});
 		cancela.setBackground(SystemColor.inactiveCaptionBorder);
@@ -442,18 +449,30 @@ public class Principal extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				banderaEditable= true;
-				 row = table.getSelectedRow();
+				row = table.getSelectedRow();
+				//System.out.println( todo.get(row).getComentario()+" "+todo.get(row).getEmpleado_cedula()+" "+todo.get(row).getEncanombre());
+				//System.out.println(todo.get(row).getEtapa()+" "+todo.get(row).getTrabajo());
+				banderaEditable = true;
+				estado.setText(todo.get(row).getEtapa());
 				comentarioP.setText( todo.get(row).getComentario());
+				String empleado;
 				try {
-					//System.out.println(lstTareas.get(row).getTrabajo());
-					 trabajo = control_trabajo.obtenerTrabajoXid(todo.get(row).getTrabajo());
-					
-					estado.setText(todo.get(row).getEtapa());
+					empleado = control_empleado.empleadoXcedula(todo.get(row).getEmpleado_cedula());
+					encargado.setText(empleado);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
+				try {
+					/////////  cargo datos de pago segun la row seleccionada
+					System.out.println(todo.get(row).getTrabajo());
+					trabajo = control_trabajo.obtenerTrabajoXid(todo.get(row).getTrabajo());
 					monto.setText(""+trabajo.getMontoTotal());
 					cuotas.setText(trabajo.getCuotas()+"");
-					encargado.setText(control_empleado.empleadoXcedula(todo.get(row).getEmpleado_cedula()));
-					//System.out.println(trabajo.getReferencia());
+					
+					///////////  cargar cliente 
+					
 					if (control.esCedula(trabajo.getReferencia())){
 						
 						particular = control.ParticularXcedula(trabajo.getReferencia());
@@ -479,6 +498,56 @@ public class Principal extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				/*banderaEditable= true;
+				row = table.getSelectedRow();
+				comentarioP.setText( todo.get(row).getComentario());
+				System.out.println(todo.get(row).getComentario());
+				try {
+					//System.out.println(lstTareas.get(row).getTrabajo());
+					 trabajo = control_trabajo.obtenerTrabajoXid(todo.get(row).getTrabajo());
+					
+					estado.setText(todo.get(row).getEtapa());
+					monto.setText(""+trabajo.getMontoTotal());
+					cuotas.setText(trabajo.getCuotas()+"");
+					encargado.setText(control_empleado.empleadoXcedula(todo.get(row).getEmpleado_cedula()));
+					//System.out.println(trabajo.getReferencia());
+					if (control.esCedula(trabajo.getReferencia())){
+						particular = control.ParticularXcedula(trabajo.getReferencia());
+						cliente.setText(particular.getNombre());
+						lblContacto.setText("APELLIDO : ");
+						contacto.setText(particular.getApellido());
+						refEditar=particular.getCedula();
+						referencia.setText(""+particular.getCedula());
+						direccion.setText(particular.getDireccion());
+						tel.setText(particular.getTelefono()+" / "+particular.getTelefono2());
+					}else{
+						
+						empresa = control.EmpresaXrut(trabajo.getReferencia());
+						cliente.setText(empresa.getNombre());
+						lblContacto.setText("CONTACTO : ");
+						contacto.setText(empresa.getContacto());
+						refEditar=empresa.getRut();
+						referencia.setText(""+empresa.getRut());
+						direccion.setText(empresa.getDireccion());
+						tel.setText(empresa.getTelefono()+" / "+empresa.getTelefono2());
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 				
 			}
 		});
@@ -526,7 +595,7 @@ public class Principal extends JFrame {
 					Editar_Tarea editarTarea = new Editar_Tarea(refEditar,todo.get(row).getTrabajo(),todo.get(row).getEmpleado_cedula(),todo.get(row));
 					editarTarea.setVisible(true);
 				}else{
-					System.out.println(row);
+					//System.out.println(row);
 				}
 				
 			}
